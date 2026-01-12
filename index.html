@@ -5,38 +5,119 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Cenová ponuka</title>
 
+<!-- FONT: Onest -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
+/* ===============================
+   BASE
+================================ */
 *{ box-sizing:border-box; }
-body{ margin:0; font-family:"Onest", system-ui, sans-serif; background:#fff; color:#000; }
-.wrap{ max-width:1200px; margin:0 auto; padding:24px; }
+body{
+  margin:0;
+  font-family:"Onest", system-ui, sans-serif;
+  background:#fff;
+  color:#000;
+}
+.wrap{
+  max-width:1200px;
+  margin:0 auto;
+  padding:24px;
+}
 h1{ margin:0 0 14px 0; font-size:28px; font-weight:800; }
 
-.toolbar{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:12px 0 16px; }
-.btn{ border-radius:999px; padding:10px 16px; border:1px solid #000; background:#fff; font-weight:800; cursor:pointer; }
+/* ===============================
+   BUTTONS
+================================ */
+.toolbar{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+  margin:12px 0 16px;
+}
+.btn{
+  border-radius:999px;
+  padding:10px 16px;
+  border:1px solid #000;
+  background:#fff;
+  font-weight:800;
+  cursor:pointer;
+}
 .btn.primary{ background:#000; color:#fff; }
 .btn.secondary{ background:#f2f2f2; border-color:#d0d0d0; }
 .btn.ghost{ background:#fff; border-color:#d0d0d0; }
+
+/* delete buttons -> RED */
+.btn.danger,
+.icon-btn.danger,
+.dp-mini-btn.danger{
+  background:#d82626 !important;
+  border-color:#d82626 !important;
+  color:#fff !important;
+}
+.icon-btn.danger{ font-size:16px; }
+.btn.danger:hover,
+.icon-btn.danger:hover,
+.dp-mini-btn.danger:hover{
+  filter:brightness(0.95);
+}
+
 .hint{ color:#666; font-size:13px; margin-top:4px; }
 
+/* ===============================
+   FORM ELEMENTS
+================================ */
 label{
-  font-size:12px; text-transform:uppercase; letter-spacing:.08em; font-weight:800;
-  display:block; margin-bottom:4px; color:#111;
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  font-weight:800;
+  display:block;
+  margin-bottom:4px;
+  color:#111;
 }
 input, select, textarea{
-  width:100%; padding:10px 12px; border-radius:12px; border:1px solid #ccc;
-  font-family:inherit; font-size:14px; background:#fff;
+  width:100%;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid #ccc;
+  font-family:inherit;
+  font-size:14px;
+  background:#fff;
 }
 input[type="number"]{ text-align:right; }
 textarea{ min-height:70px; resize:vertical; }
 .small{ font-size:12px; color:#666; }
 
-.card{ border:1px solid #ddd; border-radius:16px; padding:16px; margin-bottom:16px; }
+/* IMPORTANT selects: blue + bold */
+select.important{
+  border:2px solid #0b5bd3 !important;
+  background:#eef5ff !important;
+  font-weight:900 !important;
+  color:#0b2f6b !important;
+}
+select.important:focus{
+  outline:3px solid rgba(11,91,211,0.20);
+  outline-offset:2px;
+}
+
+/* ===============================
+   CARDS
+================================ */
+.card{
+  border:1px solid #ddd;
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:16px;
+}
 .card h2{ margin:0 0 12px 0; font-size:18px; font-weight:800; }
 
+/* ===============================
+   GRID HELPERS
+================================ */
 .grid-2{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
 .grid-3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; }
 .grid-4{ display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:14px; }
@@ -44,99 +125,265 @@ textarea{ min-height:70px; resize:vertical; }
   .grid-2,.grid-3,.grid-4{ grid-template-columns:1fr; }
 }
 
-.sections{ display:flex; flex-direction:column; gap:14px; }
-.section{ border:2px solid #000; border-radius:16px; padding:14px; }
-.section-head{
-  display:flex; gap:10px; justify-content:space-between; align-items:flex-start; flex-wrap:wrap;
-  margin-bottom:10px; padding-bottom:10px; border-bottom:1px dashed #ddd;
+/* ===============================
+   SECTIONS EDIT
+================================ */
+.sections{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
 }
-.section-title{ display:grid; grid-template-columns:1fr 220px 220px; gap:12px; width:100%; }
-@media (max-width: 900px){ .section-title{ grid-template-columns:1fr; } }
-.section-actions{ display:flex; gap:10px; align-items:center; justify-content:flex-end; flex-wrap:wrap; }
+.section{
+  border:2px solid #000;
+  border-radius:16px;
+  padding:14px;
+}
+.section-head{
+  display:flex;
+  gap:10px;
+  justify-content:space-between;
+  align-items:flex-start;
+  flex-wrap:wrap;
+  margin-bottom:10px;
+  padding-bottom:10px;
+  border-bottom:1px dashed #ddd;
+}
+.section-title{
+  display:grid;
+  grid-template-columns:1fr 220px 220px;
+  gap:12px;
+  width:100%;
+}
+@media (max-width: 900px){
+  .section-title{ grid-template-columns:1fr; }
+}
+.section-actions{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  justify-content:flex-end;
+  flex-wrap:wrap;
+}
 .icon-btn{
-  width:40px; height:40px; border-radius:999px; border:1px solid #d0d0d0;
-  background:#f2f2f2; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  width:40px;
+  height:40px;
+  border-radius:999px;
+  border:1px solid #d0d0d0;
+  background:#f2f2f2;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 .section-bottom{
-  margin-top:12px; padding-top:12px; border-top:1px dashed #ddd;
-  display:flex; justify-content:flex-end; gap:10px; flex-wrap:wrap;
+  margin-top:12px;
+  padding-top:12px;
+  border-top:1px dashed #ddd;
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  flex-wrap:wrap;
 }
 
-.items{ display:flex; flex-direction:column; gap:12px; margin-top:12px; }
-.item{ border:1px solid #ddd; border-radius:14px; padding:12px; }
-.item-head{ display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:10px; }
+/* ===============================
+   ITEMS
+================================ */
+.items{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  margin-top:12px;
+}
+.item{
+  border:1px solid #ddd;
+  border-radius:14px;
+  padding:12px;
+}
+.item-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:10px;
+}
 .item-head .left{ font-weight:800; }
-.item-head .right{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.item-head .right{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  flex-wrap:wrap;
+}
 .item-foot{
-  margin-top:10px; display:flex; justify-content:space-between; align-items:flex-end;
-  gap:12px; flex-wrap:wrap;
+  margin-top:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  gap:12px;
+  flex-wrap:wrap;
 }
-.price-block{ text-align:right; min-width:260px; }
-.price-old{ font-size:12px; color:#777; text-decoration:line-through; min-height:16px; }
-.price-main{ font-weight:800; font-size:18px; }
-.price-period{ margin-top:2px; font-size:11px; color:#777; }
+.price-block{
+  text-align:right;
+  min-width:260px;
+}
+.price-old{
+  font-size:12px;
+  color:#777;
+  text-decoration:line-through;
+  min-height:16px;
+}
+.price-main{
+  font-weight:800;
+  font-size:18px;
+}
+.price-period{
+  margin-top:2px;
+  font-size:11px;
+  color:#777;
+}
 
+/* OR separator */
 .or-sep{
-  text-align:center; font-weight:900; letter-spacing:.12em; color:#111;
-  background:#f3f3f3; border:1px solid #ddd; border-radius:999px; padding:8px 10px; margin:2px 0;
+  text-align:center;
+  font-weight:900;
+  letter-spacing:.12em;
+  color:#111;
+  background:#f3f3f3;
+  border:1px solid #ddd;
+  border-radius:999px;
+  padding:8px 10px;
+  margin:2px 0;
 }
 
-.preview-row{ margin-top:10px; display:flex; gap:12px; align-items:flex-start; flex-wrap:wrap; }
-.thumb{
-  width:120px; height:90px; border:1px solid #ddd; border-radius:12px; overflow:hidden;
-  background:#f6f6f6; display:flex; align-items:center; justify-content:center;
+/* Image upload */
+.preview-row{
+  margin-top:10px;
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+  flex-wrap:wrap;
 }
-.thumb img{ width:100%; height:100%; object-fit:cover; border-radius:10px; }
+.thumb{
+  width:120px;
+  height:90px;
+  border:1px solid #ddd;
+  border-radius:12px;
+  overflow:hidden;
+  background:#f6f6f6;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.thumb img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:10px;
+}
 .note-box{ margin-top:10px; }
+
+/* hide image controls when "bez obrázkov" */
 .images-off .img-controls{ display:none !important; }
 
-.end-settings{ border-top:1px dashed #ddd; padding-top:12px; margin-top:12px; }
+/* ===============================
+   GLOBAL SETTINGS (end)
+================================ */
+.end-settings{
+  border-top:1px dashed #ddd;
+  padding-top:12px;
+  margin-top:12px;
+}
 
-/* DIGITAL PANEL UI */
+/* ===============================
+   DIGITAL PANEL UI
+================================ */
 .dp-wrap{ margin-top:12px; }
 .dp-card{
-  border:1px solid #ddd; border-radius:14px; padding:12px; margin-top:12px;
+  border:1px solid #ddd;
+  border-radius:14px;
+  padding:12px;
+  margin-top:12px;
 }
 .dp-title{ font-weight:900; margin-bottom:10px; }
 .dp-row-head{
-  display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;
-  padding-bottom:10px; border-bottom:1px dashed #ddd; margin-bottom:10px;
-}
-.badge{
-  display:inline-block; padding:6px 10px; border-radius:999px; background:#f3f3f3; border:1px solid #ddd;
-  font-size:12px; font-weight:800;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  padding-bottom:10px;
+  border-bottom:1px dashed #ddd;
+  margin-bottom:10px;
 }
 .dp-inline-actions{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
 .dp-mini-btn{
-  border-radius:999px; padding:8px 12px; border:1px solid #d0d0d0; background:#fff; cursor:pointer; font-weight:800;
+  border-radius:999px;
+  padding:8px 12px;
+  border:1px solid #d0d0d0;
+  background:#fff;
+  cursor:pointer;
+  font-weight:900;
 }
-.dp-mini-btn.danger{ border-color:#000; }
 .dp-table{
-  width:100%; border-collapse:collapse; table-layout:fixed; margin-top:8px;
+  width:100%;
+  border-collapse:collapse;
+  table-layout:fixed;
+  margin-top:8px;
 }
 .dp-table th{
-  text-align:left; font-size:10px; text-transform:uppercase; letter-spacing:.08em;
-  border-bottom:1px solid #000; padding-bottom:6px;
+  text-align:left;
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  border-bottom:1px solid #000;
+  padding-bottom:6px;
 }
-.dp-table td{ padding:8px 0; vertical-align:middle; border-bottom:1px solid #eee; }
+.dp-table td{
+  padding:8px 0;
+  vertical-align:middle;
+  border-bottom:1px solid #eee;
+}
 .dp-table .r{ text-align:right; }
 .dp-table .c{ text-align:center; }
 .dp-orange{ color:#d35400; font-weight:900; }
 
-/* PRINT / PDF */
+/* ===============================
+   PRINT / PDF VIEW
+================================ */
 .print-view{ display:none; }
+
 .print-page{
-  width:210mm; min-height:297mm; margin:0 auto; background:#fff; border:2px solid #000;
-  padding:18mm 14mm; position:relative;
+  width:210mm;
+  min-height:297mm;
+  margin:0 auto;
+  background:#fff;
+  border:2px solid #000;
+  padding:18mm 14mm 26mm 14mm; /* extra bottom padding for footer */
+  position:relative;
 }
-.pv-logo{ position:absolute; top:10mm; right:14mm; width:26mm; height:auto; opacity:0.95; }
 
+/* IDS logo (top-right) */
+.pv-logo{
+  position:absolute;
+  top:10mm;
+  right:14mm;
+  width:26mm;
+  height:auto;
+  opacity:0.95;
+}
+
+/* left gutter for images */
 .pv-gutter{
-  position:absolute; left:14mm; top:18mm; bottom:18mm; width:42mm;
-  display:flex; flex-direction:column; gap:10mm;
+  position:absolute;
+  left:14mm;
+  top:18mm;
+  bottom:26mm; /* keep above footer */
+  width:42mm;
+  display:flex;
+  flex-direction:column;
+  gap:10mm;
 }
 
-/* jemnejšie rohy fotiek */
+/* photos rounded gently */
 .pv-gutter .pv-img{
   width:100%;
   border-radius:2mm;
@@ -144,26 +391,45 @@ textarea{ min-height:70px; resize:vertical; }
   border:1px solid #ddd;
   background:#f6f6f6;
 }
-.pv-gutter .pv-img img{ width:100%; height:auto; display:block; }
+.pv-gutter .pv-img img{
+  width:100%;
+  height:auto;
+  display:block;
+}
 
+/* content shifted right */
 .pv-content{ margin-left:48mm; }
 
+/* header */
 .pv-header{ margin-bottom:18mm; }
 .pv-title{ font-size:34px; font-weight:800; }
 .pv-subtitle{ font-size:16px; margin-top:4px; font-weight:500; }
 
+/* section */
 .pv-section{ margin-top:14mm; }
 .pv-section-name{ font-size:13px; font-weight:700; }
 .pv-section-period{ margin-top:2mm; font-size:12px; font-weight:500; color:#111; }
 
+/* table */
 .pv-table{
-  margin-top:6mm; width:100%; border-collapse:collapse; table-layout:fixed; font-size:11.5px;
+  margin-top:6mm;
+  width:100%;
+  border-collapse:collapse;
+  table-layout:fixed;
+  font-size:11.5px;
 }
 .pv-table th{
-  text-align:left; font-size:10px; text-transform:uppercase; letter-spacing:.08em;
-  border-bottom:1px solid #000; padding-bottom:6px;
+  text-align:left;
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  border-bottom:1px solid #000;
+  padding-bottom:6px;
 }
-.pv-table td{ padding:8px 0; vertical-align:top; }
+.pv-table td{
+  padding:8px 0;
+  vertical-align:top;
+}
 .c-item{ width:36%; }
 .c-spec{ width:20%; }
 .c-qty{ width:10%; text-align:right; }
@@ -177,30 +443,57 @@ textarea{ min-height:70px; resize:vertical; }
 
 .pv-divider{ margin-top:10mm; border-top:1px solid #000; }
 
-.pv-grand{ margin-top:10mm; display:flex; justify-content:flex-end; }
+/* GRAND TOTAL (optional) */
+.pv-grand{
+  margin-top:10mm;
+  display:flex;
+  justify-content:flex-end;
+}
 .pv-grand-box{
-  width:260px; border-top:1px solid #000; padding-top:6mm; text-align:right; font-size:12px;
+  width:260px;
+  border-top:1px solid #000;
+  padding-top:6mm;
+  text-align:right;
+  font-size:12px;
 }
 .pv-grand-box .lbl{ color:#111; font-weight:700; }
 .pv-grand-box .val{ font-size:16px; font-weight:800; margin-top:2mm; }
 
+/* full-width mode (no images) */
 .pv-no-images .pv-gutter{ display:none; }
 .pv-no-images .pv-content{ margin-left:0; }
 
+/* OR row in PDF */
 .pv-or-row td{
-  padding:10px 0; text-align:center !important; font-weight:900; letter-spacing:.12em; color:#111;
+  padding:10px 0;
+  text-align:center !important;
+  font-weight:900;
+  letter-spacing:.12em;
+  color:#111;
 }
 
 /* Digital PDF blocks */
 .pv-block-title{ font-size:12px; font-weight:900; margin-top:6mm; }
 .pv-dp-table{
-  width:100%; border-collapse:collapse; table-layout:fixed; margin-top:3mm; font-size:11.5px;
+  width:100%;
+  border-collapse:collapse;
+  table-layout:fixed;
+  margin-top:3mm;
+  font-size:11.5px;
 }
 .pv-dp-table th{
-  text-align:left; font-size:10px; text-transform:uppercase; letter-spacing:.08em;
-  border-bottom:1px solid #000; padding-bottom:6px;
+  text-align:left;
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  border-bottom:1px solid #000;
+  padding-bottom:6px;
 }
-.pv-dp-table td{ padding:8px 0; border-bottom:1px solid #eee; vertical-align:top; }
+.pv-dp-table td{
+  padding:8px 0;
+  border-bottom:1px solid #eee;
+  vertical-align:top;
+}
 .pv-dp-table .r{ text-align:right; }
 .pv-dp-table .c{ text-align:center; }
 .pv-dp-orange{ color:#d35400; font-weight:900; }
@@ -219,18 +512,11 @@ textarea{ min-height:70px; resize:vertical; }
   font-size:10.5px;
   color:#111;
 }
-.pv-notes .ttl{
-  font-weight:900;
-  margin-bottom:2mm;
-}
-.pv-notes .ln{
-  margin-top:1.5mm;
-}
-.pv-notes .lbl{
-  font-weight:900;
-}
+.pv-notes .ttl{ font-weight:900; margin-bottom:2mm; }
+.pv-notes .ln{ margin-top:1.5mm; }
+.pv-notes .lbl{ font-weight:900; }
 
-/* Global end notes */
+/* Global notes */
 .pv-global-note{
   margin-top:8mm;
   font-size:10.8px;
@@ -244,6 +530,41 @@ textarea{ min-height:70px; resize:vertical; }
   font-size:11px;
   font-weight:700;
   color:#111;
+}
+
+/* FOOTER on every page */
+.pv-footer{
+  position:fixed;
+  left:14mm;
+  right:14mm;
+  bottom:8mm;
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:10mm;
+  z-index:9999;
+}
+.pv-footer-left img{
+  height:10mm;
+  width:auto;
+  opacity:0.95;
+}
+.pv-footer-center{
+  flex:1;
+  text-align:center;
+  font-size:11px;
+  font-weight:800;
+}
+.pv-footer-center a{
+  color:#000;
+  text-decoration:none;
+}
+.pv-footer-right{
+  text-align:right;
+  font-size:10.5px;
+  font-weight:700;
+  color:#111;
+  white-space:nowrap;
 }
 
 @media print{
@@ -264,9 +585,16 @@ textarea{ min-height:70px; resize:vertical; }
     <button class="btn primary" id="btnPrint" type="button">Export do PDF</button>
     <button class="btn secondary" id="btnAddSection" type="button">+ Pridať sekciu</button>
     <button class="btn ghost" id="btnReset" type="button">Vymazať (demo)</button>
+
+    <div style="min-width:260px; flex:1;">
+      <label for="pdfFileName" style="margin:0 0 4px 0;">Názov súboru (obchodník)</label>
+      <input id="pdfFileName" placeholder="napr. DP_pediater_Q2_2026">
+      <div class="small">Pri exporte sa automaticky pridá dátum na začiatok (YYYY-MM-DD_...).</div>
+    </div>
   </div>
   <div class="hint">Cena spolu v riadku je vždy. Voliteľný je iba finálny súčet všetkých položiek.</div>
 
+  <!-- Offer base -->
   <div class="card">
     <h2>Základ ponuky</h2>
 
@@ -284,14 +612,14 @@ textarea{ min-height:70px; resize:vertical; }
     <div class="grid-2" style="margin-top:12px;">
       <div>
         <label for="pdfImages">PDF obrázky</label>
-        <select id="pdfImages">
+        <select id="pdfImages" class="important">
           <option value="with" selected>S obrázkami</option>
           <option value="without">Bez obrázkov (celá šírka)</option>
         </select>
       </div>
       <div>
         <label for="pdfShowGrand">Zobraziť finálny súčet (Spolu) v PDF?</label>
-        <select id="pdfShowGrand">
+        <select id="pdfShowGrand" class="important">
           <option value="yes" selected>Áno</option>
           <option value="no">Nie</option>
         </select>
@@ -302,7 +630,7 @@ textarea{ min-height:70px; resize:vertical; }
     <div class="grid-2" style="margin-top:12px;">
       <div>
         <label>Text pod štandardné plochy v PDF (raz na konci)</label>
-        <select id="stdNoteEnabled">
+        <select id="stdNoteEnabled" class="important">
           <option value="yes" selected>Áno</option>
           <option value="no">Nie</option>
         </select>
@@ -312,13 +640,14 @@ textarea{ min-height:70px; resize:vertical; }
     </div>
   </div>
 
+  <!-- Sections -->
   <div class="card">
     <h2>Sekcie</h2>
     <div class="sections" id="sections"></div>
 
     <div class="end-settings">
       <div class="grid-2">
-        <div class="small">Tip: Logo IDS sa načíta zo súboru <strong>ids-logo.png</strong> v rovnakom priečinku ako index.html.</div>
+        <div class="small">Tip: Logo IDS sa načíta zo súboru <strong>ids-logo.png</strong> v rovnakom priečinku ako index.html. Footer logo: <strong>feel.png</strong>.</div>
         <div style="text-align:right;">
           <button class="btn secondary" id="btnAddSectionBottom" type="button">+ Pridať sekciu</button>
         </div>
@@ -330,7 +659,9 @@ textarea{ min-height:70px; resize:vertical; }
 <!-- PRINT VIEW -->
 <section class="print-view" id="printView">
   <div class="print-page" id="printPage">
+    <!-- IDS logo -->
     <img class="pv-logo" id="pvLogo" src="ids-logo.png" alt="IDS logo" />
+
     <div class="pv-gutter" id="pvGutter"></div>
 
     <div class="pv-content">
@@ -345,6 +676,17 @@ textarea{ min-height:70px; resize:vertical; }
       <div id="pvGlobalNotes"></div>
       <div class="pv-vat" id="pvVat">Ceny sú bez DPH.</div>
     </div>
+  </div>
+
+  <!-- FOOTER (every page) -->
+  <div class="pv-footer" id="pvFooter">
+    <div class="pv-footer-left">
+      <img id="pvFeel" src="feel.png" alt="feel the good network">
+    </div>
+    <div class="pv-footer-center">
+      <a href="https://www.ids-media.sk" target="_blank" rel="noopener noreferrer">www.ids-media.sk</a>
+    </div>
+    <div class="pv-footer-right" id="pvGenDate"></div>
   </div>
 </section>
 
@@ -398,7 +740,7 @@ textarea{ min-height:70px; resize:vertical; }
         </div>
         <div>
           <label>Typ sekcie</label>
-          <select data-sec-kind>
+          <select data-sec-kind class="important">
             <option value="standard" selected>Štandard</option>
             <option value="digital">Digitálny panel</option>
           </select>
@@ -407,7 +749,7 @@ textarea{ min-height:70px; resize:vertical; }
       </div>
 
       <div class="section-actions">
-        <button class="icon-btn" type="button" title="Odstrániť sekciu" data-del-section>🗑️</button>
+        <button class="icon-btn danger" type="button" title="Odstrániť sekciu" data-del-section>🗑️</button>
       </div>
     </div>
 
@@ -470,7 +812,7 @@ textarea{ min-height:70px; resize:vertical; }
           <div class="grid-2">
             <div>
               <label>Zobraziť tento text v PDF?</label>
-              <select data-dp-note-enabled>
+              <select data-dp-note-enabled class="important">
                 <option value="yes" selected>Áno</option>
                 <option value="no">Nie</option>
               </select>
@@ -490,7 +832,7 @@ Súčasťou kampane u digitálnych panelov je: Aktuálny počet fungujúcich pan
         <!-- IMAGES moved to end -->
         <div class="dp-card img-controls">
           <div class="dp-row-head">
-            <div class="dp-title">Obrázky sekcie (voliteľné) <span class="badge">idú do PDF naľavo</span></div>
+            <div class="dp-title">Obrázky sekcie (voliteľné)</div>
           </div>
 
           <div class="grid-3">
@@ -532,7 +874,7 @@ Súčasťou kampane u digitálnych panelov je: Aktuálny počet fungujúcich pan
       <div class="left">Položka v tejto sekcii</div>
       <div class="right">
         <button class="btn ghost" type="button" data-add-or>+ ALEBO</button>
-        <button class="icon-btn" type="button" title="Odstrániť položku" data-del-item>🗑️</button>
+        <button class="icon-btn danger" type="button" title="Odstrániť položku" data-del-item>🗑️</button>
       </div>
     </div>
 
@@ -625,7 +967,7 @@ Súčasťou kampane u digitálnych panelov je: Aktuálny počet fungujúcich pan
     <div class="note-box">
       <label>Vlastná poznámka pod položkou (voliteľné)</label>
       <textarea data-extra placeholder="napr. Súčasťou je fotodokumentácia a zoznam, kde sa materiál odovzdal."></textarea>
-      <div class="small">V PDF sa zobrazí až na konci sekcie (nie pri položke).</div>
+      <div class="small">V PDF sa zobrazí až na konci sekcie.</div>
     </div>
   </div>
 </template>
@@ -637,7 +979,7 @@ Súčasťou kampane u digitálnych panelov je: Aktuálny počet fungujúcich pan
     <td class="r"><input data-dp-price type="number" min="0" step="0.01" placeholder="0.00"></td>
     <td class="r"><input data-dp-promo type="number" min="0" step="0.01" placeholder="0.00"></td>
     <td class="c">
-      <select data-dp-enabled>
+      <select data-dp-enabled class="important">
         <option value="yes" selected>áno</option>
         <option value="no">nie</option>
       </select>
@@ -660,7 +1002,7 @@ Súčasťou kampane u digitálnych panelov je: Aktuálny počet fungujúcich pan
           <button class="dp-mini-btn" type="button" data-dp-apply-panels>Použiť rovnaký počet všade</button>
         </div>
         <button class="dp-mini-btn" type="button" data-dp-add-month>+ Pridať mesiac</button>
-        <button class="dp-mini-btn danger" type="button" data-dp-del-aud>Odstrániť</button>
+        <button class="dp-mini-btn danger" type="button" data-dp-del-aud>Vymazať</button>
       </div>
     </div>
 
@@ -689,7 +1031,7 @@ Súčasťou kampane u digitálnych panelov je: Aktuálny počet fungujúcich pan
     </td>
     <td class="r"><input data-dp-panels type="number" min="0" step="1" value="0"></td>
     <td class="c">
-      <select data-dp-use-promo>
+      <select data-dp-use-promo class="important">
         <option value="no" selected>nie</option>
         <option value="yes">áno</option>
       </select>
@@ -699,13 +1041,34 @@ Súčasťou kampane u digitálnych panelov je: Aktuálny počet fungujúcich pan
 </template>
 
 <script>
-/* ========= UTIL ========= */
+/* ===============================
+   UTIL
+================================ */
 const moneyFmt = new Intl.NumberFormat('sk-SK', { style:'currency', currency:'EUR' });
 function n(v){ const x = Number(v); return Number.isFinite(x) ? x : 0; }
 function formatMoney(val){ return moneyFmt.format(val); }
 function normalize(s){ return (s || '').trim().toLowerCase(); }
 
-/* ========= PRESETS (standard items) ========= */
+function pad2(x){ return String(x).padStart(2,'0'); }
+function dateStamp(d=new Date()){
+  const yyyy = d.getFullYear();
+  const mm = pad2(d.getMonth()+1);
+  const dd = pad2(d.getDate());
+  return `${yyyy}-${mm}-${dd}`;
+}
+function dateTimeHuman(d=new Date()){
+  // SK format: 12. 1. 2026 16:22
+  const day = d.getDate();
+  const month = d.getMonth()+1;
+  const year = d.getFullYear();
+  const hh = pad2(d.getHours());
+  const mi = pad2(d.getMinutes());
+  return `${day}. ${month}. ${year} ${hh}:${mi}`;
+}
+
+/* ===============================
+   PRESETS
+================================ */
 function presetFromType(rawType){
   const t = normalize(rawType);
 
@@ -718,6 +1081,7 @@ function presetFromType(rawType){
   if(t === 'statický plagát' || t === 'staticky plakat'){
     return { dim:'42 × 29,7 cm', title:'Statický plagát', period:'za jednu návštevu' };
   }
+
   if(t === 'a3 plagát s umiestnením letáku pod plagátom' || t === 'a3 plakat s umiestnením letáku pod plagátom'){
     return { dim:'42 × 29,7 cm', title:'A3 plagát s umiestnením letáku pod plagátom', period:'za 3 mesiace' };
   }
@@ -745,7 +1109,9 @@ function presetFromType(rawType){
   return { dim:'', title:rawType || '', period:'za 3 mesiace' };
 }
 
-/* ========= DOM refs ========= */
+/* ===============================
+   DOM
+================================ */
 const appRoot = document.getElementById('appRoot');
 const sectionsWrap = document.getElementById('sections');
 
@@ -758,8 +1124,11 @@ const tplDpAud  = document.getElementById('tplDpAud');
 const tplDpMonth= document.getElementById('tplDpMonth');
 
 const pdfImagesSel = document.getElementById('pdfImages');
+const pdfShowGrandSel = document.getElementById('pdfShowGrand');
 
-/* ========= UI images on/off ========= */
+/* ===============================
+   UI IMAGES ON/OFF
+================================ */
 function applyImagesSetting(){
   const mode = pdfImagesSel.value;
   if(mode === 'without') appRoot.classList.add('images-off');
@@ -767,7 +1136,9 @@ function applyImagesSetting(){
 }
 pdfImagesSel.addEventListener('change', applyImagesSetting);
 
-/* ========= STANDARD ITEM logic ========= */
+/* ===============================
+   STANDARD ITEM LOGIC
+================================ */
 function setThumb(itemEl, dataUrl){
   const thumb = itemEl.querySelector('[data-thumb]');
   thumb.innerHTML = '';
@@ -947,7 +1318,9 @@ function addItem(itemsWrap){
   return itemEl;
 }
 
-/* ========= DIGITAL PANEL logic ========= */
+/* ===============================
+   DIGITAL PANEL LOGIC
+================================ */
 function setThumbIn(elThumb, dataUrl){
   elThumb.innerHTML = '';
   if(!dataUrl){
@@ -988,6 +1361,10 @@ function addDpSpotFixed(secEl, seconds){
   spotsBody.appendChild(node);
   const tr = spotsBody.lastElementChild;
   tr.querySelector('[data-dp-seconds]').value = String(seconds);
+
+  // make sure the important style stays (in case browser strips class on clone)
+  const en = tr.querySelector('[data-dp-enabled]');
+  en.classList.add('important');
 }
 
 function addDpMonthRow(monthsTbody, preset){
@@ -1002,6 +1379,8 @@ function addDpMonthRow(monthsTbody, preset){
   }
 
   tr.querySelector('[data-dp-del-month]').addEventListener('click', () => tr.remove());
+  // enforce important class
+  tr.querySelector('[data-dp-use-promo]').classList.add('important');
 }
 
 function applyPanelsToAll(audEl){
@@ -1051,7 +1430,9 @@ function initDigitalSection(secEl){
   wireDpImage(secEl, '[data-dp-img3]', '[data-dp-thumb3]', 'dpImg3');
 }
 
-/* ========= SECTION logic ========= */
+/* ===============================
+   SECTION LOGIC
+================================ */
 function toggleSectionKind(secEl){
   const kind = secEl.querySelector('[data-sec-kind]').value;
   const std = secEl.querySelector('[data-standard]');
@@ -1082,14 +1463,20 @@ function addSection(){
   secEl.querySelector('[data-add-item]').addEventListener('click', () => addItem(itemsWrap));
   secEl.querySelector('[data-sec-kind]').addEventListener('change', () => toggleSectionKind(secEl));
 
+  // first standard item
   addItem(itemsWrap);
   toggleSectionKind(secEl);
+
+  // keep important style
+  secEl.querySelector('[data-sec-kind]').classList.add('important');
 }
 
-/* ========= PDF RENDER ========= */
+/* ===============================
+   PDF RENDER (collect + render)
+================================ */
 function collectStandardItems(secEl, imagesMode){
   const items = [];
-  const notes = []; // move extras to end
+  const notes = [];
   const container = secEl.querySelector('[data-items]');
 
   Array.from(container.children).forEach(child => {
@@ -1201,20 +1588,30 @@ function collectState(){
   return { title, subtitle, imagesMode, showGrand, stdNoteEnabled, sections };
 }
 
-function renderPDF(){
+function renderPDF(generatedAt){
   const state = collectState();
 
   document.getElementById('pvTitle').textContent = state.title;
   document.getElementById('pvSubtitle').textContent = state.subtitle;
 
+  // footer date
+  document.getElementById('pvGenDate').textContent = `Generované: ${dateTimeHuman(generatedAt)}`;
+
   const printPage = document.getElementById('printPage');
   if(state.imagesMode === 'without') printPage.classList.add('pv-no-images');
   else printPage.classList.remove('pv-no-images');
 
+  // IDS logo show/hide
   const pvLogo = document.getElementById('pvLogo');
   pvLogo.onerror = () => { pvLogo.style.display = 'none'; };
   pvLogo.style.display = 'block';
 
+  // FEEL logo show/hide
+  const pvFeel = document.getElementById('pvFeel');
+  pvFeel.onerror = () => { pvFeel.style.display = 'none'; };
+  pvFeel.style.display = 'block';
+
+  // gutter images
   const pvGutter = document.getElementById('pvGutter');
   pvGutter.innerHTML = '';
   if(state.imagesMode === 'with'){
@@ -1350,7 +1747,6 @@ function renderPDF(){
 
         const tbody2 = document.createElement('tbody');
 
-        // sums per column
         const sums = activeSpots.map(() => 0);
 
         (aud.months || []).forEach(m => {
@@ -1379,14 +1775,12 @@ function renderPDF(){
             td.innerHTML = `<span class="${usePromo ? 'pv-dp-orange' : ''}">${formatMoney(total)}</span>`;
             tr.appendChild(td);
 
-            // global grand (optional overall)
             grandTotal += total;
           });
 
           tbody2.appendChild(tr);
         });
 
-        // totals row under each spot column (NOT combined)
         if(activeSpots.length > 0){
           const trTot = document.createElement('tr');
           trTot.className = 'pv-dp-total-row';
@@ -1413,7 +1807,6 @@ function renderPDF(){
         secDiv.appendChild(tbl);
       });
 
-      // DP note at end of DP section
       if(s.dp.noteEnabled && s.dp.noteText){
         const note = document.createElement('div');
         note.className = 'pv-global-note';
@@ -1547,7 +1940,6 @@ function renderPDF(){
     table.appendChild(tbody);
     secDiv.appendChild(table);
 
-    // notes at end of standard section (moved extras here)
     if((s.notes || []).length){
       const notes = document.createElement('div');
       notes.className = 'pv-notes';
@@ -1582,10 +1974,9 @@ function renderPDF(){
     pvGrandWrap.appendChild(grand);
   }
 
-  // global notes (standard + always VAT)
+  // global notes (standard)
   const pvGlobalNotes = document.getElementById('pvGlobalNotes');
   pvGlobalNotes.innerHTML = '';
-
   if(state.stdNoteEnabled){
     const block = document.createElement('div');
     block.className = 'pv-global-note';
@@ -1597,16 +1988,34 @@ function renderPDF(){
     pvGlobalNotes.appendChild(block);
   }
 
-  // VAT line exists always (already in HTML)
+  // VAT is always present (static)
 }
 
-/* ========= BUTTONS ========= */
+/* ===============================
+   BUTTONS
+================================ */
 document.getElementById('btnAddSection').addEventListener('click', addSection);
 document.getElementById('btnAddSectionBottom').addEventListener('click', addSection);
 
 document.getElementById('btnPrint').addEventListener('click', () => {
-  renderPDF();
-  setTimeout(() => window.print(), 80);
+  const now = new Date();
+
+  // filename (best-effort via document.title)
+  const userName = (document.getElementById('pdfFileName').value || '').trim();
+  const base = userName ? userName : 'Cenova_ponuka';
+  const safe = base.replace(/[\\/:*?"<>|]+/g, '_').replace(/\s+/g, '_');
+  const title = `${dateStamp(now)}_${safe}`;
+
+  const prevTitle = document.title;
+  document.title = title;
+
+  renderPDF(now);
+
+  setTimeout(() => {
+    window.print();
+    // restore title after print dialog opens (slight delay)
+    setTimeout(() => { document.title = prevTitle; }, 400);
+  }, 80);
 });
 
 document.getElementById('btnReset').addEventListener('click', () => {
@@ -1615,12 +2024,15 @@ document.getElementById('btnReset').addEventListener('click', () => {
   document.getElementById('pdfImages').value = 'with';
   document.getElementById('pdfShowGrand').value = 'yes';
   document.getElementById('stdNoteEnabled').value = 'yes';
+  document.getElementById('pdfFileName').value = '';
   sectionsWrap.innerHTML = '';
   applyImagesSetting();
   addSection();
 });
 
-/* ========= INIT ========= */
+/* ===============================
+   INIT
+================================ */
 applyImagesSetting();
 addSection();
 </script>
