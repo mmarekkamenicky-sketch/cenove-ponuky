@@ -249,7 +249,7 @@ textarea{ min-height:70px; resize:vertical; }
   width:100%;
   height:100%;
   object-fit:cover;
-  border-radius:10px; /* jemné zaoblenie v náhľade */
+  border-radius:10px;
 }
 .note-box{ margin-top:10px; }
 
@@ -285,7 +285,7 @@ textarea{ min-height:70px; resize:vertical; }
   position:absolute;
   top:10mm;
   right:14mm;
-  width:26mm;       /* upraviteľné */
+  width:26mm;
   height:auto;
   opacity:0.95;
 }
@@ -303,7 +303,7 @@ textarea{ min-height:70px; resize:vertical; }
 }
 .pv-gutter .pv-img{
   width:100%;
-  border-radius:3mm;           /* jemné zaoblenie */
+  border-radius:3mm;
   overflow:hidden;
   border:1px solid #ddd;
   background:#f6f6f6;
@@ -538,7 +538,6 @@ textarea{ min-height:70px; resize:vertical; }
 
     <div class="items" data-items></div>
 
-    <!-- + položka úplne dole -->
     <div class="section-bottom">
       <button class="btn secondary" type="button" data-add-item>+ Pridať položku</button>
     </div>
@@ -707,10 +706,11 @@ function presetFromType(rawType){
 }
 
 /* ===============================
-   DOM
+   DOM refs
 ================================ */
 const appRoot = document.getElementById('appRoot');
 const sectionsWrap = document.getElementById('sections');
+
 const tplSection = document.getElementById('tplSection');
 const tplItem = document.getElementById('tplItem');
 const tplOrSep = document.getElementById('tplOrSep');
@@ -723,16 +723,13 @@ const pdfShowGrandSel = document.getElementById('pdfShowGrand');
 ================================ */
 function applyImagesSetting(){
   const mode = pdfImagesSel.value;
-  if(mode === 'without'){
-    appRoot.classList.add('images-off');
-  } else {
-    appRoot.classList.remove('images-off');
-  }
+  if(mode === 'without') appRoot.classList.add('images-off');
+  else appRoot.classList.remove('images-off');
 }
 pdfImagesSel.addEventListener('change', applyImagesSetting);
 
 /* ===============================
-   ITEM LOGIC
+   ITEM HELPERS
 ================================ */
 function setThumb(itemEl, dataUrl){
   const thumb = itemEl.querySelector('[data-thumb]');
@@ -803,7 +800,6 @@ function applyPreset(itemEl){
   const p = presetFromType(typeEl.value);
 
   if(p.dim) dimEl.value = p.dim;
-
   if(!titleEl.value && p.title) titleEl.value = p.title;
 
   const curPer = (periodEl.value ?? '').trim();
@@ -822,19 +818,19 @@ function wireItem(itemEl){
   const typeInput = itemEl.querySelector('[data-type]');
   const imgInput = itemEl.querySelector('[data-img]');
 
-  // init period if empty
+  // default period
   if((itemEl.querySelector('[data-period]').value || '').trim() === ''){
     itemEl.querySelector('[data-period]').value = 'za 3 mesiace';
   }
 
   typeInput.addEventListener('change', () => { applyPreset(itemEl); recalcItem(itemEl); });
-  typeInput.addEventListener('blur', () => { applyPreset(itemEl); recalcItem(itemEl); });
+  typeInput.addEventListener('blur',   () => { applyPreset(itemEl); recalcItem(itemEl); });
 
   itemEl.querySelector('[data-price-mode]').addEventListener('change', () => togglePriceMode(itemEl));
 
   itemEl.querySelectorAll('input, select, textarea').forEach(el => {
     if(el.matches('[data-img]')) return;
-    el.addEventListener('input', () => recalcItem(itemEl));
+    el.addEventListener('input',  () => recalcItem(itemEl));
     el.addEventListener('change', () => recalcItem(itemEl));
   });
 
@@ -853,6 +849,7 @@ function wireItem(itemEl){
 
     itemEl.remove();
 
+    // clean orphan separators around
     if(prev && prev.matches('[data-or-sep]')){
       const after = prev.nextElementSibling;
       if(!after || !after.matches('[data-item]') || getItemGroupId(after) !== grp){
@@ -869,15 +866,18 @@ function wireItem(itemEl){
 
   itemEl.querySelector('[data-add-or]').addEventListener('click', () => {
     const itemsWrap = itemEl.parentElement;
+
     const groupId = getItemGroupId(itemEl) || ('g' + Math.random().toString(16).slice(2));
     itemEl.dataset.orGroup = groupId;
 
+    // ensure separator after current item
     const maybeNext = itemEl.nextElementSibling;
     if(!(maybeNext && maybeNext.matches('[data-or-sep]'))){
       const sepNode = tplOrSep.content.cloneNode(true);
       itemsWrap.insertBefore(sepNode, itemEl.nextElementSibling);
     }
 
+    // create new item after separator
     const newNode = tplItem.content.cloneNode(true);
     const temp = document.createElement('div');
     temp.appendChild(newNode);
@@ -890,12 +890,14 @@ function wireItem(itemEl){
 
     wireItem(newItemEl);
 
+    // copy basics
     newItemEl.querySelector('[data-type]').value = itemEl.querySelector('[data-type]').value;
     newItemEl.querySelector('[data-dim]').value = itemEl.querySelector('[data-dim]').value;
     newItemEl.querySelector('[data-title]').value = itemEl.querySelector('[data-title]').value;
     newItemEl.querySelector('[data-note]').value = itemEl.querySelector('[data-note]').value;
     newItemEl.querySelector('[data-period]').value = itemEl.querySelector('[data-period]').value;
 
+    // clear pricing
     newItemEl.querySelector('[data-qty]').value = '';
     newItemEl.querySelector('[data-price]').value = '';
     newItemEl.querySelector('[data-discount]').value = '';
@@ -944,12 +946,14 @@ function collectState(){
   const showGrand = document.getElementById('pdfShowGrand').value === 'yes';
 
   const sections = [];
+
   sectionsWrap.querySelectorAll('[data-section]').forEach(secEl => {
     const secName = secEl.querySelector('[data-sec-name]').value.trim();
     const secPeriod = secEl.querySelector('[data-sec-period]').value.trim();
 
     const items = [];
     const container = secEl.querySelector('[data-items]');
+
     Array.from(container.children).forEach(child => {
       if(child.matches && child.matches('[data-or-sep]')){
         items.push({ __or:true });
@@ -1005,11 +1009,8 @@ function renderPDF(){
   const printPage = document.getElementById('printPage');
 
   // images mode affects layout (full width)
-  if(state.imagesMode === 'without'){
-    printPage.classList.add('pv-no-images');
-  } else {
-    printPage.classList.remove('pv-no-images');
-  }
+  if(state.imagesMode === 'without') printPage.classList.add('pv-no-images');
+  else printPage.classList.remove('pv-no-images');
 
   // logo show/hide: if missing file, hide on error
   const pvLogo = document.getElementById('pvLogo');
@@ -1036,6 +1037,7 @@ function renderPDF(){
   pvSections.innerHTML = '';
 
   let grandTotal = 0;
+  let grandHasMax = false;
 
   state.sections.forEach(s => {
     const secDiv = document.createElement('div');
@@ -1057,13 +1059,12 @@ function renderPDF(){
     const thead = document.createElement('thead');
     const trh = document.createElement('tr');
 
-    // IMPORTANT: "Cena spolu" is ALWAYS present
     const headers = [
-      { cls:'c-item', txt:'Položka' },
-      { cls:'c-spec', txt:'Špecifikácia' },
-      { cls:'c-qty', txt:'Počet' },
+      { cls:'c-item',  txt:'Položka' },
+      { cls:'c-spec',  txt:'Špecifikácia' },
+      { cls:'c-qty',   txt:'Počet' },
       { cls:'c-price', txt:'Cena' },
-      { cls:'c-disc', txt:'Zvýh. cena' },
+      { cls:'c-disc',  txt:'Zvýh. cena' },
       { cls:'c-total', txt:'Cena spolu' }
     ];
     headers.forEach(h => {
@@ -1117,7 +1118,6 @@ function renderPDF(){
         pp.textContent = it.period;
         tdItem.appendChild(pp);
       }
-
       tr.appendChild(tdItem);
 
       const tdSpec = document.createElement('td');
@@ -1151,14 +1151,9 @@ function renderPDF(){
 
       const tdDisc = document.createElement('td');
       tdDisc.className = 'c-disc';
-      if(it.priceMode === 'fixed'){
-        tdDisc.textContent = '';
-      } else {
-        tdDisc.textContent = it.discount > 0 ? formatMoney(it.discount) : '';
-      }
+      tdDisc.textContent = (it.priceMode === 'fixed') ? '' : (it.discount > 0 ? formatMoney(it.discount) : '');
       tr.appendChild(tdDisc);
 
-      // ALWAYS show item total
       const tdTotal = document.createElement('td');
       tdTotal.className = 'c-total';
       const strong = document.createElement('strong');
@@ -1168,6 +1163,7 @@ function renderPDF(){
       tr.appendChild(tdTotal);
 
       grandTotal += it.total;
+      if(it.qtyMode === 'max') grandHasMax = true;
 
       tbody.appendChild(tr);
     });
@@ -1189,7 +1185,8 @@ function renderPDF(){
     grand.className = 'pv-grand';
     const box = document.createElement('div');
     box.className = 'pv-grand-box';
-    box.innerHTML = `<div class="lbl">Spolu</div><div class="val">${formatMoney(grandTotal)}</div>`;
+    const val = (grandHasMax ? ('max. ' + formatMoney(grandTotal)) : formatMoney(grandTotal));
+    box.innerHTML = `<div class="lbl">Spolu</div><div class="val">${val}</div>`;
     grand.appendChild(box);
     pvGrandWrap.appendChild(grand);
   }
@@ -1215,123 +1212,6 @@ document.getElementById('btnReset').addEventListener('click', () => {
   applyImagesSetting();
   addSection();
 });
-
-/* ===============================
-   SECTION + ITEM LOGIC (same as previous)
-================================ */
-const tplSectionRef = document.getElementById('tplSection');
-const tplItemRef = document.getElementById('tplItem');
-const tplOrRef = document.getElementById('tplOrSep');
-
-function addSection(){
-  const node = tplSectionRef.content.cloneNode(true);
-  sectionsWrap.appendChild(node);
-  const secEl = sectionsWrap.lastElementChild;
-
-  const itemsWrap = secEl.querySelector('[data-items]');
-  secEl.querySelector('[data-del-section]').addEventListener('click', () => secEl.remove());
-  secEl.querySelector('[data-add-item]').addEventListener('click', () => addItem(itemsWrap));
-  addItem(itemsWrap);
-}
-
-function addItem(itemsWrap){
-  const node = tplItemRef.content.cloneNode(true);
-  itemsWrap.appendChild(node);
-  const itemEl = itemsWrap.lastElementChild;
-  wireItem(itemEl);
-  return itemEl;
-}
-
-/* wireItem uses tplOrRef via outer scope */
-function wireItem(itemEl){
-  const typeInput = itemEl.querySelector('[data-type]');
-  const imgInput = itemEl.querySelector('[data-img]');
-
-  if((itemEl.querySelector('[data-period]').value || '').trim() === ''){
-    itemEl.querySelector('[data-period]').value = 'za 3 mesiace';
-  }
-
-  typeInput.addEventListener('change', () => { applyPreset(itemEl); recalcItem(itemEl); });
-  typeInput.addEventListener('blur', () => { applyPreset(itemEl); recalcItem(itemEl); });
-
-  itemEl.querySelector('[data-price-mode]').addEventListener('change', () => togglePriceMode(itemEl));
-
-  itemEl.querySelectorAll('input, select, textarea').forEach(el => {
-    if(el.matches('[data-img]')) return;
-    el.addEventListener('input', () => recalcItem(itemEl));
-    el.addEventListener('change', () => recalcItem(itemEl));
-  });
-
-  imgInput.addEventListener('change', () => {
-    const f = imgInput.files && imgInput.files[0];
-    if(!f){ setThumb(itemEl, ''); return; }
-    const reader = new FileReader();
-    reader.onload = () => setThumb(itemEl, String(reader.result || ''));
-    reader.readAsDataURL(f);
-  });
-
-  itemEl.querySelector('[data-del-item]').addEventListener('click', () => {
-    const prev = itemEl.previousElementSibling;
-    const next = itemEl.nextElementSibling;
-    const grp = getItemGroupId(itemEl);
-
-    itemEl.remove();
-
-    if(prev && prev.matches('[data-or-sep]')){
-      const after = prev.nextElementSibling;
-      if(!after || !after.matches('[data-item]') || getItemGroupId(after) !== grp){
-        prev.remove();
-      }
-    }
-    if(next && next.matches('[data-or-sep]')){
-      const after = next.nextElementSibling;
-      if(!after || !after.matches('[data-item]')){
-        next.remove();
-      }
-    }
-  });
-
-  itemEl.querySelector('[data-add-or]').addEventListener('click', () => {
-    const itemsWrap = itemEl.parentElement;
-    const groupId = getItemGroupId(itemEl) || ('g' + Math.random().toString(16).slice(2));
-    itemEl.dataset.orGroup = groupId;
-
-    const maybeNext = itemEl.nextElementSibling;
-    if(!(maybeNext && maybeNext.matches('[data-or-sep]'))){
-      const sepNode = tplOrRef.content.cloneNode(true);
-      itemsWrap.insertBefore(sepNode, itemEl.nextElementSibling);
-    }
-
-    const newNode = tplItemRef.content.cloneNode(true);
-    const temp = document.createElement('div');
-    temp.appendChild(newNode);
-    const newItemEl = temp.firstElementChild;
-
-    newItemEl.dataset.orGroup = groupId;
-
-    const sepEl = itemEl.nextElementSibling;
-    itemsWrap.insertBefore(newItemEl, sepEl.nextElementSibling);
-
-    wireItem(newItemEl);
-
-    newItemEl.querySelector('[data-type]').value = itemEl.querySelector('[data-type]').value;
-    newItemEl.querySelector('[data-dim]').value = itemEl.querySelector('[data-dim]').value;
-    newItemEl.querySelector('[data-title]').value = itemEl.querySelector('[data-title]').value;
-    newItemEl.querySelector('[data-note]').value = itemEl.querySelector('[data-note]').value;
-    newItemEl.querySelector('[data-period]').value = itemEl.querySelector('[data-period]').value;
-
-    newItemEl.querySelector('[data-qty]').value = '';
-    newItemEl.querySelector('[data-price]').value = '';
-    newItemEl.querySelector('[data-discount]').value = '';
-    newItemEl.querySelector('[data-fixed-total]').value = '';
-
-    recalcItem(newItemEl);
-  });
-
-  setThumb(itemEl, '');
-  togglePriceMode(itemEl);
-  recalcItem(itemEl);
-}
 
 /* ===============================
    INIT
