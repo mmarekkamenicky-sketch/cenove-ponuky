@@ -26,11 +26,7 @@ body{
   margin:0 auto;
   padding:24px;
 }
-h1{
-  margin:0 0 14px 0;
-  font-size:28px;
-  font-weight:800;
-}
+h1{ margin:0 0 14px 0; font-size:28px; font-weight:800; }
 
 /* ===============================
    BUTTONS
@@ -50,23 +46,10 @@ h1{
   font-weight:800;
   cursor:pointer;
 }
-.btn.primary{
-  background:#000;
-  color:#fff;
-}
-.btn.secondary{
-  background:#f2f2f2;
-  border-color:#d0d0d0;
-}
-.btn.ghost{
-  background:#fff;
-  border-color:#d0d0d0;
-}
-.hint{
-  color:#666;
-  font-size:13px;
-  margin-top:4px;
-}
+.btn.primary{ background:#000; color:#fff; }
+.btn.secondary{ background:#f2f2f2; border-color:#d0d0d0; }
+.btn.ghost{ background:#fff; border-color:#d0d0d0; }
+.hint{ color:#666; font-size:13px; margin-top:4px; }
 
 /* ===============================
    FORM ELEMENTS
@@ -91,10 +74,7 @@ input, select, textarea{
 }
 input[type="number"]{ text-align:right; }
 textarea{ min-height:70px; resize:vertical; }
-.small{
-  font-size:12px;
-  color:#666;
-}
+.small{ font-size:12px; color:#666; }
 
 /* ===============================
    CARDS
@@ -105,20 +85,15 @@ textarea{ min-height:70px; resize:vertical; }
   padding:16px;
   margin-bottom:16px;
 }
-.card h2{
-  margin:0 0 12px 0;
-  font-size:18px;
-  font-weight:800;
-}
+.card h2{ margin:0 0 12px 0; font-size:18px; font-weight:800; }
 
 /* ===============================
    GRID HELPERS
 ================================ */
 .grid-2{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
 .grid-3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; }
-.grid-4{ display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:14px; }
 @media (max-width: 900px){
-  .grid-2,.grid-3,.grid-4{ grid-template-columns:1fr; }
+  .grid-2,.grid-3{ grid-template-columns:1fr; }
 }
 
 /* ===============================
@@ -130,7 +105,7 @@ textarea{ min-height:70px; resize:vertical; }
   gap:14px;
 }
 .section{
-  border:1px solid #ddd;
+  border:2px solid #000;
   border-radius:16px;
   padding:14px;
 }
@@ -146,7 +121,7 @@ textarea{ min-height:70px; resize:vertical; }
 }
 .section-title{
   display:grid;
-  grid-template-columns:1fr 200px;
+  grid-template-columns:1fr 220px;
   gap:12px;
   width:100%;
 }
@@ -173,7 +148,7 @@ textarea{ min-height:70px; resize:vertical; }
 }
 
 /* ===============================
-   ITEM EDIT
+   ITEMS
 ================================ */
 .items{
   display:flex;
@@ -193,9 +168,7 @@ textarea{ min-height:70px; resize:vertical; }
   gap:10px;
   margin-bottom:10px;
 }
-.item-head .left{
-  font-weight:800;
-}
+.item-head .left{ font-weight:800; }
 .item-foot{
   margin-top:10px;
   display:flex;
@@ -246,9 +219,7 @@ textarea{ min-height:70px; resize:vertical; }
   height:100%;
   object-fit:cover;
 }
-.note-box{
-  margin-top:10px;
-}
+.note-box{ margin-top:10px; }
 
 /* ===============================
    GLOBAL SETTINGS (end)
@@ -331,12 +302,12 @@ textarea{ min-height:70px; resize:vertical; }
   padding:8px 0;
   vertical-align:top;
 }
-.c-item{ width:34%; }
+.c-item{ width:36%; }
 .c-spec{ width:20%; }
 .c-qty{ width:10%; text-align:right; }
-.c-price{ width:12%; text-align:right; }
-.c-disc{ width:12%; text-align:right; }
-.c-total{ width:12%; text-align:right; }
+.c-price{ width:14%; text-align:right; }
+.c-disc{ width:14%; text-align:right; }
+.c-total{ width:16%; text-align:right; }
 
 .pv-item-title{ font-weight:700; }
 .pv-item-note{ font-size:10.5px; margin-top:2px; color:#111; }
@@ -360,6 +331,16 @@ textarea{ min-height:70px; resize:vertical; }
 .pv-grand-box .lbl{ color:#111; font-weight:700; }
 .pv-grand-box .val{ font-size:16px; font-weight:800; margin-top:2mm; }
 
+/* hide total column when toggled off */
+.pv-hide-total .c-total{ display:none; }
+.pv-hide-total th.c-total,
+.pv-hide-total td.c-total{ display:none; }
+.pv-hide-total .c-item{ width:40%; }
+.pv-hide-total .c-spec{ width:22%; }
+.pv-hide-total .c-qty{ width:12%; }
+.pv-hide-total .c-price{ width:13%; }
+.pv-hide-total .c-disc{ width:13%; }
+
 /* print rules */
 @media print{
   .wrap{ display:none !important; }
@@ -380,7 +361,7 @@ textarea{ min-height:70px; resize:vertical; }
     <button class="btn secondary" id="btnAddSection" type="button">+ Pridať sekciu</button>
     <button class="btn ghost" id="btnReset" type="button">Vymazať (demo)</button>
   </div>
-  <div class="hint">Tip: Typ produktu je voľný text s návrhmi. Pri obrázku sa náhľad vloží doľava do PDF (gutter) pod seba.</div>
+  <div class="hint">Sekcia = napr. „Komunikácia v čakárni pediatra“. V sekcii pridávaš položky (B1, letáky, statický plagát...). Potom pridáš ďalšiu sekciu.</div>
 
   <!-- Offer base -->
   <div class="card">
@@ -411,7 +392,7 @@ textarea{ min-height:70px; resize:vertical; }
             <option value="yes">Áno</option>
             <option value="no" selected>Nie</option>
           </select>
-          <div class="small">Ak je „Nie“, PDF skryje stĺpec „Cena spolu“ aj finálny súčet.</div>
+          <div class="small">Ak je „Nie“, PDF úplne skryje stĺpec „Cena spolu“ aj finálny súčet.</div>
         </div>
         <div>
           <label>&nbsp;</label>
@@ -443,6 +424,7 @@ textarea{ min-height:70px; resize:vertical; }
 <datalist id="dlTypes">
   <option value="B1 plagát"></option>
   <option value="Umiestnenie letákov do stojanov IDS"></option>
+  <option value="Statický plagát"></option>
   <option value="A3 plagát"></option>
   <option value="Digitálny panel"></option>
   <option value="Letákový stojan"></option>
@@ -463,7 +445,7 @@ textarea{ min-height:70px; resize:vertical; }
       </div>
 
       <div class="section-actions">
-        <button class="btn secondary" type="button" data-add-item>+ Položka</button>
+        <button class="btn secondary" type="button" data-add-item>+ Pridať položku (do tejto sekcie)</button>
         <button class="icon-btn" type="button" title="Odstrániť sekciu" data-del-section>🗑️</button>
       </div>
     </div>
@@ -475,7 +457,7 @@ textarea{ min-height:70px; resize:vertical; }
 <template id="tplItem">
   <div class="item" data-item>
     <div class="item-head">
-      <div class="left">Položka</div>
+      <div class="left">Položka v tejto sekcii</div>
       <button class="icon-btn" type="button" title="Odstrániť položku" data-del-item>🗑️</button>
     </div>
 
@@ -497,7 +479,7 @@ textarea{ min-height:70px; resize:vertical; }
         <input data-title placeholder="napr. B1 plagát">
       </div>
       <div>
-        <label>Doplnenie / poznámka (voliteľné)</label>
+        <label>Doplnenie / poznámka (riadok pod názvom)</label>
         <input data-note placeholder="napr. + umiestnenie letákov do uška">
       </div>
     </div>
@@ -567,20 +549,21 @@ function formatMoney(val){ return moneyFmt.format(val); }
 function presetFromType(rawType){
   const t = (rawType || '').trim().toLowerCase();
 
-  // B1 exact match style (can be expanded later)
   if(t === 'b1 plagát' || t === 'b1 plakat' || t === 'b1'){
     return { dim:'70 × 100 cm', title:'B1 plagát', note:'+ umiestnenie letákov do uška' };
   }
-
   if(t.includes('stojan') || t.includes('umiestnenie letákov')){
     return { dim:'', title:'Umiestnenie letákov do stojanov IDS', note:'' };
+  }
+  if(t.includes('statický') || t.includes('staticky')){
+    return { dim:'', title:'Statický plagát', note:'' };
   }
 
   return { dim:'', title:'', note:'' };
 }
 
 /* ===============================
-   DOM REFS
+   DOM
 ================================ */
 const sectionsWrap = document.getElementById('sections');
 const tplSection = document.getElementById('tplSection');
@@ -620,7 +603,7 @@ function setThumb(itemEl, dataUrl){
   const img = document.createElement('img');
   img.src = dataUrl;
   thumb.appendChild(img);
-  itemEl.dataset.img = dataUrl; // store for PDF gutter
+  itemEl.dataset.img = dataUrl;
 }
 
 function wireItem(itemEl){
@@ -630,32 +613,24 @@ function wireItem(itemEl){
   const noteEl = itemEl.querySelector('[data-note]');
   const imgInput = itemEl.querySelector('[data-img]');
 
-  // preset on type blur/change
   function applyPreset(){
     const p = presetFromType(typeInput.value);
 
-    // dimension: always set if preset has it, otherwise keep current (unless empty)
     if(p.dim) dimEl.value = p.dim;
-
-    // title default only if empty
     if(!titleEl.value && p.title) titleEl.value = p.title;
-
-    // note default only if empty
     if(!noteEl.value && p.note) noteEl.value = p.note;
   }
 
   typeInput.addEventListener('change', () => { applyPreset(); recalcItem(itemEl); });
   typeInput.addEventListener('blur', () => { applyPreset(); recalcItem(itemEl); });
 
-  // recalc on inputs
   itemEl.querySelectorAll('input, select, textarea').forEach(el => {
     if(el.matches('[data-img]')) return;
     el.addEventListener('input', () => recalcItem(itemEl));
     el.addEventListener('change', () => recalcItem(itemEl));
   });
 
-  // image upload
-  imgInput.addEventListener('change', async () => {
+  imgInput.addEventListener('change', () => {
     const f = imgInput.files && imgInput.files[0];
     if(!f){ setThumb(itemEl, ''); return; }
     const reader = new FileReader();
@@ -663,12 +638,8 @@ function wireItem(itemEl){
     reader.readAsDataURL(f);
   });
 
-  // delete
-  itemEl.querySelector('[data-del-item]').addEventListener('click', () => {
-    itemEl.remove();
-  });
+  itemEl.querySelector('[data-del-item]').addEventListener('click', () => itemEl.remove());
 
-  // init
   setThumb(itemEl, '');
   recalcItem(itemEl);
 }
@@ -689,11 +660,10 @@ function addSection(){
   const secEl = sectionsWrap.lastElementChild;
 
   const itemsWrap = secEl.querySelector('[data-items]');
-
   secEl.querySelector('[data-add-item]').addEventListener('click', () => addItem(itemsWrap));
   secEl.querySelector('[data-del-section]').addEventListener('click', () => secEl.remove());
 
-  // default: one empty item
+  // start with one empty item inside this section
   addItem(itemsWrap);
 }
 
@@ -729,11 +699,7 @@ function collectState(){
 
       const img = itemEl.dataset.img || '';
 
-      items.push({
-        type, dim, title, note, extra,
-        price, discount, qtyMode, qty, total, period,
-        img
-      });
+      items.push({ type, dim, title, note, extra, price, discount, qtyMode, qty, total, period, img });
     });
 
     sections.push({ secName, secPeriod, items });
@@ -745,32 +711,33 @@ function collectState(){
 function renderPDF(){
   const state = collectState();
 
-  // header
   document.getElementById('pvTitle').textContent = state.title;
   document.getElementById('pvSubtitle').textContent = state.subtitle;
 
-  // gutter images (stack all images from all items)
+  // gutter images
   const pvGutter = document.getElementById('pvGutter');
   pvGutter.innerHTML = '';
-  state.sections.forEach(s => {
-    s.items.forEach(it => {
-      if(!it.img) return;
-      const box = document.createElement('div');
-      box.className = 'pv-img';
-      const img = document.createElement('img');
-      img.src = it.img;
-      box.appendChild(img);
-      pvGutter.appendChild(box);
-    });
-  });
+  state.sections.forEach(s => s.items.forEach(it => {
+    if(!it.img) return;
+    const box = document.createElement('div');
+    box.className = 'pv-img';
+    const img = document.createElement('img');
+    img.src = it.img;
+    box.appendChild(img);
+    pvGutter.appendChild(box);
+  }));
 
-  // sections
   const pvSections = document.getElementById('pvSections');
   pvSections.innerHTML = '';
 
+  // handle total-column on/off
+  const printPage = document.querySelector('.print-page');
+  if(!state.showTotals) printPage.classList.add('pv-hide-total');
+  else printPage.classList.remove('pv-hide-total');
+
   let grandTotal = 0;
 
-  state.sections.forEach((s, idx) => {
+  state.sections.forEach(s => {
     const secDiv = document.createElement('div');
     secDiv.className = 'pv-section';
 
@@ -790,7 +757,6 @@ function renderPDF(){
     const thead = document.createElement('thead');
     const trh = document.createElement('tr');
 
-    // Headers always include, but total column will be visually empty if showTotals=no
     const headers = [
       { cls:'c-item', txt:'Položka' },
       { cls:'c-spec', txt:'Špecifikácia' },
@@ -813,7 +779,6 @@ function renderPDF(){
     s.items.forEach(it => {
       const tr = document.createElement('tr');
 
-      // item
       const tdItem = document.createElement('td');
       tdItem.className = 'c-item';
 
@@ -828,14 +793,12 @@ function renderPDF(){
         nn.textContent = it.note;
         tdItem.appendChild(nn);
       }
-
       if(it.extra){
         const ex = document.createElement('div');
         ex.className = 'pv-item-extra';
         ex.textContent = it.extra;
         tdItem.appendChild(ex);
       }
-
       const pp = document.createElement('div');
       pp.className = 'pv-item-period';
       pp.textContent = it.period || 'za 3 mesiace';
@@ -843,19 +806,16 @@ function renderPDF(){
 
       tr.appendChild(tdItem);
 
-      // spec
       const tdSpec = document.createElement('td');
       tdSpec.className = 'c-spec';
       tdSpec.textContent = it.dim || '';
       tr.appendChild(tdSpec);
 
-      // qty
       const tdQty = document.createElement('td');
       tdQty.className = 'c-qty';
       tdQty.textContent = it.qtyMode === 'max' ? ('max. ' + (it.qty || 0)) : String(it.qty || 0);
       tr.appendChild(tdQty);
 
-      // price column (old price shown when discount present)
       const tdPrice = document.createElement('td');
       tdPrice.className = 'c-price';
       if(it.discount > 0 && it.price > 0){
@@ -870,21 +830,17 @@ function renderPDF(){
       }
       tr.appendChild(tdPrice);
 
-      // discount
       const tdDisc = document.createElement('td');
       tdDisc.className = 'c-disc';
       tdDisc.textContent = it.discount > 0 ? formatMoney(it.discount) : '';
       tr.appendChild(tdDisc);
 
-      // total
       const tdTotal = document.createElement('td');
       tdTotal.className = 'c-total';
       if(state.showTotals){
         const strong = document.createElement('strong');
         strong.textContent = it.qtyMode === 'max' ? ('max. ' + formatMoney(it.total)) : formatMoney(it.total);
         tdTotal.appendChild(strong);
-
-        // add to grand
         grandTotal += it.total;
       } else {
         tdTotal.textContent = '';
@@ -897,7 +853,6 @@ function renderPDF(){
     table.appendChild(tbody);
     secDiv.appendChild(table);
 
-    // divider between sections
     const divLine = document.createElement('div');
     divLine.className = 'pv-divider';
     secDiv.appendChild(divLine);
@@ -905,7 +860,6 @@ function renderPDF(){
     pvSections.appendChild(secDiv);
   });
 
-  // grand total at end
   const pvGrandWrap = document.getElementById('pvGrandWrap');
   pvGrandWrap.innerHTML = '';
   if(state.showTotals){
@@ -922,8 +876,8 @@ function renderPDF(){
 /* ===============================
    BUTTONS
 ================================ */
-document.getElementById('btnAddSection').addEventListener('click', () => addSection());
-document.getElementById('btnAddSectionBottom').addEventListener('click', () => addSection());
+document.getElementById('btnAddSection').addEventListener('click', addSection);
+document.getElementById('btnAddSectionBottom').addEventListener('click', addSection);
 
 document.getElementById('btnPrint').addEventListener('click', () => {
   renderPDF();
