@@ -26,21 +26,11 @@ body{
   margin:0 auto;
   padding:24px;
 }
+h1{ margin:0 0 16px 0; font-size:28px; font-weight:800; }
 
 /* ===============================
-   HEADER / EDIT UI
+   BUTTONS
 ================================ */
-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:24px;
-}
-h1{
-  margin:0;
-  font-size:28px;
-  font-weight:800;
-}
 .btn{
   border-radius:999px;
   padding:10px 16px;
@@ -53,266 +43,237 @@ h1{
   background:#000;
   color:#fff;
 }
+.btn.secondary{
+  background:#f4f4f4;
+}
+.btn + .btn{ margin-left:8px; }
 
 /* ===============================
-   EDIT CARD (zat. len symbolicky)
+   FORM ELEMENTS
 ================================ */
-.card{
-  border:1px solid #ddd;
-  border-radius:16px;
-  padding:16px;
-  margin-bottom:40px;
-}
 label{
   font-size:12px;
   text-transform:uppercase;
   letter-spacing:.08em;
   font-weight:700;
+  display:block;
+  margin-bottom:4px;
 }
-input{
+input, select{
   width:100%;
   padding:10px 12px;
   border-radius:12px;
   border:1px solid #ccc;
-  margin-top:6px;
+  font-family:inherit;
 }
+input[type="number"]{ text-align:right; }
 
 /* ===============================
-   PRINT / PDF VIEW
+   CARDS
 ================================ */
-.print-view{ display:none; }
-
-.print-page{
-  width:210mm;
-  min-height:297mm;
-  margin:0 auto;
-  background:#fff;
-  border:2px solid #000;
-  padding:18mm 14mm;
-  position:relative;
+.card{
+  border:1px solid #ddd;
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:24px;
 }
-
-/* rezerva pre obrázky */
-.pv-gutter{
-  position:absolute;
-  left:14mm;
-  top:18mm;
-  bottom:18mm;
-  width:42mm;
-}
-
-.pv-content{
-  margin-left:48mm;
-}
-
-/* ===============================
-   PDF HEADER (hore vľavo)
-================================ */
-.pv-header{
-  margin-bottom:18mm;
-}
-.pv-title{
-  font-size:34px;
-  font-weight:800;
-}
-.pv-subtitle{
-  font-size:16px;
-  margin-top:4px;
-  font-weight:500;
-}
-
-/* ===============================
-   SECTION
-================================ */
-.pv-section{
-  margin-top:14mm;
-}
-
-.pv-section-name{
-  font-size:13px;
+.card h2{
+  margin:0 0 12px 0;
+  font-size:18px;
   font-weight:700;
 }
 
-.pv-section-period{
-  margin-top:2mm;
-  font-size:12px;
-  font-weight:500;
-}
+/* ===============================
+   GRID HELPERS
+================================ */
+.grid-2{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.grid-3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+.grid-4{ display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:16px; }
 
 /* ===============================
-   TABLE
+   PRODUCT ROW
 ================================ */
-.pv-table{
-  margin-top:6mm;
-  width:100%;
-  border-collapse:collapse;
-  table-layout:fixed;
-  font-size:11.5px;
+.product{
+  border:1px solid #ddd;
+  border-radius:14px;
+  padding:12px;
+  margin-top:12px;
 }
-.pv-table th{
-  text-align:left;
-  font-size:10px;
-  text-transform:uppercase;
-  letter-spacing:.08em;
-  border-bottom:1px solid #000;
-  padding-bottom:6px;
+.product h3{
+  margin:0 0 12px 0;
+  font-size:15px;
 }
-.pv-table td{
-  padding:8px 0;
-  vertical-align:top;
-}
-
-.c-item{ width:34%; }
-.c-spec{ width:20%; }
-.c-qty,
-.c-price,
-.c-disc,
-.c-total{
-  width:11%;
+.price-block{
   text-align:right;
 }
-
-.pv-item-title{ font-weight:700; }
-.pv-item-note{
-  font-size:10.5px;
-  margin-top:2px;
+.price-main{
+  font-weight:700;
+  font-size:16px;
+}
+.price-old{
+  font-size:12px;
+  text-decoration:line-through;
+  color:#777;
+}
+.price-period{
+  font-size:11px;
+  color:#777;
 }
 
 /* ===============================
-   DIVIDER
+   PRINT VIEW (zat. len demo)
 ================================ */
-.pv-divider{
-  margin-top:10mm;
-  border-top:1px solid #000;
-}
-
-/* ===============================
-   PRINT RULES
-================================ */
+.print-view{ display:none; }
 @media print{
-  header,
-  .card{ display:none !important; }
-
-  .print-view{ display:block; }
-
   body{ margin:0; }
-  @page{ margin:0; }
+  .wrap{ display:none; }
+  .print-view{ display:block; }
 }
 </style>
 </head>
 
 <body>
+
 <div class="wrap">
 
-<header>
-  <h1>Cenová ponuka – editor</h1>
-  <button class="btn primary" onclick="window.print()">Export do PDF</button>
-</header>
+<h1>Cenová ponuka – formulár</h1>
 
-<!-- EDIT UI (zat. len symbolicky) -->
+<!-- ===============================
+     ZÁKLAD PONUKY
+================================ -->
 <div class="card">
-  <label>Názov ponuky</label>
-  <input value="Cenová ponuka">
+  <h2>Základ ponuky</h2>
+  <div class="grid-2">
+    <div>
+      <label>Názov ponuky</label>
+      <input value="Cenová ponuka">
+    </div>
+    <div>
+      <label>Podnadpis</label>
+      <input placeholder="napr. laluna">
+    </div>
+  </div>
 </div>
 
 <!-- ===============================
-     PRINT VIEW (PDF)
+     SEKČIA 1
 ================================ -->
-<section class="print-view">
-  <div class="print-page">
+<div class="card">
+  <h2>Sekcia</h2>
 
-    <div class="pv-gutter"></div>
-
-    <div class="pv-content">
-
-      <!-- HLAVIČKA -->
-      <div class="pv-header">
-        <div class="pv-title">Cenová ponuka</div>
-        <div class="pv-subtitle">laluna</div>
-      </div>
-
-      <!-- SEKČIA 1 -->
-      <div class="pv-section">
-        <div class="pv-section-name">
-          Komunikácia v čakárni praktického lekára
-        </div>
-        <div class="pv-section-period">
-          Q4 2025
-        </div>
-
-        <table class="pv-table">
-          <thead>
-            <tr>
-              <th class="c-item">Položka</th>
-              <th class="c-spec">Špecifikácia</th>
-              <th class="c-qty">Počet</th>
-              <th class="c-price">Cena</th>
-              <th class="c-disc">Zvýh. cena</th>
-              <th class="c-total">Cena spolu</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="c-item">
-                <div class="pv-item-title">B1 plagát</div>
-                <div class="pv-item-note">+ umiestnenie letáku do uška</div>
-              </td>
-              <td class="c-spec">70 × 100 cm</td>
-              <td class="c-qty">200</td>
-              <td class="c-price">1,50 €</td>
-              <td class="c-disc">1,31 €</td>
-              <td class="c-total"><strong>2 500,00 €</strong></td>
-            </tr>
-
-            <tr>
-              <td class="c-item">
-                <div class="pv-item-title">Umiestnenie letákov</div>
-                <div class="pv-item-note">v stojanoch IDS</div>
-              </td>
-              <td class="c-spec"></td>
-              <td class="c-qty">200</td>
-              <td class="c-price">1,50 €</td>
-              <td class="c-disc">1,31 €</td>
-              <td class="c-total"><strong>2 500,00 €</strong></td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div class="pv-divider"></div>
-      </div>
-
-      <!-- SEKČIA 2 -->
-      <div class="pv-section">
-        <div class="pv-section-name">
-          Komunikácia v čakárni pediatra
-        </div>
-        <div class="pv-section-period">
-          Q4 2025
-        </div>
-
-        <table class="pv-table">
-          <tbody>
-            <tr>
-              <td class="c-item">
-                <div class="pv-item-title">Umiestnenie letákov</div>
-                <div class="pv-item-note">v stojanoch IDS</div>
-              </td>
-              <td class="c-spec"></td>
-              <td class="c-qty">200</td>
-              <td class="c-price">1,50 €</td>
-              <td class="c-disc">1,31 €</td>
-              <td class="c-total"><strong>2 500,00 €</strong></td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div class="pv-divider"></div>
-      </div>
-
+  <div class="grid-2">
+    <div>
+      <label>Názov sekcie</label>
+      <input value="Komunikácia v čakárni pediatra">
+    </div>
+    <div>
+      <label>Obdobie</label>
+      <input value="Q4 2026">
     </div>
   </div>
-</section>
+
+  <!-- ===============================
+       PRODUKT 1
+  ================================ -->
+  <div class="product">
+    <h3>Produkt</h3>
+
+    <div class="grid-2">
+      <div>
+        <label>Typ produktu</label>
+        <select id="productType" onchange="applyPreset()">
+          <option value="">— vyber —</option>
+          <option value="B1">B1 plagát</option>
+          <option value="LETAKY">Umiestnenie letákov do stojanov IDS</option>
+        </select>
+      </div>
+      <div>
+        <label>Rozmer</label>
+        <input id="dimension" placeholder="—">
+      </div>
+    </div>
+
+    <div class="grid-4" style="margin-top:12px;">
+      <div>
+        <label>Cena za kus</label>
+        <input id="price" type="number" step="0.01" oninput="calcTotal()">
+      </div>
+      <div>
+        <label>Zvýhodnená cena</label>
+        <input id="discount" type="number" step="0.01" oninput="calcTotal()">
+      </div>
+      <div>
+        <label>Počet</label>
+        <input id="qty" type="number" value="1" oninput="calcTotal()">
+      </div>
+      <div class="price-block">
+        <div class="price-old" id="oldPrice"></div>
+        <div class="price-main" id="totalPrice">0,00 €</div>
+        <div class="price-period">
+          <input id="period" value="za 3 mesiace" style="border:none;padding:0;text-align:right;">
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:12px;">
+      <label>Zobraziť cenu spolu?</label>
+      <select onchange="toggleTotal(this.value)">
+        <option value="yes">Áno</option>
+        <option value="no">Nie</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- ===============================
+       PRIDAŤ ĎALŠÍ PRODUKT?
+  ================================ -->
+  <div style="margin-top:16px;">
+    <label>Chceme pridať produkt do tejto sekcie?</label>
+    <button class="btn secondary" disabled>Áno (ďalší krok)</button>
+    <button class="btn secondary" disabled>Nie</button>
+  </div>
 
 </div>
+
+<button class="btn primary" onclick="window.print()">Export do PDF</button>
+
+</div>
+
+<!-- ===============================
+     SCRIPT
+================================ -->
+<script>
+function applyPreset(){
+  const type = document.getElementById('productType').value;
+  const dim = document.getElementById('dimension');
+
+  if(type === 'B1'){
+    dim.value = '70 × 100 cm';
+  } else {
+    dim.value = '';
+  }
+}
+
+function calcTotal(){
+  const price = Number(document.getElementById('price').value || 0);
+  const discount = Number(document.getElementById('discount').value || 0);
+  const qty = Number(document.getElementById('qty').value || 0);
+
+  const unit = discount > 0 ? discount : price;
+  const total = unit * qty;
+
+  document.getElementById('totalPrice').innerText =
+    total.toLocaleString('sk-SK', { style:'currency', currency:'EUR' });
+
+  document.getElementById('oldPrice').innerText =
+    discount > 0 ? (price.toLocaleString('sk-SK', { style:'currency', currency:'EUR' })) : '';
+}
+
+function toggleTotal(val){
+  document.getElementById('totalPrice').style.display =
+    val === 'no' ? 'none' : 'block';
+}
+</script>
+
 </body>
 </html>
