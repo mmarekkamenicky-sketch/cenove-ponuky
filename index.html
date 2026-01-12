@@ -92,8 +92,9 @@ textarea{ min-height:70px; resize:vertical; }
 ================================ */
 .grid-2{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
 .grid-3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; }
+.grid-4{ display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:14px; }
 @media (max-width: 900px){
-  .grid-2,.grid-3{ grid-template-columns:1fr; }
+  .grid-2,.grid-3,.grid-4{ grid-template-columns:1fr; }
 }
 
 /* ===============================
@@ -146,6 +147,15 @@ textarea{ min-height:70px; resize:vertical; }
   align-items:center;
   justify-content:center;
 }
+.section-bottom{
+  margin-top:12px;
+  padding-top:12px;
+  border-top:1px dashed #ddd;
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  flex-wrap:wrap;
+}
 
 /* ===============================
    ITEMS
@@ -169,6 +179,12 @@ textarea{ min-height:70px; resize:vertical; }
   margin-bottom:10px;
 }
 .item-head .left{ font-weight:800; }
+.item-head .right{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  flex-wrap:wrap;
+}
 .item-foot{
   margin-top:10px;
   display:flex;
@@ -196,6 +212,21 @@ textarea{ min-height:70px; resize:vertical; }
   font-size:11px;
   color:#777;
 }
+
+/* OR separator */
+.or-sep{
+  text-align:center;
+  font-weight:900;
+  letter-spacing:.12em;
+  color:#111;
+  background:#f3f3f3;
+  border:1px solid #ddd;
+  border-radius:999px;
+  padding:8px 10px;
+  margin:2px 0;
+}
+
+/* Image upload */
 .preview-row{
   margin-top:10px;
   display:flex;
@@ -220,6 +251,9 @@ textarea{ min-height:70px; resize:vertical; }
   object-fit:cover;
 }
 .note-box{ margin-top:10px; }
+
+/* hide image controls when "bez obrázkov" */
+.images-off .img-controls{ display:none !important; }
 
 /* ===============================
    GLOBAL SETTINGS (end)
@@ -332,7 +366,6 @@ textarea{ min-height:70px; resize:vertical; }
 .pv-grand-box .val{ font-size:16px; font-weight:800; margin-top:2mm; }
 
 /* hide total column when toggled off */
-.pv-hide-total .c-total{ display:none; }
 .pv-hide-total th.c-total,
 .pv-hide-total td.c-total{ display:none; }
 .pv-hide-total .c-item{ width:40%; }
@@ -340,6 +373,19 @@ textarea{ min-height:70px; resize:vertical; }
 .pv-hide-total .c-qty{ width:12%; }
 .pv-hide-total .c-price{ width:13%; }
 .pv-hide-total .c-disc{ width:13%; }
+
+/* full-width mode (no images) */
+.pv-no-images .pv-gutter{ display:none; }
+.pv-no-images .pv-content{ margin-left:0; }
+
+/* OR row in PDF */
+.pv-or-row td{
+  padding:10px 0;
+  text-align:center !important;
+  font-weight:900;
+  letter-spacing:.12em;
+  color:#111;
+}
 
 /* print rules */
 @media print{
@@ -353,7 +399,7 @@ textarea{ min-height:70px; resize:vertical; }
 
 <body>
 
-<div class="wrap">
+<div class="wrap" id="appRoot">
   <h1>Cenová ponuka – formulár</h1>
 
   <div class="toolbar">
@@ -361,11 +407,12 @@ textarea{ min-height:70px; resize:vertical; }
     <button class="btn secondary" id="btnAddSection" type="button">+ Pridať sekciu</button>
     <button class="btn ghost" id="btnReset" type="button">Vymazať (demo)</button>
   </div>
-  <div class="hint">Sekcia = napr. „Komunikácia v čakárni pediatra“. V sekcii pridávaš položky (B1, letáky, statický plagát...). Potom pridáš ďalšiu sekciu.</div>
+  <div class="hint">Nové: „+ ALEBO“ vloží alternatívu pod položku (napr. 200 ks ALEBO 150 ks). Ceny: môžeš zvoliť fixnú cenu spolu (napr. tlač).</div>
 
   <!-- Offer base -->
   <div class="card">
     <h2>Základ ponuky</h2>
+
     <div class="grid-2">
       <div>
         <label for="offerTitle">Názov ponuky</label>
@@ -375,6 +422,18 @@ textarea{ min-height:70px; resize:vertical; }
         <label for="offerSubtitle">Obdobie alebo podnadpis</label>
         <input id="offerSubtitle" placeholder="napr. Q4 2026 • názov produktu • poznámka" value="">
       </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:12px;">
+      <div>
+        <label for="pdfImages">PDF obrázky</label>
+        <select id="pdfImages">
+          <option value="with" selected>S obrázkami</option>
+          <option value="without">Bez obrázkov (celá šírka)</option>
+        </select>
+        <div class="small">Keď dáš „bez obrázkov“, schová sa upload a PDF bude plná šírka.</div>
+      </div>
+      <div></div>
     </div>
   </div>
 
@@ -405,7 +464,7 @@ textarea{ min-height:70px; resize:vertical; }
 
 <!-- PRINT VIEW -->
 <section class="print-view" id="printView">
-  <div class="print-page">
+  <div class="print-page" id="printPage">
     <div class="pv-gutter" id="pvGutter"></div>
 
     <div class="pv-content">
@@ -420,23 +479,48 @@ textarea{ min-height:70px; resize:vertical; }
   </div>
 </section>
 
-<!-- Suggestions list for product type -->
-<datalist id="dlTypes">
-  <option value="B1 plagát"></option>
-  <option value="Umiestnenie letákov do stojanov IDS"></option>
-  <option value="Statický plagát"></option>
-  <option value="A3 plagát"></option>
-  <option value="Digitálny panel"></option>
-  <option value="Letákový stojan"></option>
+<!-- DATALISTS -->
+<datalist id="dlSectionNames">
+  <option value="Komunikácia v čakárni pediatra"></option>
+  <option value="Komunikácia v čakárni gynekológa"></option>
+  <option value="Komunikácia v čakárni praktického lekára"></option>
+  <option value="Komunikácia v čakárni urológa"></option>
+  <option value="Osobná návšteva lekára"></option>
+  <option value="Komunikácia v lekárni"></option>
+  <option value="Komunikácia v čakárni gastroenterológa"></option>
+  <option value="Návšteva gynekológa"></option>
+  <option value="Návšteva praktického lekára"></option>
+  <option value="Návšteva odbornej verejnosti"></option>
 </datalist>
 
+<datalist id="dlTypes">
+  <option value="A3 plagát"></option>
+  <option value="B1 plagát"></option>
+  <option value="Statický plagát"></option>
+  <option value="Umiestnenie letákov"></option>
+  <option value="Odovzdanie materiálov"></option>
+  <option value="A3 plagát s umiestnením letáku pod plagátom"></option>
+  <option value="B1 plagát s umiestnením letáku pod plagátom"></option>
+  <option value="Umiestnenie materiálov do čakárni praktických lekárov"></option>
+  <option value="Umiestnenie materiálov do čakárni pediatrov"></option>
+  <option value="Umiestnenie materiálov do čakárni gynekológov"></option>
+  <option value="Umiestnenie statického plagátu v sieti IDS"></option>
+  <option value="Umiestnenie statického plagátu mimo siete IDS"></option>
+  <option value="Osobne odovzdanie materiálov do ambulancii (v sieti IDS)"></option>
+  <option value="Osobne odovzdanie materiálov do ambulancii (mimo siete IDS)"></option>
+  <option value="Tlač materiálov"></option>
+  <option value="Odovzdanie materiálov do ambulancií"></option>
+</datalist>
+
+<!-- TEMPLATES -->
 <template id="tplSection">
   <div class="section" data-section>
     <div class="section-head">
       <div class="section-title">
         <div>
           <label>Názov sekcie</label>
-          <input data-sec-name placeholder="napr. Komunikácia v čakárni pediatra" value="">
+          <input data-sec-name list="dlSectionNames" placeholder="napr. Komunikácia v čakárni pediatra" value="">
+          <div class="small">Môžeš vybrať zo zoznamu alebo napísať vlastný názov.</div>
         </div>
         <div>
           <label>Obdobie (Q)</label>
@@ -445,27 +529,38 @@ textarea{ min-height:70px; resize:vertical; }
       </div>
 
       <div class="section-actions">
-        <button class="btn secondary" type="button" data-add-item>+ Pridať položku (do tejto sekcie)</button>
         <button class="icon-btn" type="button" title="Odstrániť sekciu" data-del-section>🗑️</button>
       </div>
     </div>
 
     <div class="items" data-items></div>
+
+    <!-- + položka úplne dole -->
+    <div class="section-bottom">
+      <button class="btn secondary" type="button" data-add-item>+ Pridať položku</button>
+    </div>
   </div>
+</template>
+
+<template id="tplOrSep">
+  <div class="or-sep" data-or-sep>A L E B O</div>
 </template>
 
 <template id="tplItem">
   <div class="item" data-item>
     <div class="item-head">
       <div class="left">Položka v tejto sekcii</div>
-      <button class="icon-btn" type="button" title="Odstrániť položku" data-del-item>🗑️</button>
+      <div class="right">
+        <button class="btn ghost" type="button" data-add-or>+ ALEBO</button>
+        <button class="icon-btn" type="button" title="Odstrániť položku" data-del-item>🗑️</button>
+      </div>
     </div>
 
     <div class="grid-2">
       <div>
         <label>Typ produktu (voľný text)</label>
         <input data-type list="dlTypes" placeholder="napr. B1 plagát">
-        <div class="small">Tip: keď napíšeš presne „B1 plagát“, automaticky nastavíme rozmer 70 × 100 cm.</div>
+        <div class="small">Návrhy sú v zozname, ale môžeš napísať čokoľvek.</div>
       </div>
       <div>
         <label>Rozmer</label>
@@ -484,14 +579,14 @@ textarea{ min-height:70px; resize:vertical; }
       </div>
     </div>
 
-    <div class="grid-3" style="margin-top:12px;">
+    <div class="grid-2" style="margin-top:12px;">
       <div>
-        <label>Cena za kus</label>
-        <input data-price type="number" min="0" step="0.01" placeholder="0.00">
-      </div>
-      <div>
-        <label>Zvýhodnená cena za kus</label>
-        <input data-discount type="number" min="0" step="0.01" placeholder="0.00">
+        <label>Cenový režim</label>
+        <select data-price-mode>
+          <option value="unit" selected>Cena za kus × počet</option>
+          <option value="fixed">Fixná cena spolu</option>
+        </select>
+        <div class="small">Pre tlač a balíčky je „fixná cena spolu“ (napr. 250 ks za 480 €).</div>
       </div>
       <div>
         <label>Počet</label>
@@ -505,20 +600,41 @@ textarea{ min-height:70px; resize:vertical; }
       </div>
     </div>
 
+    <!-- unit pricing -->
+    <div class="grid-2" style="margin-top:12px;" data-unit-wrap>
+      <div>
+        <label>Cena za kus</label>
+        <input data-price type="number" min="0" step="0.01" placeholder="0.00">
+      </div>
+      <div>
+        <label>Zvýhodnená cena za kus</label>
+        <input data-discount type="number" min="0" step="0.01" placeholder="0.00">
+      </div>
+    </div>
+
+    <!-- fixed total -->
+    <div class="grid-2" style="margin-top:12px; display:none;" data-fixed-wrap>
+      <div>
+        <label>Fixná cena spolu</label>
+        <input data-fixed-total type="number" min="0" step="0.01" placeholder="0.00">
+      </div>
+      <div></div>
+    </div>
+
     <div class="item-foot">
       <div style="min-width:260px;">
         <label>Obdobie pod cenou</label>
-        <input data-period value="za 3 mesiace">
+        <input data-period>
       </div>
 
       <div class="price-block">
         <div class="price-old" data-old></div>
         <div class="price-main" data-total>0,00 €</div>
-        <div class="price-period">(počítané z jednotkovej ceny)</div>
+        <div class="price-period">(výpočet podľa zvoleného režimu)</div>
       </div>
     </div>
 
-    <div class="preview-row">
+    <div class="preview-row img-controls">
       <div>
         <label>Obrázok (voliteľné)</label>
         <input data-img type="file" accept="image/*">
@@ -545,53 +661,70 @@ const moneyFmt = new Intl.NumberFormat('sk-SK', { style:'currency', currency:'EU
 function n(v){ const x = Number(v); return Number.isFinite(x) ? x : 0; }
 function formatMoney(val){ return moneyFmt.format(val); }
 
-/* Presets */
+/* ===============================
+   PRESETS: DIMENSION + PERIOD DEFAULT
+================================ */
+function normalize(s){ return (s || '').trim().toLowerCase(); }
+
 function presetFromType(rawType){
-  const t = (rawType || '').trim().toLowerCase();
+  const t = normalize(rawType);
 
+  // dimensions
+  if(t === 'a3 plagát' || t === 'a3 plakat'){
+    return { dim:'42 × 29,7 cm', title:'A3 plagát', period:'za 3 mesiace' };
+  }
   if(t === 'b1 plagát' || t === 'b1 plakat' || t === 'b1'){
-    return { dim:'70 × 100 cm', title:'B1 plagát', note:'+ umiestnenie letákov do uška' };
+    return { dim:'70 × 100 cm', title:'B1 plagát', period:'za 3 mesiace' };
   }
-  if(t.includes('stojan') || t.includes('umiestnenie letákov')){
-    return { dim:'', title:'Umiestnenie letákov do stojanov IDS', note:'' };
-  }
-  if(t.includes('statický') || t.includes('staticky')){
-    return { dim:'', title:'Statický plagát', note:'' };
+  if(t === 'statický plagát' || t === 'staticky plakat'){
+    // podľa tvojho pravidla: statický plagát -> za jednu návštevu
+    return { dim:'42 × 29,7 cm', title:'Statický plagát', period:'za jednu návštevu' };
   }
 
-  return { dim:'', title:'', note:'' };
+  if(t === 'a3 plagát s umiestnením letáku pod plagátom' || t === 'a3 plakat s umiestnením letáku pod plagátom'){
+    return { dim:'42 × 29,7 cm', title:'A3 plagát s umiestnením letáku pod plagátom', period:'za 3 mesiace' };
+  }
+  if(t === 'b1 plagát s umiestnením letáku pod plagátom' || t === 'b1 plakat s umiestnením letáku pod plagátom'){
+    return { dim:'70 × 100 cm', title:'B1 plagát s umiestnením letáku pod plagátom', period:'za 3 mesiace' };
+  }
+
+  // period rules: "za jednu návštevu"
+  const oneVisitList = [
+    'umiestnenie materiálov do čakárni praktických lekárov',
+    'umiestnenie materiálov do čakárni pediatrov',
+    'umiestnenie materiálov do čakárni gynekológov',
+    'umiestnenie statického plagátu v sieti ids',
+    'umiestnenie statického plagátu mimo siete ids',
+    'osobne odovzdanie materiálov do ambulancii (v sieti ids)',
+    'osobne odovzdanie materiálov do ambulancii (mimo siete ids)',
+  ];
+  if(oneVisitList.includes(t)){
+    return { dim:'', title:rawType || '', period:'za jednu návštevu' };
+  }
+
+  // "Tlač materiálov" -> period empty + suggest fixed pricing
+  if(t === 'tlač materiálov' || t === 'tlac materialov'){
+    return { dim:'', title:'Tlač materiálov', period:'' , suggestMode:'fixed' };
+  }
+
+  // default
+  return { dim:'', title:rawType || '', period:'za 3 mesiace' };
 }
 
 /* ===============================
    DOM
 ================================ */
+const appRoot = document.getElementById('appRoot');
 const sectionsWrap = document.getElementById('sections');
 const tplSection = document.getElementById('tplSection');
 const tplItem = document.getElementById('tplItem');
+const tplOrSep = document.getElementById('tplOrSep');
+
+const pdfImagesSel = document.getElementById('pdfImages');
 
 /* ===============================
    ITEM LOGIC
 ================================ */
-function recalcItem(itemEl){
-  const price = n(itemEl.querySelector('[data-price]').value);
-  const discount = n(itemEl.querySelector('[data-discount]').value);
-  const qty = n(itemEl.querySelector('[data-qty]').value);
-  const qtyMode = itemEl.querySelector('[data-qtymode]').value;
-
-  const unit = discount > 0 ? discount : price;
-  const total = unit * qty;
-
-  const totalEl = itemEl.querySelector('[data-total]');
-  totalEl.textContent = (qtyMode === 'max') ? ('max. ' + formatMoney(total)) : formatMoney(total);
-
-  const oldEl = itemEl.querySelector('[data-old]');
-  if(discount > 0 && price > 0){
-    oldEl.textContent = formatMoney(price);
-  } else {
-    oldEl.textContent = '';
-  }
-}
-
 function setThumb(itemEl, dataUrl){
   const thumb = itemEl.querySelector('[data-thumb]');
   thumb.innerHTML = '';
@@ -606,30 +739,108 @@ function setThumb(itemEl, dataUrl){
   itemEl.dataset.img = dataUrl;
 }
 
-function wireItem(itemEl){
-  const typeInput = itemEl.querySelector('[data-type]');
-  const dimEl = itemEl.querySelector('[data-dim]');
-  const titleEl = itemEl.querySelector('[data-title]');
-  const noteEl = itemEl.querySelector('[data-note]');
-  const imgInput = itemEl.querySelector('[data-img]');
+function getItemGroupId(itemEl){
+  return itemEl.dataset.orGroup || '';
+}
 
-  function applyPreset(){
-    const p = presetFromType(typeInput.value);
+function recalcItem(itemEl){
+  const priceMode = itemEl.querySelector('[data-price-mode]').value;
+  const qtyMode = itemEl.querySelector('[data-qtymode]').value;
 
-    if(p.dim) dimEl.value = p.dim;
-    if(!titleEl.value && p.title) titleEl.value = p.title;
-    if(!noteEl.value && p.note) noteEl.value = p.note;
+  const qty = n(itemEl.querySelector('[data-qty]').value);
+
+  const unitPrice = n(itemEl.querySelector('[data-price]').value);
+  const disc = n(itemEl.querySelector('[data-discount]').value);
+  const fixedTotal = n(itemEl.querySelector('[data-fixed-total]').value);
+
+  let total = 0;
+  let oldText = '';
+
+  if(priceMode === 'fixed'){
+    total = fixedTotal;
+    oldText = ''; // pri fixnej cene neukazujeme "pôvodnú"
+  } else {
+    const unit = disc > 0 ? disc : unitPrice;
+    total = unit * qty;
+    if(disc > 0 && unitPrice > 0) oldText = formatMoney(unitPrice);
   }
 
-  typeInput.addEventListener('change', () => { applyPreset(); recalcItem(itemEl); });
-  typeInput.addEventListener('blur', () => { applyPreset(); recalcItem(itemEl); });
+  const totalEl = itemEl.querySelector('[data-total]');
+  const oldEl = itemEl.querySelector('[data-old]');
 
+  oldEl.textContent = oldText;
+
+  const shown = (qtyMode === 'max') ? ('max. ' + formatMoney(total)) : formatMoney(total);
+  totalEl.textContent = shown;
+}
+
+function applyPreset(itemEl){
+  const typeEl = itemEl.querySelector('[data-type]');
+  const dimEl = itemEl.querySelector('[data-dim]');
+  const titleEl = itemEl.querySelector('[data-title]');
+  const periodEl = itemEl.querySelector('[data-period]');
+  const modeEl = itemEl.querySelector('[data-price-mode]');
+
+  const p = presetFromType(typeEl.value);
+
+  // dimension: set if preset has
+  if(p.dim) dimEl.value = p.dim;
+
+  // title: fill only if empty
+  if(!titleEl.value && p.title) titleEl.value = p.title;
+
+  // period: if empty OR currently one of our defaults, overwrite with new preset
+  const curPer = (periodEl.value ?? '').trim();
+  const defaults = new Set(['za 3 mesiace','za jednu návštevu','']);
+  if(curPer === '' || defaults.has(curPer)){
+    periodEl.value = p.period ?? 'za 3 mesiace';
+  }
+
+  // suggest fixed mode for print
+  if(p.suggestMode === 'fixed'){
+    modeEl.value = 'fixed';
+    togglePriceMode(itemEl);
+  }
+}
+
+function togglePriceMode(itemEl){
+  const mode = itemEl.querySelector('[data-price-mode]').value;
+  const unitWrap = itemEl.querySelector('[data-unit-wrap]');
+  const fixedWrap = itemEl.querySelector('[data-fixed-wrap]');
+  if(mode === 'fixed'){
+    unitWrap.style.display = 'none';
+    fixedWrap.style.display = 'grid';
+  } else {
+    unitWrap.style.display = 'grid';
+    fixedWrap.style.display = 'none';
+  }
+  recalcItem(itemEl);
+}
+
+function wireItem(itemEl){
+  const typeInput = itemEl.querySelector('[data-type]');
+  const imgInput = itemEl.querySelector('[data-img]');
+
+  // defaults on init
+  if(itemEl.querySelector('[data-period]').value === '') {
+    itemEl.querySelector('[data-period]').value = 'za 3 mesiace';
+  }
+
+  // preset on type
+  typeInput.addEventListener('change', () => { applyPreset(itemEl); recalcItem(itemEl); });
+  typeInput.addEventListener('blur', () => { applyPreset(itemEl); recalcItem(itemEl); });
+
+  // price mode
+  itemEl.querySelector('[data-price-mode]').addEventListener('change', () => togglePriceMode(itemEl));
+
+  // recalc on everything except image file
   itemEl.querySelectorAll('input, select, textarea').forEach(el => {
     if(el.matches('[data-img]')) return;
     el.addEventListener('input', () => recalcItem(itemEl));
     el.addEventListener('change', () => recalcItem(itemEl));
   });
 
+  // image upload
   imgInput.addEventListener('change', () => {
     const f = imgInput.files && imgInput.files[0];
     if(!f){ setThumb(itemEl, ''); return; }
@@ -638,9 +849,79 @@ function wireItem(itemEl){
     reader.readAsDataURL(f);
   });
 
-  itemEl.querySelector('[data-del-item]').addEventListener('click', () => itemEl.remove());
+  // delete item (also remove OR separator if needed)
+  itemEl.querySelector('[data-del-item]').addEventListener('click', () => {
+    const prev = itemEl.previousElementSibling;
+    const next = itemEl.nextElementSibling;
+    const grp = getItemGroupId(itemEl);
 
+    itemEl.remove();
+
+    // Clean orphan OR separators around
+    if(prev && prev.matches('[data-or-sep]')){
+      // if there's no next item with same group, remove the separator
+      const after = prev.nextElementSibling;
+      if(!after || !after.matches('[data-item]') || getItemGroupId(after) !== grp){
+        prev.remove();
+      }
+    }
+    if(next && next.matches('[data-or-sep]')){
+      // separator cannot be last
+      const after = next.nextElementSibling;
+      if(!after || !after.matches('[data-item]')){
+        next.remove();
+      }
+    }
+  });
+
+  // add OR
+  itemEl.querySelector('[data-add-or]').addEventListener('click', () => {
+    const itemsWrap = itemEl.parentElement;
+    const groupId = getItemGroupId(itemEl) || ('g' + Math.random().toString(16).slice(2));
+
+    // ensure this item has group
+    itemEl.dataset.orGroup = groupId;
+
+    // insert OR separator after this item (if not already)
+    const maybeNext = itemEl.nextElementSibling;
+    if(!(maybeNext && maybeNext.matches('[data-or-sep]'))){
+      const sepNode = tplOrSep.content.cloneNode(true);
+      itemsWrap.insertBefore(sepNode, itemEl.nextElementSibling);
+    }
+
+    // insert new alternative item after the separator
+    const newNode = tplItem.content.cloneNode(true);
+    const temp = document.createElement('div');
+    temp.appendChild(newNode);
+    const newItemEl = temp.firstElementChild;
+
+    newItemEl.dataset.orGroup = groupId;
+
+    // place after separator
+    const sepEl = itemEl.nextElementSibling; // after possible insertion
+    itemsWrap.insertBefore(newItemEl, sepEl.nextElementSibling);
+
+    // wire it
+    wireItem(newItemEl);
+
+    // small help: copy product type/title/note but clear qty/price
+    newItemEl.querySelector('[data-type]').value = itemEl.querySelector('[data-type]').value;
+    newItemEl.querySelector('[data-dim]').value = itemEl.querySelector('[data-dim]').value;
+    newItemEl.querySelector('[data-title]').value = itemEl.querySelector('[data-title]').value;
+    newItemEl.querySelector('[data-note]').value = itemEl.querySelector('[data-note]').value;
+    newItemEl.querySelector('[data-period]').value = itemEl.querySelector('[data-period]').value;
+
+    newItemEl.querySelector('[data-qty]').value = '';
+    newItemEl.querySelector('[data-price]').value = '';
+    newItemEl.querySelector('[data-discount]').value = '';
+    newItemEl.querySelector('[data-fixed-total]').value = '';
+
+    recalcItem(newItemEl);
+  });
+
+  // init
   setThumb(itemEl, '');
+  togglePriceMode(itemEl);
   recalcItem(itemEl);
 }
 
@@ -649,6 +930,7 @@ function addItem(itemsWrap){
   itemsWrap.appendChild(node);
   const itemEl = itemsWrap.lastElementChild;
   wireItem(itemEl);
+  return itemEl;
 }
 
 /* ===============================
@@ -660,12 +942,29 @@ function addSection(){
   const secEl = sectionsWrap.lastElementChild;
 
   const itemsWrap = secEl.querySelector('[data-items]');
-  secEl.querySelector('[data-add-item]').addEventListener('click', () => addItem(itemsWrap));
+
+  // section delete
   secEl.querySelector('[data-del-section]').addEventListener('click', () => secEl.remove());
+
+  // add item button at bottom
+  secEl.querySelector('[data-add-item]').addEventListener('click', () => addItem(itemsWrap));
 
   // start with one empty item inside this section
   addItem(itemsWrap);
 }
+
+/* ===============================
+   GLOBAL: Images on/off in UI
+================================ */
+function applyImagesSetting(){
+  const mode = pdfImagesSel.value; // with / without
+  if(mode === 'without'){
+    appRoot.classList.add('images-off');
+  } else {
+    appRoot.classList.remove('images-off');
+  }
+}
+pdfImagesSel.addEventListener('change', applyImagesSetting);
 
 /* ===============================
    PDF RENDER
@@ -674,38 +973,62 @@ function collectState(){
   const title = document.getElementById('offerTitle').value.trim() || 'Cenová ponuka';
   const subtitle = document.getElementById('offerSubtitle').value.trim();
   const showTotals = document.getElementById('pdfShowTotals').value === 'yes';
+  const imagesMode = document.getElementById('pdfImages').value; // with/without
 
   const sections = [];
   sectionsWrap.querySelectorAll('[data-section]').forEach(secEl => {
     const secName = secEl.querySelector('[data-sec-name]').value.trim();
     const secPeriod = secEl.querySelector('[data-sec-period]').value.trim();
+
+    // items list includes OR separators; we will keep them as markers in array
     const items = [];
+    const container = secEl.querySelector('[data-items]');
+    Array.from(container.children).forEach(child => {
+      if(child.matches && child.matches('[data-or-sep]')){
+        // OR marker: attach to previous group's id if possible
+        items.push({ __or:true });
+        return;
+      }
+      if(!(child.matches && child.matches('[data-item]'))) return;
 
-    secEl.querySelectorAll('[data-item]').forEach(itemEl => {
-      const type = itemEl.querySelector('[data-type]').value.trim();
-      const dim = itemEl.querySelector('[data-dim]').value.trim();
-      const title = itemEl.querySelector('[data-title]').value.trim();
-      const note = itemEl.querySelector('[data-note]').value.trim();
-      const extra = itemEl.querySelector('[data-extra]').value.trim();
+      const type = child.querySelector('[data-type]').value.trim();
+      const dim = child.querySelector('[data-dim]').value.trim();
+      const title = child.querySelector('[data-title]').value.trim();
+      const note = child.querySelector('[data-note]').value.trim();
+      const extra = child.querySelector('[data-extra]').value.trim();
 
-      const price = n(itemEl.querySelector('[data-price]').value);
-      const discount = n(itemEl.querySelector('[data-discount]').value);
-      const qtyMode = itemEl.querySelector('[data-qtymode]').value;
-      const qty = n(itemEl.querySelector('[data-qty]').value);
-      const period = itemEl.querySelector('[data-period]').value.trim() || 'za 3 mesiace';
+      const priceMode = child.querySelector('[data-price-mode]').value;
+      const qtyMode = child.querySelector('[data-qtymode]').value;
+      const qty = n(child.querySelector('[data-qty]').value);
 
-      const unit = (discount > 0) ? discount : price;
-      const total = unit * qty;
+      const price = n(child.querySelector('[data-price]').value);
+      const discount = n(child.querySelector('[data-discount]').value);
+      const fixedTotal = n(child.querySelector('[data-fixed-total]').value);
 
-      const img = itemEl.dataset.img || '';
+      const period = (child.querySelector('[data-period]').value || '').trim();
 
-      items.push({ type, dim, title, note, extra, price, discount, qtyMode, qty, total, period, img });
+      let total = 0;
+      if(priceMode === 'fixed'){
+        total = fixedTotal;
+      } else {
+        const unit = (discount > 0) ? discount : price;
+        total = unit * qty;
+      }
+
+      const img = (imagesMode === 'with') ? (child.dataset.img || '') : '';
+
+      items.push({
+        type, dim, title, note, extra, period,
+        priceMode, qtyMode, qty,
+        price, discount, fixedTotal,
+        total
+      , img });
     });
 
     sections.push({ secName, secPeriod, items });
   });
 
-  return { title, subtitle, showTotals, sections };
+  return { title, subtitle, showTotals, imagesMode, sections };
 }
 
 function renderPDF(){
@@ -714,26 +1037,37 @@ function renderPDF(){
   document.getElementById('pvTitle').textContent = state.title;
   document.getElementById('pvSubtitle').textContent = state.subtitle;
 
-  // gutter images
+  const printPage = document.getElementById('printPage');
+
+  // images mode
+  if(state.imagesMode === 'without'){
+    printPage.classList.add('pv-no-images');
+  } else {
+    printPage.classList.remove('pv-no-images');
+  }
+
+  // totals column on/off
+  if(!state.showTotals) printPage.classList.add('pv-hide-total');
+  else printPage.classList.remove('pv-hide-total');
+
+  // gutter images (stack all item images)
   const pvGutter = document.getElementById('pvGutter');
   pvGutter.innerHTML = '';
-  state.sections.forEach(s => s.items.forEach(it => {
-    if(!it.img) return;
-    const box = document.createElement('div');
-    box.className = 'pv-img';
-    const img = document.createElement('img');
-    img.src = it.img;
-    box.appendChild(img);
-    pvGutter.appendChild(box);
-  }));
+  if(state.imagesMode === 'with'){
+    state.sections.forEach(s => s.items.forEach(it => {
+      if(it.__or) return;
+      if(!it.img) return;
+      const box = document.createElement('div');
+      box.className = 'pv-img';
+      const img = document.createElement('img');
+      img.src = it.img;
+      box.appendChild(img);
+      pvGutter.appendChild(box);
+    }));
+  }
 
   const pvSections = document.getElementById('pvSections');
   pvSections.innerHTML = '';
-
-  // handle total-column on/off
-  const printPage = document.querySelector('.print-page');
-  if(!state.showTotals) printPage.classList.add('pv-hide-total');
-  else printPage.classList.remove('pv-hide-total');
 
   let grandTotal = 0;
 
@@ -777,6 +1111,20 @@ function renderPDF(){
     const tbody = document.createElement('tbody');
 
     s.items.forEach(it => {
+      if(it.__or){
+        // OR row (spans visible columns)
+        const trOr = document.createElement('tr');
+        trOr.className = 'pv-or-row';
+
+        const td = document.createElement('td');
+        // colSpan depends on totals enabled; but we can safely span 6 and CSS hides total col if off
+        td.colSpan = 6;
+        td.textContent = 'ALEBO';
+        trOr.appendChild(td);
+        tbody.appendChild(trOr);
+        return;
+      }
+
       const tr = document.createElement('tr');
 
       const tdItem = document.createElement('td');
@@ -799,10 +1147,12 @@ function renderPDF(){
         ex.textContent = it.extra;
         tdItem.appendChild(ex);
       }
-      const pp = document.createElement('div');
-      pp.className = 'pv-item-period';
-      pp.textContent = it.period || 'za 3 mesiace';
-      tdItem.appendChild(pp);
+      if(it.period){
+        const pp = document.createElement('div');
+        pp.className = 'pv-item-period';
+        pp.textContent = it.period;
+        tdItem.appendChild(pp);
+      }
 
       tr.appendChild(tdItem);
 
@@ -816,30 +1166,45 @@ function renderPDF(){
       tdQty.textContent = it.qtyMode === 'max' ? ('max. ' + (it.qty || 0)) : String(it.qty || 0);
       tr.appendChild(tdQty);
 
+      // price column:
+      // - unit mode: show old (strikethrough) when discount exists, otherwise show price/ks
+      // - fixed mode: show fixed total here (so "250 ks za 480 €" makes sense)
       const tdPrice = document.createElement('td');
       tdPrice.className = 'c-price';
-      if(it.discount > 0 && it.price > 0){
-        const old = document.createElement('div');
-        old.style.textDecoration = 'line-through';
-        old.style.color = '#777';
-        old.style.fontSize = '10.5px';
-        old.textContent = formatMoney(it.price);
-        tdPrice.appendChild(old);
+
+      if(it.priceMode === 'fixed'){
+        tdPrice.textContent = it.fixedTotal > 0 ? formatMoney(it.fixedTotal) : '';
       } else {
-        tdPrice.textContent = it.price > 0 ? formatMoney(it.price) : '';
+        if(it.discount > 0 && it.price > 0){
+          const old = document.createElement('div');
+          old.style.textDecoration = 'line-through';
+          old.style.color = '#777';
+          old.style.fontSize = '10.5px';
+          old.textContent = formatMoney(it.price);
+          tdPrice.appendChild(old);
+        } else {
+          tdPrice.textContent = it.price > 0 ? formatMoney(it.price) : '';
+        }
       }
       tr.appendChild(tdPrice);
 
+      // discount column:
       const tdDisc = document.createElement('td');
       tdDisc.className = 'c-disc';
-      tdDisc.textContent = it.discount > 0 ? formatMoney(it.discount) : '';
+      if(it.priceMode === 'fixed'){
+        tdDisc.textContent = '';
+      } else {
+        tdDisc.textContent = it.discount > 0 ? formatMoney(it.discount) : '';
+      }
       tr.appendChild(tdDisc);
 
+      // total column:
       const tdTotal = document.createElement('td');
       tdTotal.className = 'c-total';
       if(state.showTotals){
         const strong = document.createElement('strong');
-        strong.textContent = it.qtyMode === 'max' ? ('max. ' + formatMoney(it.total)) : formatMoney(it.total);
+        const shown = it.qtyMode === 'max' ? ('max. ' + formatMoney(it.total)) : formatMoney(it.total);
+        strong.textContent = shown;
         tdTotal.appendChild(strong);
         grandTotal += it.total;
       } else {
@@ -888,13 +1253,16 @@ document.getElementById('btnReset').addEventListener('click', () => {
   document.getElementById('offerTitle').value = 'Cenová ponuka';
   document.getElementById('offerSubtitle').value = '';
   document.getElementById('pdfShowTotals').value = 'no';
+  document.getElementById('pdfImages').value = 'with';
   sectionsWrap.innerHTML = '';
+  applyImagesSetting();
   addSection();
 });
 
 /* ===============================
    INIT
 ================================ */
+applyImagesSetting();
 addSection();
 </script>
 
