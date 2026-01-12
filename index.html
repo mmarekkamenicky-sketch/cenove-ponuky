@@ -300,8 +300,6 @@ textarea{ min-height:70px; resize:vertical; }
   <option value="Návšteva praktického lekára"></option>
   <option value="Návšteva odbornej verejnosti"></option>
   <option value="Digitálny panel v čakárni lekára"></option>
-  <option value="Digitálny panel v čakárni pediatra"></option>
-  <option value="Digitálny panel v čakárni gynekológa"></option>
 </datalist>
 
 <datalist id="dlTypes">
@@ -366,6 +364,45 @@ textarea{ min-height:70px; resize:vertical; }
 
         <div class="dp-card">
           <div class="dp-row-head">
+            <div class="dp-title">Spot v digitálnom paneli – nacenenie (max. 3 stĺpce v PDF)</div>
+          </div>
+
+          <table class="dp-table">
+            <thead>
+              <tr>
+                <th style="width:18%;">Počet sekúnd</th>
+                <th style="width:22%;" class="r">Cena (bežná)</th>
+                <th style="width:22%;" class="r">Zvýhodnená cena</th>
+                <th style="width:18%;" class="c">Zobraziť v PDF</th>
+                <th style="width:20%;" class="r"></th>
+              </tr>
+            </thead>
+            <tbody data-dp-spots></tbody>
+          </table>
+
+          <div class="small" style="margin-top:8px;">
+            Tip: ak nechceš ponúknuť 20s alebo 30s, nechaj cenu prázdnu alebo vypni „Zobraziť v PDF“.
+          </div>
+        </div>
+
+        <div class="dp-card">
+          <div class="dp-row-head">
+            <div class="dp-title">Špecializácie + mesiace</div>
+            <div class="dp-inline-actions">
+              <button class="dp-mini-btn" type="button" data-dp-add-aud>+ Pridať špecializáciu</button>
+            </div>
+          </div>
+
+          <div data-dp-auds></div>
+
+          <div class="small" style="margin-top:10px;">
+            Ak je v mesiaci „Akcia = áno“ a zvýhodnená cena je vyplnená, použije sa zvýhodnená cena.
+          </div>
+        </div>
+
+        <!-- IMAGES moved to end -->
+        <div class="dp-card img-controls">
+          <div class="dp-row-head">
             <div class="dp-title">Obrázky sekcie (voliteľné) <span class="badge">idú do PDF naľavo</span></div>
           </div>
 
@@ -388,48 +425,7 @@ textarea{ min-height:70px; resize:vertical; }
           </div>
 
           <div class="small" style="margin-top:8px;">
-            Tip: ak máš iba 1–2 fotky, nechaj zvyšok prázdny. Formát sa prispôsobí.
-          </div>
-        </div>
-
-        <div class="dp-card">
-          <div class="dp-row-head">
-            <div class="dp-title">Varianty spotu (sekundy + cena)</div>
-            <div class="dp-inline-actions">
-              <button class="dp-mini-btn" type="button" data-dp-add-spot>+ Pridať variant</button>
-            </div>
-          </div>
-
-          <table class="dp-table">
-            <thead>
-              <tr>
-                <th style="width:18%;">Počet sekúnd</th>
-                <th style="width:22%;" class="r">Cena (bežná)</th>
-                <th style="width:22%;" class="r">Akciová cena</th>
-                <th style="width:18%;" class="c">Zobraziť</th>
-                <th style="width:20%;" class="r">Akcia</th>
-              </tr>
-            </thead>
-            <tbody data-dp-spots></tbody>
-          </table>
-
-          <div class="small" style="margin-top:8px;">
-            Akciová cena sa použije len v mesiacoch, kde dáš „Akcia = áno“.
-          </div>
-        </div>
-
-        <div class="dp-card">
-          <div class="dp-row-head">
-            <div class="dp-title">Cieľové skupiny + mesiace</div>
-            <div class="dp-inline-actions">
-              <button class="dp-mini-btn" type="button" data-dp-add-aud>+ Pridať skupinu</button>
-            </div>
-          </div>
-
-          <div data-dp-auds></div>
-
-          <div class="small" style="margin-top:10px;">
-            Mesiace zadávaš len tie, ktoré chceš mať v ponuke (napr. Január–Marec).
+            Tip: ak máš iba 1–2 fotky, nechaj zvyšok prázdny.
           </div>
         </div>
 
@@ -549,7 +545,7 @@ textarea{ min-height:70px; resize:vertical; }
 <!-- DIGITAL PANEL subtemplates -->
 <template id="tplDpSpot">
   <tr data-dp-spot>
-    <td><input data-dp-seconds type="number" min="1" step="1" value="15"></td>
+    <td><input data-dp-seconds type="number" min="1" step="1" value="15" readonly></td>
     <td class="r"><input data-dp-price type="number" min="0" step="0.01" placeholder="0.00"></td>
     <td class="r"><input data-dp-promo type="number" min="0" step="0.01" placeholder="0.00"></td>
     <td class="c">
@@ -558,7 +554,7 @@ textarea{ min-height:70px; resize:vertical; }
         <option value="no">nie</option>
       </select>
     </td>
-    <td class="r"><button class="dp-mini-btn danger" type="button" data-dp-del-spot>Vymazať</button></td>
+    <td class="r"></td>
   </tr>
 </template>
 
@@ -566,13 +562,17 @@ textarea{ min-height:70px; resize:vertical; }
   <div class="dp-card" data-dp-aud>
     <div class="dp-row-head">
       <div class="dp-title">
-        Skupina:
-        <input data-dp-aud-name style="display:inline-block; width:340px; max-width:100%; margin-left:8px;"
+        Špecializácia:
+        <input data-dp-aud-name style="display:inline-block; width:360px; max-width:100%; margin-left:8px;"
                placeholder="napr. Praktický lekár" value="Praktický lekár">
       </div>
       <div class="dp-inline-actions">
+        <div style="display:flex; gap:8px; align-items:center;">
+          <input data-dp-panels-all type="number" min="0" step="1" placeholder="Počet" style="width:120px;">
+          <button class="dp-mini-btn" type="button" data-dp-apply-panels>Použiť rovnaký počet všade</button>
+        </div>
         <button class="dp-mini-btn" type="button" data-dp-add-month>+ Pridať mesiac</button>
-        <button class="dp-mini-btn danger" type="button" data-dp-del-aud>Odstrániť skupinu</button>
+        <button class="dp-mini-btn danger" type="button" data-dp-del-aud>Odstrániť</button>
       </div>
     </div>
 
@@ -890,33 +890,19 @@ function wireDpImage(secEl, inputSel, thumbSel, dsKey){
     reader.readAsDataURL(f);
   });
 
-  // init
   setThumbIn(th, secEl.dataset[dsKey] || '');
 }
 
-function addDpSpot(secEl, preset){
+function addDpSpotFixed(secEl, seconds){
   const spotsBody = secEl.querySelector('[data-dp-spots]');
   const node = tplDpSpot.content.cloneNode(true);
   spotsBody.appendChild(node);
   const tr = spotsBody.lastElementChild;
 
-  const sec = tr.querySelector('[data-dp-seconds]');
-  const pr  = tr.querySelector('[data-dp-price]');
-  const pro = tr.querySelector('[data-dp-promo]');
-  const en  = tr.querySelector('[data-dp-enabled]');
+  tr.querySelector('[data-dp-seconds]').value = String(seconds);
 
-  if(preset){
-    if(preset.seconds != null) sec.value = preset.seconds;
-    if(preset.price != null) pr.value = preset.price;
-    if(preset.promo != null) pro.value = preset.promo;
-  }
-
-  tr.querySelector('[data-dp-del-spot]').addEventListener('click', () => tr.remove());
-
-  [sec, pr, pro, en].forEach(x => {
-    x.addEventListener('input', () => {});
-    x.addEventListener('change', () => {});
-  });
+  // auto behavior: if price empty => can still keep enabled, but PDF filter will hide it
+  // (no extra wiring needed)
 }
 
 function addDpMonthRow(monthsTbody, preset){
@@ -933,6 +919,12 @@ function addDpMonthRow(monthsTbody, preset){
   tr.querySelector('[data-dp-del-month]').addEventListener('click', () => tr.remove());
 }
 
+function applyPanelsToAll(audEl){
+  const inp = audEl.querySelector('[data-dp-panels-all]');
+  const v = n(inp.value);
+  audEl.querySelectorAll('[data-dp-month] [data-dp-panels]').forEach(x => { x.value = String(v); });
+}
+
 function addDpAudience(secEl, presetName){
   const audsWrap = secEl.querySelector('[data-dp-auds]');
   const node = tplDpAud.content.cloneNode(true);
@@ -945,37 +937,36 @@ function addDpAudience(secEl, presetName){
 
   audEl.querySelector('[data-dp-add-month]').addEventListener('click', () => addDpMonthRow(monthsTbody));
   audEl.querySelector('[data-dp-del-aud]').addEventListener('click', () => audEl.remove());
+  audEl.querySelector('[data-dp-apply-panels]').addEventListener('click', () => applyPanelsToAll(audEl));
 
-  // default 3 mesiace (ako v ukážke)
-  addDpMonthRow(monthsTbody, { month:'Január', panels:0, promo:false });
-  addDpMonthRow(monthsTbody, { month:'Február', panels:0, promo:false });
-  addDpMonthRow(monthsTbody, { month:'Marec',  panels:0, promo:false });
+  // default 3 months (like your sample)
+  addDpMonthRow(monthsTbody, { month:'Apríl', panels:0, promo:false });
+  addDpMonthRow(monthsTbody, { month:'Máj',  panels:0, promo:false });
+  addDpMonthRow(monthsTbody, { month:'Jún',  panels:0, promo:false });
 }
 
 function initDigitalSection(secEl){
-  // images
-  wireDpImage(secEl, '[data-dp-img1]', '[data-dp-thumb1]', 'dpImg1');
-  wireDpImage(secEl, '[data-dp-img2]', '[data-dp-thumb2]', 'dpImg2');
-  wireDpImage(secEl, '[data-dp-img3]', '[data-dp-thumb3]', 'dpImg3');
-
-  // default spots (15/20/30)
-  if(!secEl.querySelector('[data-dp-spots]').children.length){
-    addDpSpot(secEl, { seconds:15, price:11.50, promo:'' });
-    addDpSpot(secEl, { seconds:20, price:15.00, promo:'' });
-    addDpSpot(secEl, { seconds:30, price:19.50, promo:'' });
+  // fixed spots: 15/20/30
+  const spotsBody = secEl.querySelector('[data-dp-spots]');
+  if(!spotsBody.children.length){
+    addDpSpotFixed(secEl, 15);
+    addDpSpotFixed(secEl, 20);
+    addDpSpotFixed(secEl, 30);
   }
 
-  secEl.querySelector('[data-dp-add-spot]').addEventListener('click', () => addDpSpot(secEl));
-
-  // audiences default (3)
+  // audiences default 3
   const audsWrap = secEl.querySelector('[data-dp-auds]');
   if(!audsWrap.children.length){
     addDpAudience(secEl, 'Praktický lekár');
     addDpAudience(secEl, 'Pediater');
     addDpAudience(secEl, 'Gynekológ');
   }
+  secEl.querySelector('[data-dp-add-aud]').addEventListener('click', () => addDpAudience(secEl, 'Nová špecializácia'));
 
-  secEl.querySelector('[data-dp-add-aud]').addEventListener('click', () => addDpAudience(secEl, 'Nová skupina'));
+  // images (moved to end, but still wired)
+  wireDpImage(secEl, '[data-dp-img1]', '[data-dp-thumb1]', 'dpImg1');
+  wireDpImage(secEl, '[data-dp-img2]', '[data-dp-thumb2]', 'dpImg2');
+  wireDpImage(secEl, '[data-dp-img3]', '[data-dp-thumb3]', 'dpImg3');
 }
 
 /* ========= SECTION logic ========= */
@@ -987,6 +978,16 @@ function toggleSectionKind(secEl){
   if(kind === 'digital'){
     std.style.display = 'none';
     dp.style.display = 'block';
+
+    // auto-name
+    const nm = secEl.querySelector('[data-sec-name]');
+    const cur = (nm.value || '').trim();
+    if(cur === '' || cur.toLowerCase().includes('komunikácia') || cur.toLowerCase().includes('návšteva')){
+      nm.value = 'Digitálny panel v čakárni lekára';
+    } else if(cur === ''){
+      nm.value = 'Digitálny panel v čakárni lekára';
+    }
+
     initDigitalSection(secEl);
   } else {
     std.style.display = 'block';
@@ -1002,13 +1003,9 @@ function addSection(){
   const itemsWrap = secEl.querySelector('[data-items]');
   secEl.querySelector('[data-del-section]').addEventListener('click', () => secEl.remove());
   secEl.querySelector('[data-add-item]').addEventListener('click', () => addItem(itemsWrap));
-
-  // kind switch
   secEl.querySelector('[data-sec-kind]').addEventListener('change', () => toggleSectionKind(secEl));
 
-  // default one standard item
   addItem(itemsWrap);
-
   toggleSectionKind(secEl);
 }
 
@@ -1059,26 +1056,22 @@ function collectStandardItems(secEl, imagesMode){
 }
 
 function collectDigital(secEl, imagesMode){
-  // images (section level)
   const imgs = (imagesMode === 'with') ? [
     secEl.dataset.dpImg1 || '',
     secEl.dataset.dpImg2 || '',
     secEl.dataset.dpImg3 || ''
   ].filter(Boolean) : [];
 
-  // spots
   const spots = [];
   secEl.querySelectorAll('[data-dp-spot]').forEach(tr => {
     const seconds = n(tr.querySelector('[data-dp-seconds]').value);
     const price   = n(tr.querySelector('[data-dp-price]').value);
     const promo   = n(tr.querySelector('[data-dp-promo]').value);
     const enabled = tr.querySelector('[data-dp-enabled]').value === 'yes';
-    if(seconds > 0){
-      spots.push({ seconds, price, promo, enabled });
-    }
+
+    spots.push({ seconds, price, promo, enabled });
   });
 
-  // audiences + months
   const auds = [];
   secEl.querySelectorAll('[data-dp-aud]').forEach(audEl => {
     const name = (audEl.querySelector('[data-dp-aud-name]').value || '').trim();
@@ -1087,12 +1080,7 @@ function collectDigital(secEl, imagesMode){
       const month = tr.querySelector('[data-dp-month-name]').value;
       const panels = n(tr.querySelector('[data-dp-panels]').value);
       const usePromo = tr.querySelector('[data-dp-use-promo]').value === 'yes';
-      if(month && (panels || usePromo)){
-        months.push({ month, panels, usePromo });
-      } else if(month){
-        // allow month with 0 panels (keeps row in PDF if user wants)
-        months.push({ month, panels, usePromo });
-      }
+      if(month) months.push({ month, panels, usePromo });
     });
     auds.push({ name, months });
   });
@@ -1139,7 +1127,6 @@ function renderPDF(){
   pvLogo.onerror = () => { pvLogo.style.display = 'none'; };
   pvLogo.style.display = 'block';
 
-  // gutter images: standard item images + digital section images
   const pvGutter = document.getElementById('pvGutter');
   pvGutter.innerHTML = '';
   if(state.imagesMode === 'with'){
@@ -1189,13 +1176,19 @@ function renderPDF(){
     secDiv.appendChild(per);
 
     if(s.kind === 'digital'){
-      const activeSpots = (s.dp.spots || []).filter(x => x.enabled);
+      // Active spots: enabled + price > 0, and only 15/20/30 are present
+      const activeSpots = (s.dp.spots || [])
+        .filter(x => x.enabled)
+        .filter(x => (x.price > 0 || x.promo > 0))
+        .sort((a,b) => a.seconds - b.seconds)
+        .slice(0, 3); // safety
 
       const block1 = document.createElement('div');
       block1.className = 'pv-block-title';
-      block1.textContent = 'Digitálny panel – cenník spotov';
+      block1.textContent = 'Digitálny panel v čakárni lekára';
       secDiv.appendChild(block1);
 
+      // price list table (like your PDF top)
       const tbl1 = document.createElement('table');
       tbl1.className = 'pv-dp-table';
 
@@ -1230,14 +1223,12 @@ function renderPDF(){
           const priceTd = document.createElement('td');
           priceTd.className = 'r';
 
-          if(sp.promo > 0){
-            // show both prices (like “bežná + akciová”)
-            priceTd.innerHTML = `<span>${formatMoney(sp.price)}</span><br><span class="pv-dp-orange">${formatMoney(sp.promo)}</span>`;
-          } else {
-            priceTd.textContent = sp.price > 0 ? formatMoney(sp.price) : '';
-          }
-          tr.appendChild(priceTd);
+          const lines = [];
+          if(sp.price > 0) lines.push(`<span>${formatMoney(sp.price)}</span>`);
+          if(sp.promo > 0) lines.push(`<span class="pv-dp-orange">Zvýhodnená cena ${formatMoney(sp.promo)}</span>`);
+          priceTd.innerHTML = lines.join('<br>');
 
+          tr.appendChild(priceTd);
           tbody.appendChild(tr);
         });
       }
@@ -1245,7 +1236,7 @@ function renderPDF(){
       tbl1.appendChild(tbody);
       secDiv.appendChild(tbl1);
 
-      // Audiences tables
+      // Specializations tables: max 3 columns = 15/20/30 that are active
       (s.dp.auds || []).forEach(aud => {
         const title = document.createElement('div');
         title.className = 'pv-block-title';
@@ -1255,18 +1246,24 @@ function renderPDF(){
         const tbl = document.createElement('table');
         tbl.className = 'pv-dp-table';
 
-        const cols = activeSpots.map(sp => `${sp.seconds} s`);
-        const colW = activeSpots.length ? Math.max(18, Math.floor(50 / activeSpots.length)) : 0;
-
-        // header
-        const thRow = document.createElement('tr');
-        thRow.innerHTML = `
-          <th style="width:26%;">Termín</th>
-          <th style="width:16%;" class="r">Počet panelov</th>
-          ${cols.map(() => `<th style="width:${colW}%;" class="r">Cena spolu</th>`).join('')}
-        `;
         const thead2 = document.createElement('thead');
-        thead2.appendChild(thRow);
+        const trh = document.createElement('tr');
+
+        const thTerm = document.createElement('th'); thTerm.style.width = '26%'; thTerm.textContent = 'Termín';
+        const thPanels = document.createElement('th'); thPanels.style.width = '16%'; thPanels.className = 'r'; thPanels.textContent = 'Počet panelov';
+        trh.appendChild(thTerm);
+        trh.appendChild(thPanels);
+
+        const colW = activeSpots.length ? Math.floor(58 / activeSpots.length) : 0;
+        activeSpots.forEach(sp => {
+          const th = document.createElement('th');
+          th.style.width = colW + '%';
+          th.className = 'r';
+          th.textContent = `Cena spolu za ${sp.seconds} sekundový spot`;
+          trh.appendChild(th);
+        });
+
+        thead2.appendChild(trh);
         tbl.appendChild(thead2);
 
         const tbody2 = document.createElement('tbody');
@@ -1284,7 +1281,9 @@ function renderPDF(){
           tr.appendChild(tdP);
 
           activeSpots.forEach(sp => {
-            const usePromo = !!m.usePromo && sp.promo > 0;
+            const canPromo = (sp.promo > 0);
+            const usePromo = !!m.usePromo && canPromo;
+
             const unit = usePromo ? sp.promo : sp.price;
             const total = (m.panels || 0) * (unit || 0);
 
@@ -1311,7 +1310,7 @@ function renderPDF(){
       return;
     }
 
-    // STANDARD TABLE
+    // STANDARD section table
     const table = document.createElement('table');
     table.className = 'pv-table';
 
@@ -1442,7 +1441,6 @@ function renderPDF(){
     pvSections.appendChild(secDiv);
   });
 
-  // grand total
   const pvGrandWrap = document.getElementById('pvGrandWrap');
   pvGrandWrap.innerHTML = '';
   if(state.showGrand){
