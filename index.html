@@ -92,6 +92,10 @@ input, select{
   font-size:14px;
 }
 input[type="number"]{ text-align:right; }
+.small{
+  font-size:12px;
+  color:#666;
+}
 
 /* ===============================
    CARDS
@@ -105,11 +109,6 @@ input[type="number"]{ text-align:right; }
 .card h2{
   margin:0 0 12px 0;
   font-size:18px;
-  font-weight:800;
-}
-.card h3{
-  margin:0 0 10px 0;
-  font-size:15px;
   font-weight:800;
 }
 
@@ -166,6 +165,7 @@ input[type="number"]{ text-align:right; }
   align-items:center;
   justify-content:center;
 }
+
 .item-foot{
   margin-top:10px;
   display:flex;
@@ -177,7 +177,7 @@ input[type="number"]{ text-align:right; }
 
 .price-block{
   text-align:right;
-  min-width:220px;
+  min-width:260px;
 }
 .price-old{
   font-size:12px;
@@ -203,17 +203,15 @@ input[type="number"]{ text-align:right; }
   font-size:11px;
 }
 
-.toggle-row{
-  display:flex;
-  gap:10px;
-  align-items:center;
-  flex-wrap:wrap;
-  margin-top:10px;
+.section-end{
+  margin-top:16px;
+  padding-top:12px;
+  border-top:1px dashed #ddd;
 }
-.toggle-row label{ margin:0; }
-.small{
-  font-size:12px;
-  color:#666;
+.section-end .row{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap:10px;
 }
 
 /* ===============================
@@ -342,7 +340,7 @@ input[type="number"]{ text-align:right; }
     <button class="btn secondary" id="btnAddItem" type="button">+ Pridať položku do sekcie</button>
     <button class="btn ghost" id="btnReset" type="button">Vymazať (demo)</button>
   </div>
-  <div class="hint">Tip: pri exporte do PDF sa vytvorí „čistý“ layout (rámik, posun doprava, sekcie). Obdobie pod cenou je default „za 3 mesiace“.</div>
+  <div class="hint">Všetko je prázdne (okrem „Cenová ponuka“). Pri „Max“ počte sa ráta a zobrazuje max. cena.</div>
 
   <!-- ZÁKLAD PONUKY -->
   <div class="card">
@@ -353,8 +351,8 @@ input[type="number"]{ text-align:right; }
         <input id="offerTitle" value="Cenová ponuka">
       </div>
       <div>
-        <label for="offerSubtitle">Podnadpis</label>
-        <input id="offerSubtitle" placeholder="napr. laluna" value="laluna">
+        <label for="offerSubtitle">Obdobie alebo podnadpis</label>
+        <input id="offerSubtitle" placeholder="napr. Q4 2026 • názov produktu • poznámka" value="">
       </div>
     </div>
   </div>
@@ -367,27 +365,30 @@ input[type="number"]{ text-align:right; }
       <div class="grid-2">
         <div>
           <label for="secName">Názov sekcie</label>
-          <input id="secName" value="Komunikácia v čakárni pediatra">
+          <input id="secName" placeholder="napr. Komunikácia v čakárni pediatra" value="">
         </div>
         <div>
-          <label for="secPeriod">Obdobie</label>
-          <input id="secPeriod" value="Q4 2026">
+          <label for="secPeriod">Obdobie (Q)</label>
+          <input id="secPeriod" placeholder="napr. Q4 2026" value="">
         </div>
-      </div>
-
-      <div class="toggle-row">
-        <div style="min-width:280px;">
-          <label for="showTotals">Zobraziť „cena spolu“ v PDF?</label>
-          <select id="showTotals">
-            <option value="yes" selected>Áno</option>
-            <option value="no">Nie</option>
-          </select>
-        </div>
-
-        <div class="small">Pozn.: keď je zvýhodnená cena vyplnená, v PDF zobrazíme aj pôvodnú (preškrtnutú).</div>
       </div>
 
       <div class="items" id="items"></div>
+
+      <!-- nastavenia sekcie až na konci -->
+      <div class="section-end">
+        <div class="row">
+          <div>
+            <label for="showTotals">Zobraziť „cena spolu“ v PDF?</label>
+            <select id="showTotals">
+              <option value="yes" selected>Áno</option>
+              <option value="no">Nie</option>
+            </select>
+            <div class="small">Keď je vyplnená zvýhodnená cena, v PDF sa zobrazí aj pôvodná (preškrtnutá).</div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -402,7 +403,7 @@ input[type="number"]{ text-align:right; }
     <div class="pv-content">
       <div class="pv-header">
         <div class="pv-title" id="pvTitle">Cenová ponuka</div>
-        <div class="pv-subtitle" id="pvSubtitle">laluna</div>
+        <div class="pv-subtitle" id="pvSubtitle"></div>
       </div>
 
       <div id="pvSections"></div>
@@ -434,8 +435,8 @@ input[type="number"]{ text-align:right; }
 
     <div class="grid-2" style="margin-top:12px;">
       <div>
-        <label>Názov (vlastný text)</label>
-        <input data-name placeholder="napr. B1 plagát">
+        <label>Názov položky (prepísateľné)</label>
+        <input data-title placeholder="napr. B1 plagát">
       </div>
       <div>
         <label>Doplnenie / poznámka (voliteľné)</label>
@@ -454,7 +455,13 @@ input[type="number"]{ text-align:right; }
       </div>
       <div>
         <label>Počet</label>
-        <input data-qty type="number" min="0" step="1" value="1">
+        <div class="grid-2" style="grid-template-columns: 1fr 1fr; gap:10px;">
+          <select data-qtymode title="Režim počtu">
+            <option value="exact" selected>Presný</option>
+            <option value="max">Max</option>
+          </select>
+          <input data-qty type="number" min="0" step="1" value="1">
+        </div>
       </div>
     </div>
 
@@ -483,20 +490,18 @@ function n(v){
   const x = Number(v);
   return Number.isFinite(x) ? x : 0;
 }
-
 function formatMoney(val){
   return moneyFmt.format(val);
 }
 
 function presetForType(type){
-  // Sem neskôr doplníš ďalšie prednastavenia
   if(type === 'B1'){
-    return { dim: '70 × 100 cm', name: 'B1 plagát', note: '+ umiestnenie letákov do uška' };
+    return { dim: '70 × 100 cm', title: 'B1 plagát', note: '+ umiestnenie letákov do uška' };
   }
   if(type === 'LETAKY'){
-    return { dim: '', name: 'Umiestnenie letákov do stojanov IDS', note: '' };
+    return { dim: '', title: 'Umiestnenie letákov do stojanov IDS', note: '' };
   }
-  return { dim:'', name:'', note:'' };
+  return { dim:'', title:'', note:'' };
 }
 
 /* ===============================
@@ -509,12 +514,13 @@ function recalcItem(itemEl){
   const price = n(itemEl.querySelector('[data-price]').value);
   const discount = n(itemEl.querySelector('[data-discount]').value);
   const qty = n(itemEl.querySelector('[data-qty]').value);
+  const qtyMode = itemEl.querySelector('[data-qtymode]').value;
 
   const unit = discount > 0 ? discount : price;
   const total = unit * qty;
 
-  // total
-  itemEl.querySelector('[data-total]').textContent = formatMoney(total);
+  const totalEl = itemEl.querySelector('[data-total]');
+  totalEl.textContent = (qtyMode === 'max' ? ('max. ' + formatMoney(total)) : formatMoney(total));
 
   // old price shown only if discount > 0 and price > 0
   const oldEl = itemEl.querySelector('[data-old]');
@@ -528,49 +534,44 @@ function recalcItem(itemEl){
 function wireItem(itemEl){
   const typeSel = itemEl.querySelector('[data-type]');
 
-  // preset on type change
   typeSel.addEventListener('change', () => {
     const p = presetForType(typeSel.value);
     const dimEl = itemEl.querySelector('[data-dim]');
-    const nameEl = itemEl.querySelector('[data-name]');
+    const titleEl = itemEl.querySelector('[data-title]');
     const noteEl = itemEl.querySelector('[data-note]');
 
-    // Rozmer vždy nastav (pri B1), pri iných vymaž
     dimEl.value = p.dim;
 
-    // Názov + poznámka nastav len ak sú prázdne (aby obchodníkovi neprepisovalo jeho text)
-    if(!nameEl.value) nameEl.value = p.name;
+    // title always default if empty, but user can overwrite
+    if(!titleEl.value) titleEl.value = p.title;
+
+    // note default only if empty
     if(!noteEl.value && p.note) noteEl.value = p.note;
 
     recalcItem(itemEl);
   });
 
-  // recalc on input
-  itemEl.querySelectorAll('input').forEach(inp => {
-    inp.addEventListener('input', () => recalcItem(itemEl));
+  itemEl.querySelectorAll('input, select').forEach(el => {
+    el.addEventListener('input', () => recalcItem(itemEl));
+    el.addEventListener('change', () => recalcItem(itemEl));
   });
 
-  // delete
   itemEl.querySelector('[data-del]').addEventListener('click', () => {
     itemEl.remove();
   });
 
-  // initial calc
   recalcItem(itemEl);
 }
 
-function addItem(prefillType = 'B1'){
+function addItem(prefillType = ''){
   const node = tplItem.content.cloneNode(true);
-  const itemEl = node.querySelector('[data-item]');
-
   itemsWrap.appendChild(node);
 
-  const actualItem = itemsWrap.lastElementChild;
-  wireItem(actualItem);
+  const itemEl = itemsWrap.lastElementChild;
+  wireItem(itemEl);
 
-  // optionally prefill by type
   if(prefillType){
-    const sel = actualItem.querySelector('[data-type]');
+    const sel = itemEl.querySelector('[data-type]');
     sel.value = prefillType;
     sel.dispatchEvent(new Event('change'));
   }
@@ -584,20 +585,22 @@ function getItemsData(){
   itemsWrap.querySelectorAll('[data-item]').forEach(itemEl => {
     const type = itemEl.querySelector('[data-type]').value;
     const dim = itemEl.querySelector('[data-dim]').value.trim();
-    const name = itemEl.querySelector('[data-name]').value.trim();
+    const title = itemEl.querySelector('[data-title]').value.trim();
     const note = itemEl.querySelector('[data-note]').value.trim();
 
     const price = n(itemEl.querySelector('[data-price]').value);
     const discount = n(itemEl.querySelector('[data-discount]').value);
+    const qtyMode = itemEl.querySelector('[data-qtymode]').value;
     const qty = n(itemEl.querySelector('[data-qty]').value);
+
     const period = itemEl.querySelector('[data-period]').value.trim() || 'za 3 mesiace';
 
     const unit = discount > 0 ? discount : price;
     const total = unit * qty;
 
     arr.push({
-      type, dim, name, note,
-      price, discount, qty, total, period
+      type, dim, title, note,
+      price, discount, qtyMode, qty, total, period
     });
   });
   return arr;
@@ -605,8 +608,11 @@ function getItemsData(){
 
 function renderPDF(){
   // header
-  document.getElementById('pvTitle').textContent = document.getElementById('offerTitle').value.trim() || 'Cenová ponuka';
-  document.getElementById('pvSubtitle').textContent = document.getElementById('offerSubtitle').value.trim();
+  const title = document.getElementById('offerTitle').value.trim() || 'Cenová ponuka';
+  const subtitle = document.getElementById('offerSubtitle').value.trim();
+
+  document.getElementById('pvTitle').textContent = title;
+  document.getElementById('pvSubtitle').textContent = subtitle;
 
   const secName = document.getElementById('secName').value.trim();
   const secPeriod = document.getElementById('secPeriod').value.trim();
@@ -617,13 +623,12 @@ function renderPDF(){
   const pvSections = document.getElementById('pvSections');
   pvSections.innerHTML = '';
 
-  // build one section (for now)
   const secDiv = document.createElement('div');
   secDiv.className = 'pv-section';
 
   const headName = document.createElement('div');
   headName.className = 'pv-section-name';
-  headName.textContent = secName || 'Sekcia';
+  headName.textContent = secName || '';
   secDiv.appendChild(headName);
 
   const headPer = document.createElement('div');
@@ -631,11 +636,9 @@ function renderPDF(){
   headPer.textContent = secPeriod || '';
   secDiv.appendChild(headPer);
 
-  // table
   const table = document.createElement('table');
   table.className = 'pv-table';
 
-  // thead
   const thead = document.createElement('thead');
   const trh = document.createElement('tr');
 
@@ -644,19 +647,16 @@ function renderPDF(){
     { cls:'c-spec', txt:'Špecifikácia' },
     { cls:'c-qty', txt:'Počet' },
     { cls:'c-price', txt:'Cena' },
-    { cls:'c-disc', txt:'Zvýh. cena' }
+    { cls:'c-disc', txt:'Zvýh. cena' },
+    { cls:'c-total', txt:'Cena spolu' }
   ];
+
   headers.forEach(h => {
     const th = document.createElement('th');
     th.className = h.cls;
     th.textContent = h.txt;
     trh.appendChild(th);
   });
-
-  const thTotal = document.createElement('th');
-  thTotal.className = 'c-total';
-  thTotal.textContent = 'Cena spolu';
-  trh.appendChild(thTotal);
 
   thead.appendChild(trh);
   table.appendChild(thead);
@@ -666,30 +666,30 @@ function renderPDF(){
   items.forEach(it => {
     const tr = document.createElement('tr');
 
-    // item
+    // item/title
     const tdItem = document.createElement('td');
     tdItem.className = 'c-item';
-    const title = document.createElement('div');
-    title.className = 'pv-item-title';
-    title.textContent = it.name || it.type || '—';
-    tdItem.appendChild(title);
+
+    const t = document.createElement('div');
+    t.className = 'pv-item-title';
+    t.textContent = it.title || it.type || '—';
+    tdItem.appendChild(t);
 
     if(it.note){
-      const note = document.createElement('div');
-      note.className = 'pv-item-note';
-      note.textContent = it.note;
-      tdItem.appendChild(note);
+      const nEl = document.createElement('div');
+      nEl.className = 'pv-item-note';
+      nEl.textContent = it.note;
+      tdItem.appendChild(nEl);
     }
 
-    // period under price (as requested)
-    const per = document.createElement('div');
-    per.className = 'pv-item-period';
-    per.textContent = it.period ? it.period : 'za 3 mesiace';
-    tdItem.appendChild(per);
+    const pEl = document.createElement('div');
+    pEl.className = 'pv-item-period';
+    pEl.textContent = it.period;
+    tdItem.appendChild(pEl);
 
     tr.appendChild(tdItem);
 
-    // spec/dim
+    // spec
     const tdSpec = document.createElement('td');
     tdSpec.className = 'c-spec';
     tdSpec.textContent = it.dim || '';
@@ -698,14 +698,12 @@ function renderPDF(){
     // qty
     const tdQty = document.createElement('td');
     tdQty.className = 'c-qty';
-    tdQty.textContent = String(it.qty || 0);
+    tdQty.textContent = it.qtyMode === 'max' ? ('max. ' + (it.qty || 0)) : String(it.qty || 0);
     tr.appendChild(tdQty);
 
-    // price (show old if discount? -> we show price normally, and if discount exists, the discounted column will show it)
+    // price
     const tdPrice = document.createElement('td');
     tdPrice.className = 'c-price';
-
-    // If discount exists, show old price with line-through in PDF in the price column
     if(it.discount > 0 && it.price > 0){
       const old = document.createElement('div');
       old.style.textDecoration = 'line-through';
@@ -729,7 +727,7 @@ function renderPDF(){
     tdTotal.className = 'c-total';
     if(showTotals){
       const strong = document.createElement('strong');
-      strong.textContent = formatMoney(it.total);
+      strong.textContent = it.qtyMode === 'max' ? ('max. ' + formatMoney(it.total)) : formatMoney(it.total);
       tdTotal.appendChild(strong);
     } else {
       tdTotal.textContent = '';
@@ -742,7 +740,6 @@ function renderPDF(){
   table.appendChild(tbody);
   secDiv.appendChild(table);
 
-  // divider (ready for future sections)
   const divLine = document.createElement('div');
   divLine.className = 'pv-divider';
   secDiv.appendChild(divLine);
@@ -753,34 +750,27 @@ function renderPDF(){
 /* ===============================
    BUTTONS
 ================================ */
-document.getElementById('btnAddItem').addEventListener('click', () => {
-  addItem('');
-});
+document.getElementById('btnAddItem').addEventListener('click', () => addItem(''));
 
 document.getElementById('btnPrint').addEventListener('click', () => {
-  // render print layout from current form
   renderPDF();
-
-  // tiny delay to ensure DOM updates before print dialog
   setTimeout(() => window.print(), 50);
 });
 
 document.getElementById('btnReset').addEventListener('click', () => {
   document.getElementById('offerTitle').value = 'Cenová ponuka';
-  document.getElementById('offerSubtitle').value = 'laluna';
-  document.getElementById('secName').value = 'Komunikácia v čakárni pediatra';
-  document.getElementById('secPeriod').value = 'Q4 2026';
+  document.getElementById('offerSubtitle').value = '';
+  document.getElementById('secName').value = '';
+  document.getElementById('secPeriod').value = '';
   document.getElementById('showTotals').value = 'yes';
   itemsWrap.innerHTML = '';
-  addItem('B1');
+  addItem(''); // jedna prázdna položka
 });
 
 /* ===============================
    INIT
 ================================ */
-// default: 2 položky v sekcii ako tvoj príklad
-addItem('B1');       // B1 + rozmer + default note
-addItem('LETAKY');   // letáky do stojanov
+addItem(''); // vždy štartujeme prázdne
 </script>
 
 </body>
