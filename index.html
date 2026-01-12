@@ -249,6 +249,7 @@ textarea{ min-height:70px; resize:vertical; }
   width:100%;
   height:100%;
   object-fit:cover;
+  border-radius:10px; /* jemné zaoblenie v náhľade */
 }
 .note-box{ margin-top:10px; }
 
@@ -279,6 +280,16 @@ textarea{ min-height:70px; resize:vertical; }
   position:relative;
 }
 
+/* IDS logo (top-right) */
+.pv-logo{
+  position:absolute;
+  top:10mm;
+  right:14mm;
+  width:26mm;       /* upraviteľné */
+  height:auto;
+  opacity:0.95;
+}
+
 /* left gutter for images */
 .pv-gutter{
   position:absolute;
@@ -292,7 +303,7 @@ textarea{ min-height:70px; resize:vertical; }
 }
 .pv-gutter .pv-img{
   width:100%;
-  border-radius:4mm;
+  border-radius:3mm;           /* jemné zaoblenie */
   overflow:hidden;
   border:1px solid #ddd;
   background:#f6f6f6;
@@ -350,6 +361,7 @@ textarea{ min-height:70px; resize:vertical; }
 
 .pv-divider{ margin-top:10mm; border-top:1px solid #000; }
 
+/* GRAND TOTAL (optional) */
 .pv-grand{
   margin-top:10mm;
   display:flex;
@@ -364,15 +376,6 @@ textarea{ min-height:70px; resize:vertical; }
 }
 .pv-grand-box .lbl{ color:#111; font-weight:700; }
 .pv-grand-box .val{ font-size:16px; font-weight:800; margin-top:2mm; }
-
-/* hide total column when toggled off */
-.pv-hide-total th.c-total,
-.pv-hide-total td.c-total{ display:none; }
-.pv-hide-total .c-item{ width:40%; }
-.pv-hide-total .c-spec{ width:22%; }
-.pv-hide-total .c-qty{ width:12%; }
-.pv-hide-total .c-price{ width:13%; }
-.pv-hide-total .c-disc{ width:13%; }
 
 /* full-width mode (no images) */
 .pv-no-images .pv-gutter{ display:none; }
@@ -407,7 +410,7 @@ textarea{ min-height:70px; resize:vertical; }
     <button class="btn secondary" id="btnAddSection" type="button">+ Pridať sekciu</button>
     <button class="btn ghost" id="btnReset" type="button">Vymazať (demo)</button>
   </div>
-  <div class="hint">Nové: „+ ALEBO“ vloží alternatívu pod položku (napr. 200 ks ALEBO 150 ks). Ceny: môžeš zvoliť fixnú cenu spolu (napr. tlač).</div>
+  <div class="hint">Cena spolu v riadku je vždy. Voliteľný je iba finálny súčet všetkých položiek.</div>
 
   <!-- Offer base -->
   <div class="card">
@@ -431,9 +434,15 @@ textarea{ min-height:70px; resize:vertical; }
           <option value="with" selected>S obrázkami</option>
           <option value="without">Bez obrázkov (celá šírka)</option>
         </select>
-        <div class="small">Keď dáš „bez obrázkov“, schová sa upload a PDF bude plná šírka.</div>
       </div>
-      <div></div>
+      <div>
+        <label for="pdfShowGrand">Zobraziť finálny súčet (Spolu) v PDF?</label>
+        <select id="pdfShowGrand">
+          <option value="yes" selected>Áno</option>
+          <option value="no">Nie</option>
+        </select>
+        <div class="small">Pozor: „Cena spolu“ pri položkách je vždy, toto je len finálny súčet na konci.</div>
+      </div>
     </div>
   </div>
 
@@ -442,19 +451,10 @@ textarea{ min-height:70px; resize:vertical; }
     <h2>Sekcie</h2>
     <div class="sections" id="sections"></div>
 
-    <!-- Global end settings -->
     <div class="end-settings">
       <div class="grid-2">
-        <div>
-          <label for="pdfShowTotals">Zobraziť „cena spolu“ v PDF + súčet všetkých položiek?</label>
-          <select id="pdfShowTotals">
-            <option value="yes">Áno</option>
-            <option value="no" selected>Nie</option>
-          </select>
-          <div class="small">Ak je „Nie“, PDF úplne skryje stĺpec „Cena spolu“ aj finálny súčet.</div>
-        </div>
-        <div>
-          <label>&nbsp;</label>
+        <div class="small">Tip: Logo IDS sa načíta zo súboru <strong>ids-logo.png</strong> v rovnakom priečinku ako index.html.</div>
+        <div style="text-align:right;">
           <button class="btn secondary" id="btnAddSectionBottom" type="button">+ Pridať sekciu</button>
         </div>
       </div>
@@ -465,6 +465,9 @@ textarea{ min-height:70px; resize:vertical; }
 <!-- PRINT VIEW -->
 <section class="print-view" id="printView">
   <div class="print-page" id="printPage">
+    <!-- IDS logo -->
+    <img class="pv-logo" id="pvLogo" src="ids-logo.png" alt="IDS logo" />
+
     <div class="pv-gutter" id="pvGutter"></div>
 
     <div class="pv-content">
@@ -586,7 +589,6 @@ textarea{ min-height:70px; resize:vertical; }
           <option value="unit" selected>Cena za kus × počet</option>
           <option value="fixed">Fixná cena spolu</option>
         </select>
-        <div class="small">Pre tlač a balíčky je „fixná cena spolu“ (napr. 250 ks za 480 €).</div>
       </div>
       <div>
         <label>Počet</label>
@@ -638,7 +640,6 @@ textarea{ min-height:70px; resize:vertical; }
       <div>
         <label>Obrázok (voliteľné)</label>
         <input data-img type="file" accept="image/*">
-        <div class="small">V PDF sa obrázky skladajú doľava pod seba.</div>
       </div>
 
       <div class="thumb" data-thumb>
@@ -660,16 +661,14 @@ textarea{ min-height:70px; resize:vertical; }
 const moneyFmt = new Intl.NumberFormat('sk-SK', { style:'currency', currency:'EUR' });
 function n(v){ const x = Number(v); return Number.isFinite(x) ? x : 0; }
 function formatMoney(val){ return moneyFmt.format(val); }
-
-/* ===============================
-   PRESETS: DIMENSION + PERIOD DEFAULT
-================================ */
 function normalize(s){ return (s || '').trim().toLowerCase(); }
 
+/* ===============================
+   PRESETS
+================================ */
 function presetFromType(rawType){
   const t = normalize(rawType);
 
-  // dimensions
   if(t === 'a3 plagát' || t === 'a3 plakat'){
     return { dim:'42 × 29,7 cm', title:'A3 plagát', period:'za 3 mesiace' };
   }
@@ -677,7 +676,6 @@ function presetFromType(rawType){
     return { dim:'70 × 100 cm', title:'B1 plagát', period:'za 3 mesiace' };
   }
   if(t === 'statický plagát' || t === 'staticky plakat'){
-    // podľa tvojho pravidla: statický plagát -> za jednu návštevu
     return { dim:'42 × 29,7 cm', title:'Statický plagát', period:'za jednu návštevu' };
   }
 
@@ -688,7 +686,6 @@ function presetFromType(rawType){
     return { dim:'70 × 100 cm', title:'B1 plagát s umiestnením letáku pod plagátom', period:'za 3 mesiace' };
   }
 
-  // period rules: "za jednu návštevu"
   const oneVisitList = [
     'umiestnenie materiálov do čakárni praktických lekárov',
     'umiestnenie materiálov do čakárni pediatrov',
@@ -702,12 +699,10 @@ function presetFromType(rawType){
     return { dim:'', title:rawType || '', period:'za jednu návštevu' };
   }
 
-  // "Tlač materiálov" -> period empty + suggest fixed pricing
   if(t === 'tlač materiálov' || t === 'tlac materialov'){
-    return { dim:'', title:'Tlač materiálov', period:'' , suggestMode:'fixed' };
+    return { dim:'', title:'Tlač materiálov', period:'', suggestMode:'fixed' };
   }
 
-  // default
   return { dim:'', title:rawType || '', period:'za 3 mesiace' };
 }
 
@@ -721,6 +716,20 @@ const tplItem = document.getElementById('tplItem');
 const tplOrSep = document.getElementById('tplOrSep');
 
 const pdfImagesSel = document.getElementById('pdfImages');
+const pdfShowGrandSel = document.getElementById('pdfShowGrand');
+
+/* ===============================
+   UI IMAGES ON/OFF
+================================ */
+function applyImagesSetting(){
+  const mode = pdfImagesSel.value;
+  if(mode === 'without'){
+    appRoot.classList.add('images-off');
+  } else {
+    appRoot.classList.remove('images-off');
+  }
+}
+pdfImagesSel.addEventListener('change', applyImagesSetting);
 
 /* ===============================
    ITEM LOGIC
@@ -743,66 +752,6 @@ function getItemGroupId(itemEl){
   return itemEl.dataset.orGroup || '';
 }
 
-function recalcItem(itemEl){
-  const priceMode = itemEl.querySelector('[data-price-mode]').value;
-  const qtyMode = itemEl.querySelector('[data-qtymode]').value;
-
-  const qty = n(itemEl.querySelector('[data-qty]').value);
-
-  const unitPrice = n(itemEl.querySelector('[data-price]').value);
-  const disc = n(itemEl.querySelector('[data-discount]').value);
-  const fixedTotal = n(itemEl.querySelector('[data-fixed-total]').value);
-
-  let total = 0;
-  let oldText = '';
-
-  if(priceMode === 'fixed'){
-    total = fixedTotal;
-    oldText = ''; // pri fixnej cene neukazujeme "pôvodnú"
-  } else {
-    const unit = disc > 0 ? disc : unitPrice;
-    total = unit * qty;
-    if(disc > 0 && unitPrice > 0) oldText = formatMoney(unitPrice);
-  }
-
-  const totalEl = itemEl.querySelector('[data-total]');
-  const oldEl = itemEl.querySelector('[data-old]');
-
-  oldEl.textContent = oldText;
-
-  const shown = (qtyMode === 'max') ? ('max. ' + formatMoney(total)) : formatMoney(total);
-  totalEl.textContent = shown;
-}
-
-function applyPreset(itemEl){
-  const typeEl = itemEl.querySelector('[data-type]');
-  const dimEl = itemEl.querySelector('[data-dim]');
-  const titleEl = itemEl.querySelector('[data-title]');
-  const periodEl = itemEl.querySelector('[data-period]');
-  const modeEl = itemEl.querySelector('[data-price-mode]');
-
-  const p = presetFromType(typeEl.value);
-
-  // dimension: set if preset has
-  if(p.dim) dimEl.value = p.dim;
-
-  // title: fill only if empty
-  if(!titleEl.value && p.title) titleEl.value = p.title;
-
-  // period: if empty OR currently one of our defaults, overwrite with new preset
-  const curPer = (periodEl.value ?? '').trim();
-  const defaults = new Set(['za 3 mesiace','za jednu návštevu','']);
-  if(curPer === '' || defaults.has(curPer)){
-    periodEl.value = p.period ?? 'za 3 mesiace';
-  }
-
-  // suggest fixed mode for print
-  if(p.suggestMode === 'fixed'){
-    modeEl.value = 'fixed';
-    togglePriceMode(itemEl);
-  }
-}
-
 function togglePriceMode(itemEl){
   const mode = itemEl.querySelector('[data-price-mode]').value;
   const unitWrap = itemEl.querySelector('[data-unit-wrap]');
@@ -817,30 +766,78 @@ function togglePriceMode(itemEl){
   recalcItem(itemEl);
 }
 
+function recalcItem(itemEl){
+  const priceMode = itemEl.querySelector('[data-price-mode]').value;
+  const qtyMode = itemEl.querySelector('[data-qtymode]').value;
+
+  const qty = n(itemEl.querySelector('[data-qty]').value);
+  const unitPrice = n(itemEl.querySelector('[data-price]').value);
+  const disc = n(itemEl.querySelector('[data-discount]').value);
+  const fixedTotal = n(itemEl.querySelector('[data-fixed-total]').value);
+
+  let total = 0;
+  let oldText = '';
+
+  if(priceMode === 'fixed'){
+    total = fixedTotal;
+    oldText = '';
+  } else {
+    const unit = disc > 0 ? disc : unitPrice;
+    total = unit * qty;
+    if(disc > 0 && unitPrice > 0) oldText = formatMoney(unitPrice);
+  }
+
+  itemEl.querySelector('[data-old]').textContent = oldText;
+
+  const shown = (qtyMode === 'max') ? ('max. ' + formatMoney(total)) : formatMoney(total);
+  itemEl.querySelector('[data-total]').textContent = shown;
+}
+
+function applyPreset(itemEl){
+  const typeEl = itemEl.querySelector('[data-type]');
+  const dimEl = itemEl.querySelector('[data-dim]');
+  const titleEl = itemEl.querySelector('[data-title]');
+  const periodEl = itemEl.querySelector('[data-period]');
+  const modeEl = itemEl.querySelector('[data-price-mode]');
+
+  const p = presetFromType(typeEl.value);
+
+  if(p.dim) dimEl.value = p.dim;
+
+  if(!titleEl.value && p.title) titleEl.value = p.title;
+
+  const curPer = (periodEl.value ?? '').trim();
+  const defaults = new Set(['za 3 mesiace','za jednu návštevu','']);
+  if(curPer === '' || defaults.has(curPer)){
+    periodEl.value = p.period ?? 'za 3 mesiace';
+  }
+
+  if(p.suggestMode === 'fixed'){
+    modeEl.value = 'fixed';
+    togglePriceMode(itemEl);
+  }
+}
+
 function wireItem(itemEl){
   const typeInput = itemEl.querySelector('[data-type]');
   const imgInput = itemEl.querySelector('[data-img]');
 
-  // defaults on init
-  if(itemEl.querySelector('[data-period]').value === '') {
+  // init period if empty
+  if((itemEl.querySelector('[data-period]').value || '').trim() === ''){
     itemEl.querySelector('[data-period]').value = 'za 3 mesiace';
   }
 
-  // preset on type
   typeInput.addEventListener('change', () => { applyPreset(itemEl); recalcItem(itemEl); });
   typeInput.addEventListener('blur', () => { applyPreset(itemEl); recalcItem(itemEl); });
 
-  // price mode
   itemEl.querySelector('[data-price-mode]').addEventListener('change', () => togglePriceMode(itemEl));
 
-  // recalc on everything except image file
   itemEl.querySelectorAll('input, select, textarea').forEach(el => {
     if(el.matches('[data-img]')) return;
     el.addEventListener('input', () => recalcItem(itemEl));
     el.addEventListener('change', () => recalcItem(itemEl));
   });
 
-  // image upload
   imgInput.addEventListener('change', () => {
     const f = imgInput.files && imgInput.files[0];
     if(!f){ setThumb(itemEl, ''); return; }
@@ -849,7 +846,6 @@ function wireItem(itemEl){
     reader.readAsDataURL(f);
   });
 
-  // delete item (also remove OR separator if needed)
   itemEl.querySelector('[data-del-item]').addEventListener('click', () => {
     const prev = itemEl.previousElementSibling;
     const next = itemEl.nextElementSibling;
@@ -857,16 +853,13 @@ function wireItem(itemEl){
 
     itemEl.remove();
 
-    // Clean orphan OR separators around
     if(prev && prev.matches('[data-or-sep]')){
-      // if there's no next item with same group, remove the separator
       const after = prev.nextElementSibling;
       if(!after || !after.matches('[data-item]') || getItemGroupId(after) !== grp){
         prev.remove();
       }
     }
     if(next && next.matches('[data-or-sep]')){
-      // separator cannot be last
       const after = next.nextElementSibling;
       if(!after || !after.matches('[data-item]')){
         next.remove();
@@ -874,22 +867,17 @@ function wireItem(itemEl){
     }
   });
 
-  // add OR
   itemEl.querySelector('[data-add-or]').addEventListener('click', () => {
     const itemsWrap = itemEl.parentElement;
     const groupId = getItemGroupId(itemEl) || ('g' + Math.random().toString(16).slice(2));
-
-    // ensure this item has group
     itemEl.dataset.orGroup = groupId;
 
-    // insert OR separator after this item (if not already)
     const maybeNext = itemEl.nextElementSibling;
     if(!(maybeNext && maybeNext.matches('[data-or-sep]'))){
       const sepNode = tplOrSep.content.cloneNode(true);
       itemsWrap.insertBefore(sepNode, itemEl.nextElementSibling);
     }
 
-    // insert new alternative item after the separator
     const newNode = tplItem.content.cloneNode(true);
     const temp = document.createElement('div');
     temp.appendChild(newNode);
@@ -897,14 +885,11 @@ function wireItem(itemEl){
 
     newItemEl.dataset.orGroup = groupId;
 
-    // place after separator
-    const sepEl = itemEl.nextElementSibling; // after possible insertion
+    const sepEl = itemEl.nextElementSibling;
     itemsWrap.insertBefore(newItemEl, sepEl.nextElementSibling);
 
-    // wire it
     wireItem(newItemEl);
 
-    // small help: copy product type/title/note but clear qty/price
     newItemEl.querySelector('[data-type]').value = itemEl.querySelector('[data-type]').value;
     newItemEl.querySelector('[data-dim]').value = itemEl.querySelector('[data-dim]').value;
     newItemEl.querySelector('[data-title]').value = itemEl.querySelector('[data-title]').value;
@@ -919,7 +904,6 @@ function wireItem(itemEl){
     recalcItem(newItemEl);
   });
 
-  // init
   setThumb(itemEl, '');
   togglePriceMode(itemEl);
   recalcItem(itemEl);
@@ -943,28 +927,11 @@ function addSection(){
 
   const itemsWrap = secEl.querySelector('[data-items]');
 
-  // section delete
   secEl.querySelector('[data-del-section]').addEventListener('click', () => secEl.remove());
-
-  // add item button at bottom
   secEl.querySelector('[data-add-item]').addEventListener('click', () => addItem(itemsWrap));
 
-  // start with one empty item inside this section
   addItem(itemsWrap);
 }
-
-/* ===============================
-   GLOBAL: Images on/off in UI
-================================ */
-function applyImagesSetting(){
-  const mode = pdfImagesSel.value; // with / without
-  if(mode === 'without'){
-    appRoot.classList.add('images-off');
-  } else {
-    appRoot.classList.remove('images-off');
-  }
-}
-pdfImagesSel.addEventListener('change', applyImagesSetting);
 
 /* ===============================
    PDF RENDER
@@ -972,20 +939,19 @@ pdfImagesSel.addEventListener('change', applyImagesSetting);
 function collectState(){
   const title = document.getElementById('offerTitle').value.trim() || 'Cenová ponuka';
   const subtitle = document.getElementById('offerSubtitle').value.trim();
-  const showTotals = document.getElementById('pdfShowTotals').value === 'yes';
+
   const imagesMode = document.getElementById('pdfImages').value; // with/without
+  const showGrand = document.getElementById('pdfShowGrand').value === 'yes';
 
   const sections = [];
   sectionsWrap.querySelectorAll('[data-section]').forEach(secEl => {
     const secName = secEl.querySelector('[data-sec-name]').value.trim();
     const secPeriod = secEl.querySelector('[data-sec-period]').value.trim();
 
-    // items list includes OR separators; we will keep them as markers in array
     const items = [];
     const container = secEl.querySelector('[data-items]');
     Array.from(container.children).forEach(child => {
       if(child.matches && child.matches('[data-or-sep]')){
-        // OR marker: attach to previous group's id if possible
         items.push({ __or:true });
         return;
       }
@@ -996,6 +962,7 @@ function collectState(){
       const title = child.querySelector('[data-title]').value.trim();
       const note = child.querySelector('[data-note]').value.trim();
       const extra = child.querySelector('[data-extra]').value.trim();
+      const period = (child.querySelector('[data-period]').value || '').trim();
 
       const priceMode = child.querySelector('[data-price-mode]').value;
       const qtyMode = child.querySelector('[data-qtymode]').value;
@@ -1004,8 +971,6 @@ function collectState(){
       const price = n(child.querySelector('[data-price]').value);
       const discount = n(child.querySelector('[data-discount]').value);
       const fixedTotal = n(child.querySelector('[data-fixed-total]').value);
-
-      const period = (child.querySelector('[data-period]').value || '').trim();
 
       let total = 0;
       if(priceMode === 'fixed'){
@@ -1021,14 +986,14 @@ function collectState(){
         type, dim, title, note, extra, period,
         priceMode, qtyMode, qty,
         price, discount, fixedTotal,
-        total
-      , img });
+        total, img
+      });
     });
 
     sections.push({ secName, secPeriod, items });
   });
 
-  return { title, subtitle, showTotals, imagesMode, sections };
+  return { title, subtitle, imagesMode, showGrand, sections };
 }
 
 function renderPDF(){
@@ -1039,18 +1004,19 @@ function renderPDF(){
 
   const printPage = document.getElementById('printPage');
 
-  // images mode
+  // images mode affects layout (full width)
   if(state.imagesMode === 'without'){
     printPage.classList.add('pv-no-images');
   } else {
     printPage.classList.remove('pv-no-images');
   }
 
-  // totals column on/off
-  if(!state.showTotals) printPage.classList.add('pv-hide-total');
-  else printPage.classList.remove('pv-hide-total');
+  // logo show/hide: if missing file, hide on error
+  const pvLogo = document.getElementById('pvLogo');
+  pvLogo.onerror = () => { pvLogo.style.display = 'none'; };
+  pvLogo.style.display = 'block';
 
-  // gutter images (stack all item images)
+  // gutter images
   const pvGutter = document.getElementById('pvGutter');
   pvGutter.innerHTML = '';
   if(state.imagesMode === 'with'){
@@ -1091,6 +1057,7 @@ function renderPDF(){
     const thead = document.createElement('thead');
     const trh = document.createElement('tr');
 
+    // IMPORTANT: "Cena spolu" is ALWAYS present
     const headers = [
       { cls:'c-item', txt:'Položka' },
       { cls:'c-spec', txt:'Špecifikácia' },
@@ -1112,12 +1079,9 @@ function renderPDF(){
 
     s.items.forEach(it => {
       if(it.__or){
-        // OR row (spans visible columns)
         const trOr = document.createElement('tr');
         trOr.className = 'pv-or-row';
-
         const td = document.createElement('td');
-        // colSpan depends on totals enabled; but we can safely span 6 and CSS hides total col if off
         td.colSpan = 6;
         td.textContent = 'ALEBO';
         trOr.appendChild(td);
@@ -1166,9 +1130,6 @@ function renderPDF(){
       tdQty.textContent = it.qtyMode === 'max' ? ('max. ' + (it.qty || 0)) : String(it.qty || 0);
       tr.appendChild(tdQty);
 
-      // price column:
-      // - unit mode: show old (strikethrough) when discount exists, otherwise show price/ks
-      // - fixed mode: show fixed total here (so "250 ks za 480 €" makes sense)
       const tdPrice = document.createElement('td');
       tdPrice.className = 'c-price';
 
@@ -1188,7 +1149,6 @@ function renderPDF(){
       }
       tr.appendChild(tdPrice);
 
-      // discount column:
       const tdDisc = document.createElement('td');
       tdDisc.className = 'c-disc';
       if(it.priceMode === 'fixed'){
@@ -1198,19 +1158,16 @@ function renderPDF(){
       }
       tr.appendChild(tdDisc);
 
-      // total column:
+      // ALWAYS show item total
       const tdTotal = document.createElement('td');
       tdTotal.className = 'c-total';
-      if(state.showTotals){
-        const strong = document.createElement('strong');
-        const shown = it.qtyMode === 'max' ? ('max. ' + formatMoney(it.total)) : formatMoney(it.total);
-        strong.textContent = shown;
-        tdTotal.appendChild(strong);
-        grandTotal += it.total;
-      } else {
-        tdTotal.textContent = '';
-      }
+      const strong = document.createElement('strong');
+      const shown = it.qtyMode === 'max' ? ('max. ' + formatMoney(it.total)) : formatMoney(it.total);
+      strong.textContent = shown;
+      tdTotal.appendChild(strong);
       tr.appendChild(tdTotal);
+
+      grandTotal += it.total;
 
       tbody.appendChild(tr);
     });
@@ -1227,7 +1184,7 @@ function renderPDF(){
 
   const pvGrandWrap = document.getElementById('pvGrandWrap');
   pvGrandWrap.innerHTML = '';
-  if(state.showTotals){
+  if(state.showGrand){
     const grand = document.createElement('div');
     grand.className = 'pv-grand';
     const box = document.createElement('div');
@@ -1252,12 +1209,129 @@ document.getElementById('btnPrint').addEventListener('click', () => {
 document.getElementById('btnReset').addEventListener('click', () => {
   document.getElementById('offerTitle').value = 'Cenová ponuka';
   document.getElementById('offerSubtitle').value = '';
-  document.getElementById('pdfShowTotals').value = 'no';
   document.getElementById('pdfImages').value = 'with';
+  document.getElementById('pdfShowGrand').value = 'yes';
   sectionsWrap.innerHTML = '';
   applyImagesSetting();
   addSection();
 });
+
+/* ===============================
+   SECTION + ITEM LOGIC (same as previous)
+================================ */
+const tplSectionRef = document.getElementById('tplSection');
+const tplItemRef = document.getElementById('tplItem');
+const tplOrRef = document.getElementById('tplOrSep');
+
+function addSection(){
+  const node = tplSectionRef.content.cloneNode(true);
+  sectionsWrap.appendChild(node);
+  const secEl = sectionsWrap.lastElementChild;
+
+  const itemsWrap = secEl.querySelector('[data-items]');
+  secEl.querySelector('[data-del-section]').addEventListener('click', () => secEl.remove());
+  secEl.querySelector('[data-add-item]').addEventListener('click', () => addItem(itemsWrap));
+  addItem(itemsWrap);
+}
+
+function addItem(itemsWrap){
+  const node = tplItemRef.content.cloneNode(true);
+  itemsWrap.appendChild(node);
+  const itemEl = itemsWrap.lastElementChild;
+  wireItem(itemEl);
+  return itemEl;
+}
+
+/* wireItem uses tplOrRef via outer scope */
+function wireItem(itemEl){
+  const typeInput = itemEl.querySelector('[data-type]');
+  const imgInput = itemEl.querySelector('[data-img]');
+
+  if((itemEl.querySelector('[data-period]').value || '').trim() === ''){
+    itemEl.querySelector('[data-period]').value = 'za 3 mesiace';
+  }
+
+  typeInput.addEventListener('change', () => { applyPreset(itemEl); recalcItem(itemEl); });
+  typeInput.addEventListener('blur', () => { applyPreset(itemEl); recalcItem(itemEl); });
+
+  itemEl.querySelector('[data-price-mode]').addEventListener('change', () => togglePriceMode(itemEl));
+
+  itemEl.querySelectorAll('input, select, textarea').forEach(el => {
+    if(el.matches('[data-img]')) return;
+    el.addEventListener('input', () => recalcItem(itemEl));
+    el.addEventListener('change', () => recalcItem(itemEl));
+  });
+
+  imgInput.addEventListener('change', () => {
+    const f = imgInput.files && imgInput.files[0];
+    if(!f){ setThumb(itemEl, ''); return; }
+    const reader = new FileReader();
+    reader.onload = () => setThumb(itemEl, String(reader.result || ''));
+    reader.readAsDataURL(f);
+  });
+
+  itemEl.querySelector('[data-del-item]').addEventListener('click', () => {
+    const prev = itemEl.previousElementSibling;
+    const next = itemEl.nextElementSibling;
+    const grp = getItemGroupId(itemEl);
+
+    itemEl.remove();
+
+    if(prev && prev.matches('[data-or-sep]')){
+      const after = prev.nextElementSibling;
+      if(!after || !after.matches('[data-item]') || getItemGroupId(after) !== grp){
+        prev.remove();
+      }
+    }
+    if(next && next.matches('[data-or-sep]')){
+      const after = next.nextElementSibling;
+      if(!after || !after.matches('[data-item]')){
+        next.remove();
+      }
+    }
+  });
+
+  itemEl.querySelector('[data-add-or]').addEventListener('click', () => {
+    const itemsWrap = itemEl.parentElement;
+    const groupId = getItemGroupId(itemEl) || ('g' + Math.random().toString(16).slice(2));
+    itemEl.dataset.orGroup = groupId;
+
+    const maybeNext = itemEl.nextElementSibling;
+    if(!(maybeNext && maybeNext.matches('[data-or-sep]'))){
+      const sepNode = tplOrRef.content.cloneNode(true);
+      itemsWrap.insertBefore(sepNode, itemEl.nextElementSibling);
+    }
+
+    const newNode = tplItemRef.content.cloneNode(true);
+    const temp = document.createElement('div');
+    temp.appendChild(newNode);
+    const newItemEl = temp.firstElementChild;
+
+    newItemEl.dataset.orGroup = groupId;
+
+    const sepEl = itemEl.nextElementSibling;
+    itemsWrap.insertBefore(newItemEl, sepEl.nextElementSibling);
+
+    wireItem(newItemEl);
+
+    newItemEl.querySelector('[data-type]').value = itemEl.querySelector('[data-type]').value;
+    newItemEl.querySelector('[data-dim]').value = itemEl.querySelector('[data-dim]').value;
+    newItemEl.querySelector('[data-title]').value = itemEl.querySelector('[data-title]').value;
+    newItemEl.querySelector('[data-note]').value = itemEl.querySelector('[data-note]').value;
+    newItemEl.querySelector('[data-period]').value = itemEl.querySelector('[data-period]').value;
+
+    newItemEl.querySelector('[data-qty]').value = '';
+    newItemEl.querySelector('[data-price]').value = '';
+    newItemEl.querySelector('[data-discount]').value = '';
+    newItemEl.querySelector('[data-fixed-total]').value = '';
+
+    recalcItem(newItemEl);
+  });
+
+  setThumb(itemEl, '');
+  togglePriceMode(itemEl);
+  recalcItem(itemEl);
+}
 
 /* ===============================
    INIT
