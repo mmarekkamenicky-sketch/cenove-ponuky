@@ -53,10 +53,9 @@ h1{
   background:#000;
   color:#fff;
 }
-.btn + .btn{ margin-left:8px; }
 
 /* ===============================
-   EDIT CARD (zat. jednoduchý)
+   EDIT CARD (zat. len symbolicky)
 ================================ */
 .card{
   border:1px solid #ddd;
@@ -106,9 +105,11 @@ input{
   margin-left:48mm;
 }
 
-/* HEADER */
+/* ===============================
+   PDF HEADER (hore vľavo)
+================================ */
 .pv-header{
-  margin-bottom:20mm;
+  margin-bottom:18mm;
 }
 .pv-title{
   font-size:34px;
@@ -116,29 +117,33 @@ input{
 }
 .pv-subtitle{
   font-size:16px;
-  margin-top:6px;
+  margin-top:4px;
+  font-weight:500;
 }
 
-/* SECTION */
+/* ===============================
+   SECTION
+================================ */
 .pv-section{
   margin-top:14mm;
 }
-.pv-section-head{
-  display:flex;
-  justify-content:space-between;
-  margin-bottom:6mm;
-}
+
 .pv-section-name{
   font-size:13px;
   font-weight:700;
 }
+
 .pv-section-period{
-  font-size:13px;
-  font-weight:600;
+  margin-top:2mm;
+  font-size:12px;
+  font-weight:500;
 }
 
-/* TABLE */
+/* ===============================
+   TABLE
+================================ */
 .pv-table{
+  margin-top:6mm;
   width:100%;
   border-collapse:collapse;
   table-layout:fixed;
@@ -173,7 +178,9 @@ input{
   margin-top:2px;
 }
 
-/* DIVIDER */
+/* ===============================
+   DIVIDER
+================================ */
 .pv-divider{
   margin-top:10mm;
   border-top:1px solid #000;
@@ -199,9 +206,7 @@ input{
 
 <header>
   <h1>Cenová ponuka – editor</h1>
-  <div>
-    <button class="btn" onclick="window.print()">Export do PDF</button>
-  </div>
+  <button class="btn primary" onclick="window.print()">Export do PDF</button>
 </header>
 
 <!-- EDIT UI (zat. len symbolicky) -->
@@ -220,6 +225,7 @@ input{
 
     <div class="pv-content">
 
+      <!-- HLAVIČKA -->
       <div class="pv-header">
         <div class="pv-title">Cenová ponuka</div>
         <div class="pv-subtitle">laluna</div>
@@ -227,11 +233,11 @@ input{
 
       <!-- SEKČIA 1 -->
       <div class="pv-section">
-        <div class="pv-section-head">
-          <div class="pv-section-name">
-            Komunikácia v čakárni praktického lekára
-          </div>
-          <div class="pv-section-period">Q4 2025</div>
+        <div class="pv-section-name">
+          Komunikácia v čakárni praktického lekára
+        </div>
+        <div class="pv-section-period">
+          Q4 2025
         </div>
 
         <table class="pv-table">
@@ -277,11 +283,11 @@ input{
 
       <!-- SEKČIA 2 -->
       <div class="pv-section">
-        <div class="pv-section-head">
-          <div class="pv-section-name">
-            Komunikácia v čakárni pediatra
-          </div>
-          <div class="pv-section-period">Q4 2025</div>
+        <div class="pv-section-name">
+          Komunikácia v čakárni pediatra
+        </div>
+        <div class="pv-section-period">
+          Q4 2025
         </div>
 
         <table class="pv-table">
