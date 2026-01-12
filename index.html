@@ -1,507 +1,312 @@
 <!doctype html>
 <html lang="sk">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Cenová ponuka</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cenová ponuka</title>
 
-  <!-- Font: Onest -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- FONT -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <style>
-    :root{
-      --bg:#fff;
-      --fg:#0b0b0b;
-      --muted:#666;
-      --line:#e6e6e6;
-      --soft:#f6f6f6;
+<style>
+/* ===============================
+   BASE
+================================ */
+*{ box-sizing:border-box; }
+body{
+  margin:0;
+  font-family:"Onest", system-ui, sans-serif;
+  background:#fff;
+  color:#000;
+}
+.wrap{
+  max-width:1200px;
+  margin:0 auto;
+  padding:24px;
+}
 
-      --radius:16px;
-      --radius-sm:12px;
+/* ===============================
+   HEADER / EDIT UI
+================================ */
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:24px;
+}
+h1{
+  margin:0;
+  font-size:28px;
+  font-weight:800;
+}
+.btn{
+  border-radius:999px;
+  padding:10px 16px;
+  border:1px solid #000;
+  background:#fff;
+  font-weight:600;
+  cursor:pointer;
+}
+.btn.primary{
+  background:#000;
+  color:#fff;
+}
+.btn + .btn{ margin-left:8px; }
 
-      --btn-black:#0b0b0b;
-      --btn-white:#fff;
+/* ===============================
+   EDIT CARD (zat. jednoduchý)
+================================ */
+.card{
+  border:1px solid #ddd;
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:40px;
+}
+label{
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  font-weight:700;
+}
+input{
+  width:100%;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid #ccc;
+  margin-top:6px;
+}
 
-      --shadow: 0 10px 30px rgba(0,0,0,.06);
-    }
+/* ===============================
+   PRINT / PDF VIEW
+================================ */
+.print-view{ display:none; }
 
-    *{ box-sizing:border-box; }
-    html,body{ height:100%; }
-    body{
-      margin:0;
-      background:var(--bg);
-      color:var(--fg);
-      font-family:"Onest", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      line-height:1.35;
-    }
+.print-page{
+  width:210mm;
+  min-height:297mm;
+  margin:0 auto;
+  background:#fff;
+  border:2px solid #000;
+  padding:18mm 14mm;
+  position:relative;
+}
 
-    .wrap{
-      max-width:1100px;
-      margin:0 auto;
-      padding:24px 16px 80px;
-    }
+/* rezerva pre obrázky */
+.pv-gutter{
+  position:absolute;
+  left:14mm;
+  top:18mm;
+  bottom:18mm;
+  width:42mm;
+}
 
-    header{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:16px;
-      padding:14px 0 18px;
-      border-bottom:1px solid var(--line);
-      margin-bottom:18px;
-    }
+.pv-content{
+  margin-left:48mm;
+}
 
-    h1{
-      margin:0;
-      font-size:28px;
-      letter-spacing:-.02em;
-    }
+/* HEADER */
+.pv-header{
+  margin-bottom:20mm;
+}
+.pv-title{
+  font-size:34px;
+  font-weight:800;
+}
+.pv-subtitle{
+  font-size:16px;
+  margin-top:6px;
+}
 
-    .header-actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
+/* SECTION */
+.pv-section{
+  margin-top:14mm;
+}
+.pv-section-head{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:6mm;
+}
+.pv-section-name{
+  font-size:13px;
+  font-weight:700;
+}
+.pv-section-period{
+  font-size:13px;
+  font-weight:600;
+}
 
-    .btn{
-      border:1px solid var(--fg);
-      border-radius:999px;
-      padding:10px 14px;
-      font-weight:600;
-      cursor:pointer;
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      user-select:none;
-      transition:transform .05s ease, opacity .15s ease;
-      background:transparent;
-      color:var(--fg);
-      white-space:nowrap;
-    }
-    .btn:active{ transform:translateY(1px); }
-    .btn--primary{
-      background:var(--btn-black);
-      color:#fff;
-      border-color:var(--btn-black);
-    }
-    .btn--secondary{
-      background:var(--btn-white);
-      color:var(--fg);
-    }
-    .btn--ghost{
-      border-color:transparent;
-      background:var(--soft);
-    }
-    .btn small{ font-weight:600; opacity:.85; }
+/* TABLE */
+.pv-table{
+  width:100%;
+  border-collapse:collapse;
+  table-layout:fixed;
+  font-size:11.5px;
+}
+.pv-table th{
+  text-align:left;
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  border-bottom:1px solid #000;
+  padding-bottom:6px;
+}
+.pv-table td{
+  padding:8px 0;
+  vertical-align:top;
+}
 
-    .card{
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      padding:16px;
-      box-shadow:var(--shadow);
-      background:#fff;
-    }
+.c-item{ width:34%; }
+.c-spec{ width:20%; }
+.c-qty,
+.c-price,
+.c-disc,
+.c-total{
+  width:11%;
+  text-align:right;
+}
 
-    .grid{
-      display:grid;
-      grid-template-columns: 1.2fr 1fr;
-      gap:12px;
-      margin:14px 0 18px;
-    }
-    @media (max-width: 800px){
-      .grid{ grid-template-columns:1fr; }
-      header{ flex-direction:column; }
-      .header-actions{ justify-content:flex-start; }
-    }
+.pv-item-title{ font-weight:700; }
+.pv-item-note{
+  font-size:10.5px;
+  margin-top:2px;
+}
 
-    label{
-      display:block;
-      font-size:12px;
-      font-weight:700;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-      color:var(--muted);
-      margin-bottom:6px;
-    }
-    input, textarea{
-      width:100%;
-      border:1px solid var(--line);
-      border-radius:14px;
-      padding:11px 12px;
-      font:inherit;
-      background:#fff;
-      outline:none;
-    }
-    input:focus, textarea:focus{
-      border-color:#000;
-      box-shadow:0 0 0 3px rgba(0,0,0,.08);
-    }
-    textarea{ min-height:90px; resize:vertical; }
+/* DIVIDER */
+.pv-divider{
+  margin-top:10mm;
+  border-top:1px solid #000;
+}
 
-    .top-meta{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:12px;
-      margin-top:14px;
-    }
-    @media (max-width: 800px){
-      .top-meta{ grid-template-columns:1fr; }
-    }
+/* ===============================
+   PRINT RULES
+================================ */
+@media print{
+  header,
+  .card{ display:none !important; }
 
-    .sections{
-      display:flex;
-      flex-direction:column;
-      gap:14px;
-      margin-top:14px;
-    }
+  .print-view{ display:block; }
 
-    .section{
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      padding:14px;
-      background:#fff;
-    }
-    .section-head{
-      display:flex;
-      justify-content:space-between;
-      gap:12px;
-      align-items:flex-start;
-      padding-bottom:10px;
-      border-bottom:1px dashed var(--line);
-      margin-bottom:12px;
-    }
-    .section-title{
-      display:grid;
-      grid-template-columns: 1fr 160px;
-      gap:10px;
-      width:100%;
-    }
-    @media (max-width: 800px){
-      .section-title{ grid-template-columns:1fr; }
-    }
-
-    .section-actions{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-
-    .items{
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-
-    .item{
-      border:1px solid var(--line);
-      border-radius:var(--radius-sm);
-      padding:12px;
-      background:linear-gradient(#fff,#fff) padding-box, linear-gradient(90deg, rgba(0,0,0,.04), rgba(0,0,0,0)) border-box;
-    }
-
-    .item-grid{
-      display:grid;
-      grid-template-columns: 2fr 0.8fr 1fr 1fr 1fr 42px;
-      gap:10px;
-      align-items:end;
-    }
-    @media (max-width: 980px){
-      .item-grid{
-        grid-template-columns: 1fr 1fr;
-      }
-      .item-grid .col-trash{ justify-self:end; }
-    }
-
-    .money{
-      text-align:right;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .note-row{
-      margin-top:10px;
-      display:grid;
-      grid-template-columns:1fr;
-      gap:8px;
-    }
-
-    .icon-btn{
-      width:42px;
-      height:42px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background:var(--soft);
-      cursor:pointer;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      transition:transform .05s ease;
-    }
-    .icon-btn:active{ transform:translateY(1px); }
-
-    .totals{
-      margin-top:18px;
-      display:flex;
-      justify-content:flex-end;
-    }
-    .totals-card{
-      width:min(440px, 100%);
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      padding:14px;
-      background:#fff;
-    }
-    .totals-row{
-      display:flex;
-      justify-content:space-between;
-      padding:8px 0;
-      border-bottom:1px dashed var(--line);
-      font-variant-numeric: tabular-nums;
-    }
-    .totals-row:last-child{ border-bottom:none; }
-    .totals-row strong{ font-size:18px; }
-
-    .hint{
-      color:var(--muted);
-      font-size:13px;
-      margin-top:8px;
-    }
-
-    /* Print / PDF */
-    @media print{
-      header, .header-actions, .btn, .icon-btn, .section-actions, .hint { display:none !important; }
-      body{ background:#fff; }
-      .wrap{ max-width:100%; padding:0; }
-      .card{ box-shadow:none; border:none; padding:0; }
-      .section{ break-inside:avoid; box-shadow:none; }
-      input, textarea{
-        border:1px solid #ddd;
-        box-shadow:none !important;
-      }
-    }
-  </style>
+  body{ margin:0; }
+  @page{ margin:0; }
+}
+</style>
 </head>
 
 <body>
-  <div class="wrap">
-    <header>
-      <div>
-        <h1>Cenová ponuka</h1>
-        <div class="hint">Čierno-biely formulár • oblé tlačidlá • export cez tlač do PDF</div>
-      </div>
-      <div class="header-actions">
-        <button class="btn btn--ghost" id="btnAddSection" type="button">+ Pridať sekciu</button>
-        <button class="btn btn--secondary" id="btnReset" type="button">Vymazať</button>
-        <button class="btn btn--primary" id="btnPrint" type="button">Export do PDF</button>
-      </div>
-    </header>
+<div class="wrap">
 
-    <div class="card">
-      <div class="grid">
-        <div>
-          <label for="offerTitle">Názov</label>
-          <input id="offerTitle" type="text" value="Cenová ponuka" />
-        </div>
-        <div>
-          <label for="offerSubtitle">Podnadpis</label>
-          <input id="offerSubtitle" type="text" placeholder="Napríklad na názov produktu" />
-        </div>
-      </div>
+<header>
+  <h1>Cenová ponuka – editor</h1>
+  <div>
+    <button class="btn" onclick="window.print()">Export do PDF</button>
+  </div>
+</header>
 
-      <div class="top-meta">
-        <div>
-          <label for="clientName">Klient / Projekt (voliteľné)</label>
-          <input id="clientName" type="text" placeholder="Názov klienta alebo projektu" />
-        </div>
-        <div>
-          <label for="validUntil">Platnosť do (voliteľné)</label>
-          <input id="validUntil" type="text" placeholder="napr. 31. 03. 2026" />
-        </div>
-        <div style="grid-column:1/-1;">
-          <label for="offerNote">Poznámka k ponuke (voliteľné)</label>
-          <textarea id="offerNote" placeholder="Krátka poznámka..."></textarea>
-        </div>
+<!-- EDIT UI (zat. len symbolicky) -->
+<div class="card">
+  <label>Názov ponuky</label>
+  <input value="Cenová ponuka">
+</div>
+
+<!-- ===============================
+     PRINT VIEW (PDF)
+================================ -->
+<section class="print-view">
+  <div class="print-page">
+
+    <div class="pv-gutter"></div>
+
+    <div class="pv-content">
+
+      <div class="pv-header">
+        <div class="pv-title">Cenová ponuka</div>
+        <div class="pv-subtitle">laluna</div>
       </div>
 
-      <div class="sections" id="sections"></div>
-
-      <div class="totals">
-        <div class="totals-card">
-          <div class="totals-row">
-            <span>Spolu (súčet položiek)</span>
-            <strong class="money" id="grandTotal">0,00 €</strong>
+      <!-- SEKČIA 1 -->
+      <div class="pv-section">
+        <div class="pv-section-head">
+          <div class="pv-section-name">
+            Komunikácia v čakárni praktického lekára
           </div>
-          <div class="hint">Tip: do PDF choď cez „Export do PDF“ (otvorí tlač). V print nastaveniach zvoľ „Uložiť ako PDF“.</div>
+          <div class="pv-section-period">Q4 2025</div>
         </div>
+
+        <table class="pv-table">
+          <thead>
+            <tr>
+              <th class="c-item">Položka</th>
+              <th class="c-spec">Špecifikácia</th>
+              <th class="c-qty">Počet</th>
+              <th class="c-price">Cena</th>
+              <th class="c-disc">Zvýh. cena</th>
+              <th class="c-total">Cena spolu</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="c-item">
+                <div class="pv-item-title">B1 plagát</div>
+                <div class="pv-item-note">+ umiestnenie letáku do uška</div>
+              </td>
+              <td class="c-spec">70 × 100 cm</td>
+              <td class="c-qty">200</td>
+              <td class="c-price">1,50 €</td>
+              <td class="c-disc">1,31 €</td>
+              <td class="c-total"><strong>2 500,00 €</strong></td>
+            </tr>
+
+            <tr>
+              <td class="c-item">
+                <div class="pv-item-title">Umiestnenie letákov</div>
+                <div class="pv-item-note">v stojanoch IDS</div>
+              </td>
+              <td class="c-spec"></td>
+              <td class="c-qty">200</td>
+              <td class="c-price">1,50 €</td>
+              <td class="c-disc">1,31 €</td>
+              <td class="c-total"><strong>2 500,00 €</strong></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="pv-divider"></div>
       </div>
+
+      <!-- SEKČIA 2 -->
+      <div class="pv-section">
+        <div class="pv-section-head">
+          <div class="pv-section-name">
+            Komunikácia v čakárni pediatra
+          </div>
+          <div class="pv-section-period">Q4 2025</div>
+        </div>
+
+        <table class="pv-table">
+          <tbody>
+            <tr>
+              <td class="c-item">
+                <div class="pv-item-title">Umiestnenie letákov</div>
+                <div class="pv-item-note">v stojanoch IDS</div>
+              </td>
+              <td class="c-spec"></td>
+              <td class="c-qty">200</td>
+              <td class="c-price">1,50 €</td>
+              <td class="c-disc">1,31 €</td>
+              <td class="c-total"><strong>2 500,00 €</strong></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="pv-divider"></div>
+      </div>
+
     </div>
   </div>
+</section>
 
-  <template id="tplSection">
-    <div class="section" data-section>
-      <div class="section-head">
-        <div class="section-title">
-          <div>
-            <label>Názov sekcie</label>
-            <input type="text" data-sec-title placeholder="Napríklad: Komunikácia v čakárni praktického lekára" />
-          </div>
-          <div>
-            <label>Obdobie</label>
-            <input type="text" data-sec-period placeholder="Q4 2025" />
-          </div>
-        </div>
-
-        <div class="section-actions">
-          <button class="btn btn--secondary" type="button" data-add-item>+ Položka</button>
-          <button class="btn btn--ghost" type="button" data-del-section>Odstrániť</button>
-        </div>
-      </div>
-
-      <div class="items" data-items></div>
-    </div>
-  </template>
-
-  <template id="tplItem">
-    <div class="item" data-item>
-      <div class="item-grid">
-        <div>
-          <label>Názov položky</label>
-          <input type="text" data-name placeholder="Napríklad: B1 plagát s umiestnením letáku do uška" />
-        </div>
-        <div>
-          <label>Počet</label>
-          <input type="number" min="0" step="1" data-qty value="1" />
-        </div>
-        <div>
-          <label>Cena</label>
-          <input type="number" min="0" step="0.01" data-price placeholder="0.00" />
-        </div>
-        <div>
-          <label>Zvýhodnená cena</label>
-          <input type="number" min="0" step="0.01" data-discount placeholder="0.00" />
-        </div>
-        <div>
-          <label>Cena spolu</label>
-          <input type="text" data-total class="money" value="0,00 €" readonly />
-        </div>
-        <div class="col-trash">
-          <button class="icon-btn" type="button" title="Odstrániť položku" data-del-item>
-            🗑️
-          </button>
-        </div>
-      </div>
-
-      <div class="note-row">
-        <div>
-          <label>Poznámka (voliteľné)</label>
-          <input type="text" data-note placeholder="Voliteľná poznámka k položke..." />
-        </div>
-      </div>
-    </div>
-  </template>
-
-  <script>
-    const elSections = document.getElementById('sections');
-    const tplSection = document.getElementById('tplSection');
-    const tplItem = document.getElementById('tplItem');
-    const grandTotalEl = document.getElementById('grandTotal');
-
-    const moneyFmt = new Intl.NumberFormat('sk-SK', { style: 'currency', currency: 'EUR' });
-
-    function num(v){
-      const n = Number(v);
-      return Number.isFinite(n) ? n : 0;
-    }
-
-    function calcItemTotal(itemEl){
-      const qty = num(itemEl.querySelector('[data-qty]').value);
-      const price = num(itemEl.querySelector('[data-price]').value);
-      const discount = num(itemEl.querySelector('[data-discount]').value);
-
-      // Ak je zvýhodnená cena vyplnená ( >0 ), použijeme ju. Inak použijeme "Cena".
-      const unit = discount > 0 ? discount : price;
-      const total = qty * unit;
-
-      itemEl.querySelector('[data-total]').value = moneyFmt.format(total);
-      return total;
-    }
-
-    function calcGrandTotal(){
-      let sum = 0;
-      elSections.querySelectorAll('[data-item]').forEach(item => {
-        sum += calcItemTotal(item);
-      });
-      grandTotalEl.textContent = moneyFmt.format(sum);
-    }
-
-    function addItem(itemsWrap){
-      const node = tplItem.content.cloneNode(true);
-      const itemEl = node.querySelector('[data-item]');
-
-      // Handlers
-      itemEl.querySelectorAll('input').forEach(inp => {
-        inp.addEventListener('input', () => calcGrandTotal());
-      });
-      itemEl.querySelector('[data-del-item]').addEventListener('click', () => {
-        itemEl.remove();
-        calcGrandTotal();
-      });
-
-      itemsWrap.appendChild(node);
-      calcGrandTotal();
-    }
-
-    function addSection(prefill = {}){
-      const node = tplSection.content.cloneNode(true);
-      const secEl = node.querySelector('[data-section]');
-      const itemsWrap = secEl.querySelector('[data-items]');
-
-      const title = secEl.querySelector('[data-sec-title]');
-      const period = secEl.querySelector('[data-sec-period]');
-
-      title.value = prefill.title || '';
-      period.value = prefill.period || '';
-
-      secEl.querySelector('[data-add-item]').addEventListener('click', () => addItem(itemsWrap));
-      secEl.querySelector('[data-del-section]').addEventListener('click', () => {
-        secEl.remove();
-        calcGrandTotal();
-      });
-
-      elSections.appendChild(node);
-
-      // default: 1 položka v novej sekcii
-      const justAddedSection = elSections.lastElementChild;
-      addItem(justAddedSection.querySelector('[data-items]'));
-    }
-
-    // Top buttons
-    document.getElementById('btnAddSection').addEventListener('click', () => addSection());
-    document.getElementById('btnPrint').addEventListener('click', () => window.print());
-    document.getElementById('btnReset').addEventListener('click', () => {
-      // minimalistický reset bez dialógu (aby to bolo rýchle)
-      document.getElementById('offerTitle').value = 'Cenová ponuka';
-      document.getElementById('offerSubtitle').value = '';
-      document.getElementById('clientName').value = '';
-      document.getElementById('validUntil').value = '';
-      document.getElementById('offerNote').value = '';
-      elSections.innerHTML = '';
-      addSection({
-        title: 'Komunikácia v čakárni praktického lekára',
-        period: 'Q4 2025'
-      });
-      calcGrandTotal();
-    });
-
-    // Init: jedna sekcia + jedna položka
-    addSection({
-      title: 'Komunikácia v čakárni praktického lekára',
-      period: 'Q4 2025'
-    });
-    calcGrandTotal();
-  </script>
+</div>
 </body>
 </html>
