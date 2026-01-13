@@ -157,24 +157,19 @@ textarea{ min-height:70px; resize:vertical; }
 .pv-logo{ position:absolute; top:10mm; right:14mm; width:26mm; height:auto; opacity:0.95; }
 
 .pv-gutter{
-  position:absolute; left:14mm; top:18mm; bottom:26mm;
-  width:42mm; display:flex; flex-direction:column; gap:10mm;
-
-  /* FIX: obrázky nesmú liezť do textu */
-  z-index:0;
+  position:absolute;
+  left:8mm;          /* CHANGE: bolo 14mm -> viac ku kraju */
+  top:12mm;          /* CHANGE: bolo 18mm -> vyššie */
+  bottom:26mm;
+  width:42mm;
+  display:flex; flex-direction:column; gap:10mm;
 }
 .pv-gutter .pv-img{
   width:100%; border-radius:3mm; overflow:hidden;
   border:1px solid #ddd; background:#f6f6f6;
 }
 .pv-gutter .pv-img img{ width:100%; height:auto; display:block; }
-
-/* FIX: posun obsahu doprava mimo šírku gutteru (14mm + 42mm = 56mm) */
-.pv-content{
-  margin-left:60mm;   /* bolo 48mm */
-  position:relative;  /* pre istotu */
-  z-index:2;          /* text nad obrázkami */
-}
+.pv-content{ margin-left:48mm; }
 
 .pv-header{ margin-bottom:12mm; }
 .pv-title{ font-size:34px; font-weight:800; }
@@ -321,6 +316,9 @@ textarea{ min-height:70px; resize:vertical; }
   .wrap{ display:none !important; }
   .print-view{ display:block !important; }
   body{ margin:0; }
+
+  /* CHANGE: zabráni prázdnej druhej strane pri krátkom obsahu */
+  .print-page{ min-height: unset !important; height: auto !important; }
 
   /* ďalšie strany – cca o 2 cm nižšie */
   @page{ margin:20mm 14mm 22mm 14mm; }
