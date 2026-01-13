@@ -131,7 +131,7 @@ textarea{ min-height:70px; resize:vertical; }
   display:grid; grid-template-columns: 180px 160px 200px 40px; gap:10px; align-items:center;
 }
 @media (max-width:900px){ .dp-month{ grid-template-columns:1fr; } }
-.dp-inline{ display:flex; gap:10px; flex-wrap:wrap; align-items:flex-start; margin-top:10px; }
+.dp-inline{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:10px; }
 
 .chip{
   display:inline-flex; align-items:center; gap:8px;
@@ -153,36 +153,13 @@ textarea{ min-height:70px; resize:vertical; }
   position:relative;
 }
 
-/* ===== FIX 1: spacing + positioning in left gutter (images not "na husto") ===== */
-.pv-logo{
-  position:absolute;
-  top:10mm;
-  right:14mm;
-  width:26mm;
-  height:auto;
-  opacity:0.95;
-}
-
-.pv-gutter{
-  position:absolute;
-  left:14mm;
-  top:18mm;
-  bottom:26mm;              /* nech je rezerva nad footerom */
-  width:42mm;
-  display:flex;
-  flex-direction:column;
-  gap:10mm;                 /* rozostupy medzi obrázkami */
-}
-
+.pv-logo{ position:absolute; top:0; right:0; width:26mm; }
+.pv-gutter{ position:absolute; left:0; top:0; bottom:18mm; width:42mm; }
 .pv-gutter .pv-img{
-  width:100%;
-  overflow:hidden;
-  border:1px solid #ddd;
-  background:#f6f6f6;
-  border-radius:2.2mm;      /* ===== FIX 2: jemnejšie rohy ===== */
+  width:100%; border-radius:3mm; overflow:hidden;
+  border:1px solid #ddd; background:#f6f6f6;
 }
 .pv-gutter .pv-img img{ width:100%; height:auto; display:block; }
-
 .pv-content{ margin-left:48mm; }
 
 .pv-header{ margin-bottom:12mm; }
@@ -277,8 +254,9 @@ textarea{ min-height:70px; resize:vertical; }
 .pv-dp-month-table .m-panels{ width:16%; text-align:right; padding-right:10px; }
 .pv-dp-month-table .m-col{ text-align:right; }
 
+/* ✅ ZMENA #1: posun spodnej lišty nižšie cca o 1,5 cm */
 .pv-footer{
-  position:fixed; left:0; right:0; bottom:0;
+  position:fixed; left:0; right:0; bottom:-15mm;
   height:18mm;
   display:flex; align-items:flex-end; justify-content:center;
   padding:0 14mm 6mm 14mm;
@@ -311,7 +289,6 @@ textarea{ min-height:70px; resize:vertical; }
   .wrap{ display:none !important; }
   .print-view{ display:block !important; }
   body{ margin:0; }
-  /* pozn.: browserové URL dole vypneš iba v Print dialogu -> Headers/Footers OFF */
   @page{ margin:18mm 14mm 22mm 14mm; }
 }
 </style>
@@ -503,7 +480,7 @@ textarea{ min-height:70px; resize:vertical; }
 
         <div data-dp-rates></div>
 
-        <!-- DP note toggle (default "nie") -->
+        <!-- DP note toggle -->
         <div class="dp-inline">
           <span class="chip">
             <input type="checkbox" data-dp-note-on>
@@ -708,6 +685,17 @@ textarea{ min-height:70px; resize:vertical; }
 </template>
 
 <script>
+/* 🔒 Jednoduché heslo pri otvorení (client-side) */
+(function gate(){
+  const PASS = "Ids159263";
+  const entered = prompt("Zadajte prístupový kód:");
+  if(entered !== PASS){
+    document.documentElement.innerHTML = "";
+    document.write("<div style='font-family:Onest,system-ui,sans-serif;padding:24px;font-weight:800;'>Prístup zamietnutý.</div>");
+    throw new Error("Access denied");
+  }
+})();
+
 const moneyFmt = new Intl.NumberFormat('sk-SK', { style:'currency', currency:'EUR' });
 function n(v){ const x = Number(v); return Number.isFinite(x) ? x : 0; }
 function formatMoney(val){ return moneyFmt.format(val); }
@@ -1063,8 +1051,16 @@ function wireSection(secEl){
       if(ratesWrap.children.length === 0){
         dpAddRate(secEl); dpAddRate(secEl);
         const rows = ratesWrap.querySelectorAll('[data-dp-rate]');
-        if(rows[0]) rows[0].querySelector('[data-sec]').value = '15';
-        if(rows[1]) rows[1].querySelector('[data-sec]').value = '30';
+
+        /* ✅ ZMENA #2: prednastavené ceny */
+        if(rows[0]){
+          rows[0].querySelector('[data-sec]').value = '15';
+          rows[0].querySelector('[data-base]').value = '11.50';
+        }
+        if(rows[1]){
+          rows[1].querySelector('[data-sec]').value = '30';
+          rows[1].querySelector('[data-base]').value = '19.50';
+        }
       }
       const specsWrap = secEl.querySelector('[data-dp-specs]');
       if(specsWrap.children.length === 0) dpAddSpec(secEl);
@@ -1385,6 +1381,7 @@ function renderPDF(){
       return;
     }
 
+    // DP section
     const dp = s.dp;
 
     const dpTable = document.createElement('table');
@@ -1541,7 +1538,6 @@ function renderPDF(){
 
   const pvStdNote = document.getElementById('pvStdNote');
   pvStdNote.innerHTML = '';
-
   if(state.stdNoteOn && anyStandard && lastStandardSectionEl){
     const ndiv = document.createElement('div');
     ndiv.className = 'pv-note-block';
