@@ -171,12 +171,6 @@ textarea{ min-height:70px; resize:vertical; }
 .pv-subtitle{ font-size:16px; margin-top:4px; font-weight:500; }
 
 .pv-section{ margin-top:12mm; break-inside:avoid; page-break-inside:avoid; }
-
-/* ✅ NOVÉ: ak je DP na novej strane, posuň ho nižšie */
-.pv-section.page-start{
-  margin-top:18mm;
-}
-
 .pv-section-name{ font-size:13px; font-weight:800; }
 .pv-section-period{ margin-top:2mm; font-size:12px; font-weight:500; color:#111; }
 
@@ -489,8 +483,15 @@ textarea{ min-height:70px; resize:vertical; }
 
         <div data-dp-rates></div>
 
+        <!-- ONLY CHANGE: DP note toggle (default "nie") -->
         <div class="dp-inline">
-          <span class="chip"><input type="checkbox" data-dp-note-on checked> <span>V PDF pridať text pod digitálne panely</span></span>
+          <span class="chip">
+            <input type="checkbox" data-dp-note-on>
+            <span>Doplnkový text k digitálnym panelom (v PDF) – áno/nie</span>
+          </span>
+          <div class="small" style="margin-top:2px; color:#888;">
+            (nenápadné – zobrazí sa iba raz pod digitálnymi panelmi)
+          </div>
         </div>
 
         <div class="small" style="margin-top:10px; font-weight:800;">Fotografie k digitálnym panelom (voliteľné)</div>
@@ -1028,6 +1029,8 @@ function wireSection(secEl){
   dpAddImageSlot(dpImagesWrap);
   dpAddImageSlot(dpImagesWrap);
   secEl.querySelector('[data-dp-note]').value = '';
+  // ONLY CHANGE: default DP note toggle = "nie"
+  secEl.querySelector('[data-dp-note-on]').checked = false;
 
   function applyKind(){
     const k = kindSel.value;
@@ -1219,14 +1222,12 @@ function renderPDF(){
   let grandTotal = 0;
   let anyStandard = false;
 
+  // ONLY CHANGE: remember last standard section to insert note right after it
+  let lastStandardSectionEl = null;
+
   state.sections.forEach(s => {
     const secDiv = document.createElement('div');
     secDiv.className = 'pv-section';
-
-    /* ✅ NOVÉ: DP sekciu posuň nižšie (prakticky rieši "druhú stranu je pri strope") */
-    if(s.kind === 'dp'){
-      secDiv.classList.add('page-start');
-    }
 
     const name = document.createElement('div');
     name.className = 'pv-section-name';
@@ -1244,7 +1245,6 @@ function renderPDF(){
       const table = document.createElement('table');
       table.className = 'pv-table pv-std-table';
 
-      // FIX: colgroup for perfect header/data alignment
       const colg = document.createElement('colgroup');
       colg.innerHTML = `
         <col style="width:44%">
@@ -1362,6 +1362,9 @@ function renderPDF(){
       divLine.className = 'pv-divider';
       secDiv.appendChild(divLine);
 
+      // ONLY CHANGE: remember last standard section
+      lastStandardSectionEl = secDiv;
+
       pvSections.appendChild(secDiv);
       return;
     }
@@ -1369,7 +1372,6 @@ function renderPDF(){
     // DP section – IMPORTANT FIX: no extra DP title here (was causing double title)
     const dp = s.dp;
 
-    // rate table
     const dpTable = document.createElement('table');
     dpTable.className = 'pv-table pv-dp-table';
 
@@ -1508,6 +1510,7 @@ function renderPDF(){
       secDiv.appendChild(block);
     });
 
+    // DP note appears only if toggled ON and text exists
     if(dp.noteOn && dp.noteText){
       const note = document.createElement('div');
       note.className = 'pv-note-block';
@@ -1522,18 +1525,21 @@ function renderPDF(){
     pvSections.appendChild(secDiv);
   });
 
+  // ONLY CHANGE: move std note directly under last standard section (not at end)
   const pvStdNote = document.getElementById('pvStdNote');
   pvStdNote.innerHTML = '';
-  if(state.stdNoteOn && anyStandard){
+
+  if(state.stdNoteOn && anyStandard && lastStandardSectionEl){
     const ndiv = document.createElement('div');
     ndiv.className = 'pv-note-block';
     ndiv.textContent =
       'Súčasťou kampane je kompletná fotodokumentácia plôch. V prípade odovzdania zásielok je súčasťou kampane kompletný zoznam odovzdaných zásielok.';
-    pvStdNote.appendChild(ndiv);
 
     const line = document.createElement('div');
     line.className = 'pv-divider';
-    pvStdNote.appendChild(line);
+
+    lastStandardSectionEl.insertAdjacentElement('afterend', ndiv);
+    ndiv.insertAdjacentElement('afterend', line);
   }
 
   const pvGrandWrap = document.getElementById('pvGrandWrap');
