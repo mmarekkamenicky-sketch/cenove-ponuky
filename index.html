@@ -143,20 +143,6 @@ textarea{ min-height:70px; resize:vertical; }
 .dp-img{ margin-top:10px; display:flex; gap:12px; flex-wrap:wrap; align-items:flex-start; }
 .dp-img .thumb{ width:140px; height:105px; }
 
-/* ✅ NEW: tiny, grey helper option text */
-.dp-helper{
-  margin-top:10px;
-  font-size:11px;
-  color:#777;
-  line-height:1.35;
-}
-.dp-helper .chip{ font-size:12px; }
-.dp-helper-text{
-  margin-top:8px;
-  padding-left:2px;
-  white-space:pre-wrap;
-}
-
 /* PRINT / PDF */
 .print-view{ display:none; }
 
@@ -185,6 +171,12 @@ textarea{ min-height:70px; resize:vertical; }
 .pv-subtitle{ font-size:16px; margin-top:4px; font-weight:500; }
 
 .pv-section{ margin-top:12mm; break-inside:avoid; page-break-inside:avoid; }
+
+/* ✅ NOVÉ: ak je DP na novej strane, posuň ho nižšie */
+.pv-section.page-start{
+  margin-top:18mm;
+}
+
 .pv-section-name{ font-size:13px; font-weight:800; }
 .pv-section-period{ margin-top:2mm; font-size:12px; font-weight:500; color:#111; }
 
@@ -396,9 +388,7 @@ textarea{ min-height:70px; resize:vertical; }
 
       <div id="pvSections"></div>
 
-      <!-- NOTE: pvStdNote exists in DOM, but we no longer use it (note is now placed under standard sections). -->
-      <div id="pvStdNote" style="display:none;"></div>
-
+      <div id="pvStdNote"></div>
       <div id="pvGrandWrap"></div>
 
       <div class="pv-note-block" style="margin-top:8mm; font-weight:900;">Ceny sú bez DPH.</div>
@@ -509,24 +499,6 @@ textarea{ min-height:70px; resize:vertical; }
         <div class="note-box" style="margin-top:10px;">
           <label>Text pod digitálne panely (voliteľné)</label>
           <textarea data-dp-note></textarea>
-        </div>
-
-        <!-- ✅ NEW (only change you asked): optional tiny grey helper text, once per DP section -->
-        <div class="dp-helper">
-          <div class="chip" style="background:#fafafa;">
-            <input type="checkbox" data-dp-helper-on>
-            <span>Doplnkový text k digitálnym panelom (áno / nie)</span>
-          </div>
-          <div class="dp-helper-text" data-dp-helper-text style="display:none;">
-Súčasťou kampane u digitálnych panelov je:
-Aktuálny počet fungujúcich panelov v daný mesiac, dĺžka slučky, priemerná návštevnosť za daný mesiac, plánovaný počet prehraní za daný mesiac, reálny počet prehraní za daný mesiac, počet možných videní za daný mesiac.
-Komunikácia na pacienta prebieha prostredníctvom dynamickej slučky zloženej z krátkych animovaných sekvencií.
-Slučka má 8 - 10 minút a skladá sa z časti vyhradeného pre lekára (30 %), edukačnej časti (30 %) a komerčnej časti (40%).
-Komerčná časť je obmedzená, aby bola Vaša kampaň čo najviac viditeľná.
-Rozmer digitálneho panelu je 55 x 100 cm, umiestnený priamo v čakárni lekára.
-Počty panelov sú odhadované.
-Fakturovať budeme len reálny počet panelov v daný mesiac.
-          </div>
         </div>
       </div>
 
@@ -1057,17 +1029,6 @@ function wireSection(secEl){
   dpAddImageSlot(dpImagesWrap);
   secEl.querySelector('[data-dp-note]').value = '';
 
-  // ✅ NEW: helper default OFF, and show/hide text
-  const helperOn = secEl.querySelector('[data-dp-helper-on]');
-  const helperText = secEl.querySelector('[data-dp-helper-text]');
-  if(helperOn && helperText){
-    helperOn.checked = false;
-    helperText.style.display = 'none';
-    helperOn.addEventListener('change', () => {
-      helperText.style.display = helperOn.checked ? 'block' : 'none';
-    });
-  }
-
   function applyKind(){
     const k = kindSel.value;
     if(k === 'dp'){
@@ -1140,8 +1101,6 @@ function collectDP(secEl, imagesMode){
   const noteOn = secEl.querySelector('[data-dp-note-on]').checked;
   const noteText = (secEl.querySelector('[data-dp-note]').value || '').trim();
 
-  const dpHelperOn = !!secEl.querySelector('[data-dp-helper-on]')?.checked;
-
   const dpImgs = [];
   if(imagesMode === 'with'){
     const thumbs = secEl.querySelectorAll('[data-dp-images] .thumb');
@@ -1162,7 +1121,7 @@ function collectDP(secEl, imagesMode){
     specs.push({ spec, specImg, months });
   });
 
-  return { rates, specs, showColSum, noteOn, noteText, dpImgs, dpHelperOn };
+  return { rates, specs, showColSum, noteOn, noteText, dpImgs };
 }
 
 function collectState(){
@@ -1258,10 +1217,16 @@ function renderPDF(){
   pvSections.innerHTML = '';
 
   let grandTotal = 0;
+  let anyStandard = false;
 
   state.sections.forEach(s => {
     const secDiv = document.createElement('div');
     secDiv.className = 'pv-section';
+
+    /* ✅ NOVÉ: DP sekciu posuň nižšie (prakticky rieši "druhú stranu je pri strope") */
+    if(s.kind === 'dp'){
+      secDiv.classList.add('page-start');
+    }
 
     const name = document.createElement('div');
     name.className = 'pv-section-name';
@@ -1274,9 +1239,12 @@ function renderPDF(){
     secDiv.appendChild(per);
 
     if(s.kind === 'standard'){
+      anyStandard = true;
+
       const table = document.createElement('table');
       table.className = 'pv-table pv-std-table';
 
+      // FIX: colgroup for perfect header/data alignment
       const colg = document.createElement('colgroup');
       colg.innerHTML = `
         <col style="width:44%">
@@ -1390,14 +1358,6 @@ function renderPDF(){
         secDiv.appendChild(exDiv);
       }
 
-      if(state.stdNoteOn){
-        const ndiv = document.createElement('div');
-        ndiv.className = 'pv-note-block';
-        ndiv.textContent =
-          'Súčasťou kampane je kompletná fotodokumentácia plôch. V prípade odovzdania zásielok je súčasťou kampane kompletný zoznam odovzdaných zásielok.';
-        secDiv.appendChild(ndiv);
-      }
-
       const divLine = document.createElement('div');
       divLine.className = 'pv-divider';
       secDiv.appendChild(divLine);
@@ -1406,9 +1366,10 @@ function renderPDF(){
       return;
     }
 
-    // DP section
+    // DP section – IMPORTANT FIX: no extra DP title here (was causing double title)
     const dp = s.dp;
 
+    // rate table
     const dpTable = document.createElement('table');
     dpTable.className = 'pv-table pv-dp-table';
 
@@ -1554,27 +1515,6 @@ function renderPDF(){
       secDiv.appendChild(note);
     }
 
-    // ✅ NEW: optional helper text in PDF, once per DP section (small, grey)
-    if(dp.dpHelperOn){
-      const helper = document.createElement('div');
-      helper.className = 'pv-note-block';
-      helper.style.marginTop = '5mm';
-      helper.style.fontSize = '9.6px';
-      helper.style.color = '#777';
-      helper.style.lineHeight = '1.35';
-      helper.style.whiteSpace = 'pre-wrap';
-      helper.textContent =
-`Súčasťou kampane u digitálnych panelov je:
-Aktuálny počet fungujúcich panelov v daný mesiac, dĺžka slučky, priemerná návštevnosť za daný mesiac, plánovaný počet prehraní za daný mesiac, reálny počet prehraní za daný mesiac, počet možných videní za daný mesiac.
-Komunikácia na pacienta prebieha prostredníctvom dynamickej slučky zloženej z krátkych animovaných sekvencií.
-Slučka má 8 - 10 minút a skladá sa z časti vyhradeného pre lekára (30 %), edukačnej časti (30 %) a komerčnej časti (40%).
-Komerčná časť je obmedzená, aby bola Vaša kampaň čo najviac viditeľná.
-Rozmer digitálneho panelu je 55 x 100 cm, umiestnený priamo v čakárni lekára.
-Počty panelov sú odhadované.
-Fakturovať budeme len reálny počet panelov v daný mesiac.`;
-      secDiv.appendChild(helper);
-    }
-
     const divLine = document.createElement('div');
     divLine.className = 'pv-divider';
     secDiv.appendChild(divLine);
@@ -1583,7 +1523,18 @@ Fakturovať budeme len reálny počet panelov v daný mesiac.`;
   });
 
   const pvStdNote = document.getElementById('pvStdNote');
-  if(pvStdNote) pvStdNote.innerHTML = '';
+  pvStdNote.innerHTML = '';
+  if(state.stdNoteOn && anyStandard){
+    const ndiv = document.createElement('div');
+    ndiv.className = 'pv-note-block';
+    ndiv.textContent =
+      'Súčasťou kampane je kompletná fotodokumentácia plôch. V prípade odovzdania zásielok je súčasťou kampane kompletný zoznam odovzdaných zásielok.';
+    pvStdNote.appendChild(ndiv);
+
+    const line = document.createElement('div');
+    line.className = 'pv-divider';
+    pvStdNote.appendChild(line);
+  }
 
   const pvGrandWrap = document.getElementById('pvGrandWrap');
   pvGrandWrap.innerHTML = '';
