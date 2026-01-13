@@ -147,59 +147,59 @@ textarea{ min-height:70px; resize:vertical; }
 /* PRINT / PDF */
 .print-view{ display:none; }
 
-/* ====== PRINT LAYOUT (FIXED) ======
-   - fotky väčšie a bez orezania (contain)
-   - viac vľavo (gutter margin-left)
-   - vyššie (gutter margin-top)
-   - stále bez prekrývania textu
-*/
 .print-page{
   width:210mm;
-  min-height:297mm;
-  margin:0 auto;
-  background:#fff;
-  padding:0;
+  margin:0 auto; background:#fff;
+  padding:14mm 14mm 26mm 10mm; /* viac doľava + vyššie (tvoje želanie) */
   position:relative;
+}
+
+/* logo vpravo hore – ostane pekne v rohu v rámci paddingu */
+.pv-logo{
+  position:absolute;
+  top:0;
+  right:0;
+  width:26mm; height:auto; opacity:0.95;
+}
+
+/* ====== KLÚČOVÝ FIX: GRID layout (žiadne absolútne pozicovanie fotiek) ====== */
+.pv-grid{
   display:grid;
-  grid-template-columns:55mm 1fr; /* bolo 42mm => fotky maličké */
-  column-gap:7mm;                /* jemne viac vzduchu */
+  grid-template-columns: 48mm 1fr;  /* širší stĺpec na fotky = plnšie */
+  column-gap:10mm;
+  align-items:start;
 }
 
-.pv-logo{ position:absolute; top:10mm; right:14mm; width:26mm; height:auto; opacity:0.95; }
-
+/* ľavý stĺpec fotiek */
 .pv-gutter{
-  grid-column:1;
-  margin-left:5mm;   /* viac vľavo */
-  margin-top:12mm;   /* vyššie */
-  margin-bottom:26mm;
-  display:flex; flex-direction:column; gap:10mm;
+  display:flex;
+  flex-direction:column;
+  gap:10mm;
 }
 
+/* box fotky: fixná výška -> žiadne zmenšovanie podľa počtu */
 .pv-gutter .pv-img{
   width:100%;
-  height:34mm;       /* väčší rámik */
-  border-radius:2mm; /* jemné zaoblenie */
+  height:34mm;          /* plnohodnotná výška (bez škálovania podľa počtu) */
+  border-radius:2mm;    /* jemné rohy, nie “oblé jak keksík” */
   overflow:hidden;
   border:1px solid #ddd;
-  background:#fff;
-  padding:2mm;       /* aby fotka nebola nalepená na okraj rámika */
-  break-inside:avoid;
-  page-break-inside:avoid;
+  background:#f6f6f6;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
+/* žiadne orezanie: contain */
 .pv-gutter .pv-img img{
   width:100%;
   height:100%;
-  object-fit:contain; /* KĽÚČ: nič sa neoreže */
+  object-fit:contain;   /* NEKROJÍ */
   display:block;
 }
 
-.pv-content{
-  grid-column:2;
-  margin-top:14mm; /* nech je content pekne zarovnaný s fotkami */
-  padding-right:14mm;
-}
-
+/* pravý obsah */
+.pv-content{ min-width:0; }
 /* ====== koniec fixu ====== */
 
 .pv-header{ margin-bottom:12mm; }
@@ -314,7 +314,8 @@ textarea{ min-height:70px; resize:vertical; }
 .pv-footer .right{ text-align:right; font-weight:800; }
 
 .pv-no-images .pv-gutter{ display:none; }
-.pv-no-images .pv-content{ grid-column:1 / span 2; margin-top:14mm; padding-right:14mm; }
+.pv-no-images .pv-grid{ grid-template-columns: 1fr; }
+.pv-no-images .pv-content{ }
 
 .pv-or-row td{
   padding:10px 0;
@@ -450,20 +451,24 @@ textarea{ min-height:70px; resize:vertical; }
 <section class="print-view" id="printView">
   <div class="print-page" id="printPage">
     <img class="pv-logo" id="pvLogo" src="ids-logo.png" alt="IDS logo" />
-    <div class="pv-gutter" id="pvGutter"></div>
 
-    <div class="pv-content">
-      <div class="pv-header">
-        <div class="pv-title" id="pvTitle">Cenová ponuka</div>
-        <div class="pv-subtitle" id="pvSubtitle"></div>
+    <!-- GRID WRAP -->
+    <div class="pv-grid" id="pvGrid">
+      <div class="pv-gutter" id="pvGutter"></div>
+
+      <div class="pv-content">
+        <div class="pv-header">
+          <div class="pv-title" id="pvTitle">Cenová ponuka</div>
+          <div class="pv-subtitle" id="pvSubtitle"></div>
+        </div>
+
+        <div id="pvSections"></div>
+
+        <div id="pvStdNote"></div>
+        <div id="pvGrandWrap"></div>
+
+        <div class="pv-note-block" style="margin-top:8mm; font-weight:900;">Ceny sú bez DPH.</div>
       </div>
-
-      <div id="pvSections"></div>
-
-      <div id="pvStdNote"></div>
-      <div id="pvGrandWrap"></div>
-
-      <div class="pv-note-block" style="margin-top:8mm; font-weight:900;">Ceny sú bez DPH.</div>
     </div>
   </div>
 
@@ -512,6 +517,7 @@ textarea{ min-height:70px; resize:vertical; }
   <option value="Gynekológ"></option>
 </datalist>
 
+<!-- TEMPLATES (nezmenené) -->
 <template id="tplSection">
   <div class="section" data-section>
     <div class="section-head">
