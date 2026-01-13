@@ -148,7 +148,8 @@ textarea{ min-height:70px; resize:vertical; }
 .print-view{ display:none; }
 
 .print-page{
-  width:210mm; min-height:297mm;
+  width:210mm;
+  min-height:297mm;
   margin:0 auto; background:#fff;
   padding:0;
   position:relative;
@@ -156,20 +157,28 @@ textarea{ min-height:70px; resize:vertical; }
 
 .pv-logo{ position:absolute; top:10mm; right:14mm; width:26mm; height:auto; opacity:0.95; }
 
+/* ====== FIXED: gutter viac doľava + vyššie, a hlavne bez prekrývania s textom ====== */
 .pv-gutter{
   position:absolute;
-  left:8mm;          /* CHANGE: bolo 14mm -> viac ku kraju */
-  top:12mm;          /* CHANGE: bolo 18mm -> vyššie */
+  left:10mm;            /* bolo 14mm */
+  top:14mm;             /* bolo 18mm */
   bottom:26mm;
   width:42mm;
   display:flex; flex-direction:column; gap:10mm;
 }
 .pv-gutter .pv-img{
-  width:100%; border-radius:3mm; overflow:hidden;
-  border:1px solid #ddd; background:#f6f6f6;
+  width:100%;
+  border-radius:2mm;    /* bolo 3mm (príliš oblé) */
+  overflow:hidden;
+  border:1px solid #ddd;
+  background:#f6f6f6;
 }
 .pv-gutter .pv-img img{ width:100%; height:auto; display:block; }
-.pv-content{ margin-left:48mm; }
+
+/* text musí začínať až za gutterom (left + width + medzera) => 10 + 42 + ~6 = 58mm */
+.pv-content{ margin-left:58mm; }  /* bolo 48mm => PREKRYV */
+
+/* ====== koniec fixu ====== */
 
 .pv-header{ margin-bottom:12mm; }
 .pv-title{ font-size:34px; font-weight:800; }
@@ -317,14 +326,14 @@ textarea{ min-height:70px; resize:vertical; }
   .print-view{ display:block !important; }
   body{ margin:0; }
 
-  /* CHANGE: zabráni prázdnej druhej strane pri krátkom obsahu */
-  .print-page{ min-height: unset !important; height: auto !important; }
-
   /* ďalšie strany – cca o 2 cm nižšie */
   @page{ margin:20mm 14mm 22mm 14mm; }
 
   /* prvá strana ostane „po starom“ */
   @page :first{ margin:18mm 14mm 22mm 14mm; }
+
+  /* FIX: aby 1-stranový dokument nerobil prázdnu 2. stranu */
+  .print-page{ min-height:auto !important; }
 
   .lock{ display:none !important; }
 }
