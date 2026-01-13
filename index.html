@@ -11,89 +11,40 @@
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-/* ===============================
-   BASE
-================================ */
 *{ box-sizing:border-box; }
-body{
-  margin:0;
-  font-family:"Onest", system-ui, sans-serif;
-  background:#fff;
-  color:#000;
-}
-.wrap{
-  max-width:1200px;
-  margin:0 auto;
-  padding:24px;
-}
+body{ margin:0; font-family:"Onest", system-ui, sans-serif; background:#fff; color:#000; }
+.wrap{ max-width:1200px; margin:0 auto; padding:24px; }
 h1{ margin:0 0 14px 0; font-size:28px; font-weight:800; }
 
-/* ===============================
-   BUTTONS
-================================ */
-.toolbar{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  align-items:center;
-  margin:12px 0 16px;
-}
-.btn{
-  border-radius:999px;
-  padding:10px 16px;
-  border:1px solid #000;
-  background:#fff;
-  font-weight:800;
-  cursor:pointer;
-}
+/* BUTTONS */
+.toolbar{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:12px 0 16px; }
+.btn{ border-radius:999px; padding:10px 16px; border:1px solid #000; background:#fff; font-weight:800; cursor:pointer; }
 .btn.primary{ background:#000; color:#fff; }
 .btn.secondary{ background:#f2f2f2; border-color:#d0d0d0; }
 .btn.ghost{ background:#fff; border-color:#d0d0d0; }
 
 .icon-btn{
-  width:40px;
-  height:40px;
-  border-radius:999px;
-  border:1px solid #d0d0d0;
-  background:#f2f2f2;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  width:40px; height:40px; border-radius:999px;
+  border:1px solid #d0d0d0; background:#f2f2f2;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
 }
 .icon-btn.danger{
-  background:#fff0f0;
-  border-color:#ffb3b3;
-  color:#c40000;
+  background:#fff0f0; border-color:#ffb3b3; color:#c40000;
 }
 .hint{ color:#666; font-size:13px; margin-top:4px; }
 
-/* ===============================
-   FORM ELEMENTS
-================================ */
+/* FORM */
 label{
-  font-size:12px;
-  text-transform:uppercase;
-  letter-spacing:.08em;
-  font-weight:800;
-  display:block;
-  margin-bottom:4px;
-  color:#111;
+  font-size:12px; text-transform:uppercase; letter-spacing:.08em;
+  font-weight:800; display:block; margin-bottom:4px; color:#111;
 }
 input, select, textarea{
-  width:100%;
-  padding:10px 12px;
-  border-radius:12px;
-  border:1px solid #ccc;
-  font-family:inherit;
-  font-size:14px;
-  background:#fff;
+  width:100%; padding:10px 12px; border-radius:12px;
+  border:1px solid #ccc; font-family:inherit; font-size:14px; background:#fff;
 }
 input[type="number"]{ text-align:right; }
 textarea{ min-height:70px; resize:vertical; }
 .small{ font-size:12px; color:#666; }
-
-/* "dôležité" comboboxy */
 .select-important{
   border-color:#1e63ff !important;
   box-shadow:0 0 0 2px rgba(30,99,255,.12);
@@ -101,373 +52,139 @@ textarea{ min-height:70px; resize:vertical; }
   color:#0b2f9e;
 }
 
-/* ===============================
-   CARDS
-================================ */
-.card{
-  border:1px solid #ddd;
-  border-radius:16px;
-  padding:16px;
-  margin-bottom:16px;
-}
+/* CARDS */
+.card{ border:1px solid #ddd; border-radius:16px; padding:16px; margin-bottom:16px; }
 .card h2{ margin:0 0 12px 0; font-size:18px; font-weight:800; }
 
-/* ===============================
-   GRID HELPERS
-================================ */
+/* GRID */
 .grid-2{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
 .grid-3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; }
 .grid-4{ display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:14px; }
-@media (max-width: 900px){
-  .grid-2,.grid-3,.grid-4{ grid-template-columns:1fr; }
-}
+@media (max-width:900px){ .grid-2,.grid-3,.grid-4{ grid-template-columns:1fr; } }
 
-/* ===============================
-   SECTIONS EDIT
-================================ */
-.sections{
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-}
-.section{
-  border:2px solid #000;
-  border-radius:16px;
-  padding:14px;
-}
+/* SECTIONS */
+.sections{ display:flex; flex-direction:column; gap:14px; }
+.section{ border:2px solid #000; border-radius:16px; padding:14px; }
 .section-head{
-  display:flex;
-  gap:10px;
-  justify-content:space-between;
-  align-items:flex-start;
-  flex-wrap:wrap;
-  margin-bottom:10px;
-  padding-bottom:10px;
-  border-bottom:1px dashed #ddd;
+  display:flex; gap:10px; justify-content:space-between; align-items:flex-start;
+  flex-wrap:wrap; margin-bottom:10px; padding-bottom:10px; border-bottom:1px dashed #ddd;
 }
-.section-title{
-  display:grid;
-  grid-template-columns:1fr 220px 220px;
-  gap:12px;
-  width:100%;
-}
-@media (max-width: 900px){
-  .section-title{ grid-template-columns:1fr; }
-}
-.section-actions{
-  display:flex;
-  gap:10px;
-  align-items:center;
-  justify-content:flex-end;
-  flex-wrap:wrap;
-}
+.section-title{ display:grid; grid-template-columns:1fr 220px 220px; gap:12px; width:100%; }
+@media (max-width:900px){ .section-title{ grid-template-columns:1fr; } }
+.section-actions{ display:flex; gap:10px; align-items:center; justify-content:flex-end; flex-wrap:wrap; }
 .section-bottom{
-  margin-top:12px;
-  padding-top:12px;
-  border-top:1px dashed #ddd;
-  display:flex;
-  justify-content:flex-end;
-  gap:10px;
-  flex-wrap:wrap;
+  margin-top:12px; padding-top:12px; border-top:1px dashed #ddd;
+  display:flex; justify-content:flex-end; gap:10px; flex-wrap:wrap;
 }
 
-/* ===============================
-   ITEMS (standard)
-================================ */
-.items{
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  margin-top:12px;
-}
-.item{
-  border:1px solid #ddd;
-  border-radius:14px;
-  padding:12px;
-}
-.item-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  margin-bottom:10px;
-}
+/* STANDARD ITEMS */
+.items{ display:flex; flex-direction:column; gap:12px; margin-top:12px; }
+.item{ border:1px solid #ddd; border-radius:14px; padding:12px; }
+.item-head{ display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:10px; }
 .item-head .left{ font-weight:800; }
-.item-head .right{
-  display:flex;
-  gap:8px;
-  align-items:center;
-  flex-wrap:wrap;
-}
-.item-foot{
-  margin-top:10px;
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-end;
-  gap:12px;
-  flex-wrap:wrap;
-}
-.price-block{
-  text-align:right;
-  min-width:260px;
-}
-.price-old{
-  font-size:12px;
-  color:#777;
-  text-decoration:line-through;
-  min-height:16px;
-}
-.price-main{
-  font-weight:800;
-  font-size:18px;
-}
-.price-period{
-  margin-top:2px;
-  font-size:11px;
-  color:#777;
-}
+.item-head .right{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.item-foot{ margin-top:10px; display:flex; justify-content:space-between; align-items:flex-end; gap:12px; flex-wrap:wrap; }
+.price-block{ text-align:right; min-width:260px; }
+.price-old{ font-size:12px; color:#777; text-decoration:line-through; min-height:16px; }
+.price-main{ font-weight:800; font-size:18px; }
+.price-period{ margin-top:2px; font-size:11px; color:#777; }
 
-/* OR separator */
 .or-sep{
-  text-align:center;
-  font-weight:900;
-  letter-spacing:.12em;
-  color:#111;
-  background:#f3f3f3;
-  border:1px solid #ddd;
-  border-radius:999px;
-  padding:8px 10px;
-  margin:2px 0;
+  text-align:center; font-weight:900; letter-spacing:.12em; color:#111;
+  background:#f3f3f3; border:1px solid #ddd; border-radius:999px; padding:8px 10px; margin:2px 0;
 }
 
-/* Image upload */
-.preview-row{
-  margin-top:10px;
-  display:flex;
-  gap:12px;
-  align-items:flex-start;
-  flex-wrap:wrap;
-}
+.preview-row{ margin-top:10px; display:flex; gap:12px; align-items:flex-start; flex-wrap:wrap; }
 .thumb{
-  width:120px;
-  height:90px;
-  border:1px solid #ddd;
-  border-radius:12px;
-  overflow:hidden;
-  background:#f6f6f6;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  width:120px; height:90px; border:1px solid #ddd; border-radius:12px;
+  overflow:hidden; background:#f6f6f6; display:flex; align-items:center; justify-content:center;
 }
-.thumb img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  border-radius:10px;
-}
+.thumb img{ width:100%; height:100%; object-fit:cover; border-radius:10px; }
 .note-box{ margin-top:10px; }
 
-/* hide image controls when "bez obrázkov" */
 .images-off .img-controls{ display:none !important; }
 
-/* ===============================
-   DIGITAL PANEL EDIT UI
-================================ */
+/* DP EDIT */
 .dp-wrap{ margin-top:10px; }
-.dp-card{
-  border:1px solid #ddd;
-  border-radius:14px;
-  padding:12px;
-}
-.dp-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-bottom:10px;
-}
-.dp-title{
-  font-weight:900;
-  font-size:16px;
-}
-.dp-actions{
-  display:flex;
-  gap:10px;
-  align-items:center;
-  flex-wrap:wrap;
-}
+.dp-card{ border:1px solid #ddd; border-radius:14px; padding:12px; }
+.dp-head{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; flex-wrap:wrap; margin-bottom:10px; }
+.dp-title{ font-weight:900; font-size:16px; }
+.dp-actions{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+
 .dp-row{
-  display:grid;
-  grid-template-columns: 120px 1fr 1fr 40px;
-  gap:10px;
-  align-items:end;
-  margin-top:10px;
+  display:grid; grid-template-columns: 120px 1fr 1fr 40px; gap:10px; align-items:end; margin-top:10px;
 }
-.dp-row .sec{
-  text-align:center;
-  font-weight:900;
-}
+.dp-row .sec{ text-align:center; font-weight:900; }
 .dp-row .sec input{ text-align:center; font-weight:900; }
 .dp-row .kill{ display:flex; justify-content:flex-end; }
 .dp-row .kill button{ width:40px; height:40px; }
 
-.dp-specs{
-  margin-top:12px;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-}
-.dp-spec{
-  border:1px solid #ddd;
-  border-radius:14px;
-  padding:12px;
-}
+.dp-specs{ margin-top:12px; display:flex; flex-direction:column; gap:12px; }
+.dp-spec{ border:1px solid #ddd; border-radius:14px; padding:12px; }
 .dp-spec-head{
-  display:grid;
-  grid-template-columns: 1fr 180px 180px 40px;
-  gap:10px;
-  align-items:end;
+  display:grid; grid-template-columns: 1fr 180px 180px 40px; gap:10px; align-items:end;
 }
-@media (max-width:900px){
-  .dp-spec-head{ grid-template-columns:1fr; }
-}
-.dp-months{
-  margin-top:10px;
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
+@media (max-width:900px){ .dp-spec-head{ grid-template-columns:1fr; } }
+
+.dp-months{ margin-top:10px; display:flex; flex-direction:column; gap:8px; }
 .dp-month{
-  display:grid;
-  grid-template-columns: 180px 160px 200px 40px;
-  gap:10px;
-  align-items:center;
+  display:grid; grid-template-columns: 180px 160px 200px 40px; gap:10px; align-items:center;
 }
-@media (max-width:900px){
-  .dp-month{ grid-template-columns:1fr; }
-}
-.dp-month .mini{
-  font-size:12px;
-  color:#666;
-}
-.dp-month button{
-  width:40px; height:40px;
-}
-.dp-inline{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  align-items:center;
-  margin-top:10px;
-}
+@media (max-width:900px){ .dp-month{ grid-template-columns:1fr; } }
+.dp-inline{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:10px; }
+
 .chip{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  border:1px solid #ddd;
-  border-radius:999px;
-  padding:8px 12px;
-  background:#f7f7f7;
-  font-weight:800;
-  font-size:13px;
+  display:inline-flex; align-items:center; gap:8px;
+  border:1px solid #ddd; border-radius:999px; padding:8px 12px;
+  background:#f7f7f7; font-weight:800; font-size:13px;
 }
 .chip input{ width:18px; height:18px; }
-.dp-img{
-  margin-top:10px;
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
-  align-items:flex-start;
-}
+
+.dp-img{ margin-top:10px; display:flex; gap:12px; flex-wrap:wrap; align-items:flex-start; }
 .dp-img .thumb{ width:140px; height:105px; }
 
-/* ===============================
-   GLOBAL SETTINGS (end)
-================================ */
-.end-settings{
-  border-top:1px dashed #ddd;
-  padding-top:12px;
-  margin-top:12px;
-}
-
-/* ===============================
-   PRINT / PDF VIEW
-================================ */
+/* PRINT / PDF */
 .print-view{ display:none; }
 
 .print-page{
-  width:210mm;
-  min-height:297mm;
-  margin:0 auto;
-  background:#fff;
-  /* border removed intentionally */
+  width:210mm; min-height:297mm;
+  margin:0 auto; background:#fff;
   padding:18mm 14mm 22mm 14mm;
   position:relative;
 }
 
-/* IDS logo (top-right) */
-.pv-logo{
-  position:absolute;
-  top:10mm;
-  right:14mm;
-  width:26mm;
-  height:auto;
-  opacity:0.95;
-}
+.pv-logo{ position:absolute; top:10mm; right:14mm; width:26mm; height:auto; opacity:0.95; }
 
-/* left gutter for images */
 .pv-gutter{
-  position:absolute;
-  left:14mm;
-  top:18mm;
-  bottom:26mm; /* leave space for footer */
-  width:42mm;
-  display:flex;
-  flex-direction:column;
-  gap:10mm;
+  position:absolute; left:14mm; top:18mm; bottom:26mm;
+  width:42mm; display:flex; flex-direction:column; gap:10mm;
 }
 .pv-gutter .pv-img{
-  width:100%;
-  border-radius:3mm;
-  overflow:hidden;
-  border:1px solid #ddd;
-  background:#f6f6f6;
+  width:100%; border-radius:3mm; overflow:hidden;
+  border:1px solid #ddd; background:#f6f6f6;
 }
-.pv-gutter .pv-img img{
-  width:100%;
-  height:auto;
-  display:block;
-}
-
-/* content shifted right */
+.pv-gutter .pv-img img{ width:100%; height:auto; display:block; }
 .pv-content{ margin-left:48mm; }
 
-/* header */
 .pv-header{ margin-bottom:12mm; }
 .pv-title{ font-size:34px; font-weight:800; }
 .pv-subtitle{ font-size:16px; margin-top:4px; font-weight:500; }
 
-/* section */
 .pv-section{ margin-top:12mm; break-inside:avoid; page-break-inside:avoid; }
 .pv-section-name{ font-size:13px; font-weight:800; }
 .pv-section-period{ margin-top:2mm; font-size:12px; font-weight:500; color:#111; }
 
-/* tables base */
+/* TABLES */
 .pv-table{
-  margin-top:6mm;
-  width:100%;
-  border-collapse:collapse;
-  table-layout:fixed;
+  margin-top:6mm; width:100%;
+  border-collapse:collapse; table-layout:fixed;
   font-size:11.5px;
 }
 .pv-table th{
   text-align:left;
-  font-size:10px;
-  text-transform:uppercase;
-  letter-spacing:.08em;
+  font-size:10px; text-transform:uppercase; letter-spacing:.08em;
   border-bottom:1px solid #000;
-  padding-bottom:6px;
+  padding:0 0 6px 0;
 }
 .pv-table td{
   padding:8px 0;
@@ -475,33 +192,9 @@ textarea{ min-height:70px; resize:vertical; }
 }
 .pv-table tr{ break-inside:avoid; page-break-inside:avoid; }
 
-.c-item{ width:42%; }
-.c-spec{ width:20%; }
-.c-qty{ width:10%; text-align:right; padding-right:10px; }
-.c-price{ width:14%; text-align:left; }     /* align left to feel consistent */
-.c-total{ width:14%; text-align:right; }
-
 .pv-item-title{ font-weight:800; }
 .pv-item-note{ font-size:10.5px; margin-top:2px; color:#111; }
 .pv-item-period{ margin-top:3px; font-size:10px; color:#666; }
-.pv-item-extra{ font-size:10px; margin-top:4px; color:#666; }
-
-.pv-money-old{
-  font-size:10.5px;
-  color:#777;
-  text-decoration:line-through;
-  display:block;
-  line-height:1.05;
-}
-.pv-money-new{
-  font-size:11.5px;
-  font-weight:900;
-  display:block;
-  line-height:1.05;
-}
-
-.pv-divider{ margin-top:8mm; border-top:1px solid #000; }
-
 .pv-note-block{
   margin-top:6mm;
   font-size:10.7px;
@@ -510,13 +203,29 @@ textarea{ min-height:70px; resize:vertical; }
   break-inside:avoid;
   page-break-inside:avoid;
 }
-
-/* DP styles */
-.pv-dp-head{
-  margin-top:3mm;
-  font-weight:900;
-  font-size:13px;
+.pv-money-old{
+  font-size:10.5px; color:#777; text-decoration:line-through;
+  display:block; line-height:1.05;
 }
+.pv-money-new{
+  font-size:11.5px; font-weight:900;
+  display:block; line-height:1.05;
+}
+.pv-divider{ margin-top:8mm; border-top:1px solid #000; }
+
+/* Standard table col alignments */
+.pv-std-table .c-qty,
+.pv-std-table .c-price,
+.pv-std-table .c-total{ text-align:right; }
+
+.pv-qty-max{
+  display:inline-block;
+  text-align:right;
+  line-height:1.05;
+}
+.pv-qty-max strong{ font-weight:900; }
+
+/* DP */
 .pv-dp-table th, .pv-dp-table td{ font-size:11.2px; }
 .pv-dp-sec{ width:16%; text-align:center; }
 .pv-dp-price{ width:24%; text-align:right; }
@@ -549,19 +258,12 @@ textarea{ min-height:70px; resize:vertical; }
 .pv-dp-month-table .m-panels{ width:16%; text-align:right; padding-right:10px; }
 .pv-dp-month-table .m-col{ text-align:right; }
 
-/* footer fixed on every page */
 .pv-footer{
-  position:fixed;
-  left:0;
-  right:0;
-  bottom:0;
+  position:fixed; left:0; right:0; bottom:0;
   height:18mm;
-  display:flex;
-  align-items:flex-end;
-  justify-content:center;
+  display:flex; align-items:flex-end; justify-content:center;
   padding:0 14mm 6mm 14mm;
-  font-size:10.5px;
-  color:#000;
+  font-size:10.5px; color:#000;
 }
 .pv-footer .inner{
   width:210mm;
@@ -569,34 +271,15 @@ textarea{ min-height:70px; resize:vertical; }
   grid-template-columns: 1fr 1fr 1fr;
   align-items:end;
 }
-.pv-footer .left{
-  display:flex;
-  align-items:flex-end;
-  gap:8px;
-}
-.pv-footer img{
-  width:28mm;
-  height:auto;
-  opacity:.95;
-}
-.pv-footer .mid{
-  text-align:center;
-}
-.pv-footer .mid a{
-  color:#000;
-  text-decoration:underline;
-  font-weight:800;
-}
-.pv-footer .right{
-  text-align:right;
-  font-weight:800;
-}
+.pv-footer .left{ display:flex; align-items:flex-end; gap:8px; }
+.pv-footer img{ width:28mm; height:auto; opacity:.95; }
+.pv-footer .mid{ text-align:center; }
+.pv-footer .mid a{ color:#000; text-decoration:underline; font-weight:800; }
+.pv-footer .right{ text-align:right; font-weight:800; }
 
-/* full-width mode (no images) */
 .pv-no-images .pv-gutter{ display:none; }
 .pv-no-images .pv-content{ margin-left:0; }
 
-/* OR row in PDF */
 .pv-or-row td{
   padding:10px 0;
   text-align:center !important;
@@ -605,7 +288,6 @@ textarea{ min-height:70px; resize:vertical; }
   color:#111;
 }
 
-/* print rules */
 @media print{
   .wrap{ display:none !important; }
   .print-view{ display:block !important; }
@@ -625,9 +307,8 @@ textarea{ min-height:70px; resize:vertical; }
     <button class="btn secondary" id="btnAddSection" type="button">+ Pridať sekciu</button>
     <button class="btn ghost" id="btnReset" type="button">Vymazať (demo)</button>
   </div>
-  <div class="hint">V PDF je „zvýhodnenie“ riešené preškrtnutou pôvodnou cenou a novou tučnou cenou pod ňou (bez samostatného stĺpca).</div>
+  <div class="hint">Zvýhodnenie v PDF: pôvodná cena preškrtnutá + pod ňou nová tučná cena (bez samostatného stĺpca).</div>
 
-  <!-- Offer base -->
   <div class="card">
     <h2>Základ ponuky</h2>
 
@@ -656,23 +337,21 @@ textarea{ min-height:70px; resize:vertical; }
           <option value="yes">Áno</option>
           <option value="no" selected>Nie</option>
         </select>
-        <div class="small">Predvolené je NIE.</div>
       </div>
     </div>
 
     <div class="grid-2" style="margin-top:12px;">
-      <div class="chip" title="Text pod štandardné plochy (raz)">
+      <div class="chip">
         <input type="checkbox" id="chkStdNote" checked>
         <span>V PDF pridať text „Súčasťou kampane…“ pod štandardné plochy</span>
       </div>
-      <div class="chip" title="Ceny bez DPH (vždy)">
+      <div class="chip">
         <input type="checkbox" checked disabled>
         <span>„Ceny sú bez DPH.“ (vždy na konci PDF)</span>
       </div>
     </div>
   </div>
 
-  <!-- Sections -->
   <div class="card">
     <h2>Sekcie</h2>
     <div class="sections" id="sections"></div>
@@ -680,7 +359,7 @@ textarea{ min-height:70px; resize:vertical; }
     <div class="end-settings">
       <div class="grid-2">
         <div class="small">
-          Tip: Logo IDS = <strong>ids-logo.png</strong>. Footer logo = <strong>feel.png</strong>.
+          Súbory: <strong>ids-logo.png</strong> (hore vpravo), <strong>feel.png</strong> (footer).
         </div>
         <div style="text-align:right;">
           <button class="btn secondary" id="btnAddSectionBottom" type="button">+ Pridať sekciu</button>
@@ -690,12 +369,9 @@ textarea{ min-height:70px; resize:vertical; }
   </div>
 </div>
 
-<!-- PRINT VIEW -->
 <section class="print-view" id="printView">
   <div class="print-page" id="printPage">
-    <!-- IDS logo -->
     <img class="pv-logo" id="pvLogo" src="ids-logo.png" alt="IDS logo" />
-
     <div class="pv-gutter" id="pvGutter"></div>
 
     <div class="pv-content">
@@ -706,17 +382,13 @@ textarea{ min-height:70px; resize:vertical; }
 
       <div id="pvSections"></div>
 
-      <!-- standard global note goes here -->
       <div id="pvStdNote"></div>
-
-      <!-- grand total optional -->
       <div id="pvGrandWrap"></div>
 
       <div class="pv-note-block" style="margin-top:8mm; font-weight:900;">Ceny sú bez DPH.</div>
     </div>
   </div>
 
-  <!-- footer fixed on every page -->
   <div class="pv-footer">
     <div class="inner">
       <div class="left">
@@ -730,15 +402,11 @@ textarea{ min-height:70px; resize:vertical; }
   </div>
 </section>
 
-<!-- DATALISTS -->
 <datalist id="dlSectionNames">
   <option value="Komunikácia v čakárni pediatra"></option>
   <option value="Komunikácia v čakárni gynekológa"></option>
   <option value="Komunikácia v čakárni praktického lekára"></option>
-  <option value="Komunikácia v čakárni urológa"></option>
   <option value="Osobná návšteva lekára"></option>
-  <option value="Komunikácia v lekárni"></option>
-  <option value="Komunikácia v čakárni gastroenterológa"></option>
 </datalist>
 
 <datalist id="dlTypes">
@@ -748,6 +416,10 @@ textarea{ min-height:70px; resize:vertical; }
   <option value="Umiestnenie letákov"></option>
   <option value="Odovzdanie materiálov"></option>
   <option value="Tlač materiálov"></option>
+
+  <!-- NEW COMBO OPTIONS -->
+  <option value="B1 plagát s umiestnením letáku do uška pod B1 plagát"></option>
+  <option value="A3 plagát s umiestnením letáku pod plagátom v stojane IDS"></option>
 </datalist>
 
 <datalist id="dlMonths">
@@ -761,11 +433,8 @@ textarea{ min-height:70px; resize:vertical; }
   <option value="Praktický lekár"></option>
   <option value="Pediater"></option>
   <option value="Gynekológ"></option>
-  <option value="Urológ"></option>
-  <option value="Gastroenterológ"></option>
 </datalist>
 
-<!-- TEMPLATES -->
 <template id="tplSection">
   <div class="section" data-section>
     <div class="section-head">
@@ -773,7 +442,6 @@ textarea{ min-height:70px; resize:vertical; }
         <div>
           <label>Názov sekcie</label>
           <input data-sec-name list="dlSectionNames" placeholder="napr. Komunikácia v čakárni pediatra" value="">
-          <div class="small">Môžeš vybrať zo zoznamu alebo napísať vlastný názov.</div>
         </div>
         <div>
           <label>Obdobie (Q)</label>
@@ -793,16 +461,13 @@ textarea{ min-height:70px; resize:vertical; }
       </div>
     </div>
 
-    <!-- STANDARD -->
     <div data-standard>
       <div class="items" data-items></div>
-
       <div class="section-bottom">
         <button class="btn secondary" type="button" data-add-item>+ Pridať položku</button>
       </div>
     </div>
 
-    <!-- DIGITAL PANEL -->
     <div data-dp class="dp-wrap" style="display:none;">
       <div class="dp-card">
         <div class="dp-head">
@@ -844,7 +509,6 @@ textarea{ min-height:70px; resize:vertical; }
   <div class="or-sep" data-or-sep>A L E B O</div>
 </template>
 
-<!-- STANDARD ITEM -->
 <template id="tplItem">
   <div class="item" data-item>
     <div class="item-head">
@@ -887,8 +551,8 @@ textarea{ min-height:70px; resize:vertical; }
       </div>
       <div>
         <label>Počet</label>
-        <div class="grid-2" style="grid-template-columns: 1fr 1fr; gap:10px;">
-          <select data-qtymode class="select-important" title="Režim počtu">
+        <div class="grid-2" style="grid-template-columns:1fr 1fr; gap:10px;">
+          <select data-qtymode class="select-important">
             <option value="exact" selected>Presný</option>
             <option value="max">Max</option>
           </select>
@@ -897,7 +561,6 @@ textarea{ min-height:70px; resize:vertical; }
       </div>
     </div>
 
-    <!-- unit pricing -->
     <div class="grid-2" style="margin-top:12px;" data-unit-wrap>
       <div>
         <label>Cena za kus</label>
@@ -909,7 +572,6 @@ textarea{ min-height:70px; resize:vertical; }
       </div>
     </div>
 
-    <!-- fixed total -->
     <div class="grid-2" style="margin-top:12px; display:none;" data-fixed-wrap>
       <div>
         <label>Fixná cena spolu</label>
@@ -936,10 +598,7 @@ textarea{ min-height:70px; resize:vertical; }
         <label>Obrázok (voliteľné)</label>
         <input data-img type="file" accept="image/*">
       </div>
-
-      <div class="thumb" data-thumb>
-        <span class="small">bez obrázka</span>
-      </div>
+      <div class="thumb" data-thumb><span class="small">bez obrázka</span></div>
     </div>
 
     <div class="note-box">
@@ -949,7 +608,6 @@ textarea{ min-height:70px; resize:vertical; }
   </div>
 </template>
 
-<!-- DP RATE ROW -->
 <template id="tplDpRate">
   <div class="dp-row" data-dp-rate>
     <div class="sec">
@@ -970,7 +628,6 @@ textarea{ min-height:70px; resize:vertical; }
   </div>
 </template>
 
-<!-- DP SPEC BLOCK -->
 <template id="tplDpSpec">
   <div class="dp-spec" data-dp-spec>
     <div class="dp-spec-head">
@@ -981,7 +638,6 @@ textarea{ min-height:70px; resize:vertical; }
       <div>
         <label>Rovnaký počet všade</label>
         <input data-same-panels type="number" min="0" step="1" placeholder="napr. 110">
-        <div class="small">Klikneš na tlačidlo ➜ vyplní sa do všetkých riadkov.</div>
       </div>
       <div style="display:flex; gap:10px; align-items:flex-end;">
         <button class="btn secondary" type="button" data-apply-same>Vyplniť všade</button>
@@ -1004,7 +660,6 @@ textarea{ min-height:70px; resize:vertical; }
   </div>
 </template>
 
-<!-- DP MONTH ROW -->
 <template id="tplDpMonth">
   <div class="dp-month" data-dp-month>
     <div>
@@ -1026,26 +681,23 @@ textarea{ min-height:70px; resize:vertical; }
 </template>
 
 <script>
-/* ===============================
-   UTIL
-================================ */
 const moneyFmt = new Intl.NumberFormat('sk-SK', { style:'currency', currency:'EUR' });
 function n(v){ const x = Number(v); return Number.isFinite(x) ? x : 0; }
 function formatMoney(val){ return moneyFmt.format(val); }
 function normalize(s){ return (s || '').trim().toLowerCase(); }
 function pad2(x){ return String(x).padStart(2,'0'); }
-function nowStamp(){
-  const d = new Date();
-  return `${pad2(d.getDate())}.${pad2(d.getMonth()+1)}.${d.getFullYear()} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
-}
-function fileDatePrefix(){
-  const d = new Date();
-  return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
+function nowStamp(){ const d=new Date(); return `${pad2(d.getDate())}.${pad2(d.getMonth()+1)}.${d.getFullYear()} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`; }
+function fileDatePrefix(){ const d=new Date(); return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`; }
+function ensurePeriodPrefix(p){
+  const s=(p||'').trim();
+  if(!s) return s;
+  const low=s.toLowerCase();
+  if(low.startsWith('cena ')) return s;
+  if(low.startsWith('za ')) return 'cena ' + s;
+  return s;
 }
 
-/* ===============================
-   PRESETS (standard)
-================================ */
+/* PRESETS */
 function presetFromType(rawType){
   const t = normalize(rawType);
 
@@ -1061,6 +713,25 @@ function presetFromType(rawType){
   if(t === 'umiestnenie letákov'){
     return { dim:'', title:'Umiestnenie letákov', period:'cena za 3 mesiace' };
   }
+
+  // NEW combo presets:
+  if(t === 'b1 plagát s umiestnením letáku do uška pod b1 plagát'){
+    return {
+      dim:'70 × 100 cm',
+      title:'B1 plagát',
+      note:'S umiestnením letáku do uška pod B1 plagát',
+      period:'cena za 3 mesiace'
+    };
+  }
+  if(t === 'a3 plagát s umiestnením letáku pod plagátom v stojane ids'){
+    return {
+      dim:'42 × 29,7 cm',
+      title:'A3 plagát',
+      note:'S umiestnením letáku pod plagátom v stojane IDS',
+      period:'cena za 3 mesiace'
+    };
+  }
+
   if(t === 'odovzdanie materiálov'){
     return { dim:'', title:'Odovzdanie materiálov', period:'cena za jednu návštevu' };
   }
@@ -1071,19 +742,6 @@ function presetFromType(rawType){
   return { dim:'', title:rawType || '', period:'cena za 3 mesiace' };
 }
 
-function ensurePeriodPrefix(p){
-  const s = (p || '').trim();
-  if(!s) return s;
-  const low = s.toLowerCase();
-  if(low.startsWith('cena ')) return s;
-  // common phrases
-  if(low.startsWith('za ')) return 'cena ' + s;
-  return s;
-}
-
-/* ===============================
-   DOM
-================================ */
 const appRoot = document.getElementById('appRoot');
 const sectionsWrap = document.getElementById('sections');
 const tplSection = document.getElementById('tplSection');
@@ -1095,24 +753,15 @@ const tplDpSpec = document.getElementById('tplDpSpec');
 const tplDpMonth = document.getElementById('tplDpMonth');
 
 const pdfImagesSel = document.getElementById('pdfImages');
-const pdfShowGrandSel = document.getElementById('pdfShowGrand');
 
-/* ===============================
-   UI IMAGES ON/OFF
-================================ */
 function applyImagesSetting(){
   const mode = pdfImagesSel.value;
-  if(mode === 'without'){
-    appRoot.classList.add('images-off');
-  } else {
-    appRoot.classList.remove('images-off');
-  }
+  if(mode === 'without') appRoot.classList.add('images-off');
+  else appRoot.classList.remove('images-off');
 }
 pdfImagesSel.addEventListener('change', applyImagesSetting);
 
-/* ===============================
-   STANDARD ITEM LOGIC
-================================ */
+/* STANDARD ITEMS */
 function setThumb(itemEl, dataUrl){
   const thumb = itemEl.querySelector('[data-thumb]');
   thumb.innerHTML = '';
@@ -1126,22 +775,14 @@ function setThumb(itemEl, dataUrl){
   thumb.appendChild(img);
   itemEl.dataset.img = dataUrl;
 }
-
-function getItemGroupId(itemEl){
-  return itemEl.dataset.orGroup || '';
-}
+function getItemGroupId(itemEl){ return itemEl.dataset.orGroup || ''; }
 
 function togglePriceMode(itemEl){
   const mode = itemEl.querySelector('[data-price-mode]').value;
   const unitWrap = itemEl.querySelector('[data-unit-wrap]');
   const fixedWrap = itemEl.querySelector('[data-fixed-wrap]');
-  if(mode === 'fixed'){
-    unitWrap.style.display = 'none';
-    fixedWrap.style.display = 'grid';
-  } else {
-    unitWrap.style.display = 'grid';
-    fixedWrap.style.display = 'none';
-  }
+  if(mode === 'fixed'){ unitWrap.style.display='none'; fixedWrap.style.display='grid'; }
+  else { unitWrap.style.display='grid'; fixedWrap.style.display='none'; }
   recalcItem(itemEl);
 }
 
@@ -1160,18 +801,16 @@ function recalcItem(itemEl){
   if(priceMode === 'fixed'){
     total = fixedTotal;
     oldText = '';
-  } else {
+  }else{
     const unit = disc > 0 ? disc : unitPrice;
     total = unit * qty;
     if(disc > 0 && unitPrice > 0) oldText = formatMoney(unitPrice);
   }
 
   itemEl.querySelector('[data-old]').textContent = oldText;
-
   const shown = (qtyMode === 'max') ? ('max. ' + formatMoney(total)) : formatMoney(total);
   itemEl.querySelector('[data-total]').textContent = shown;
 
-  // normalize period prefix
   const perEl = itemEl.querySelector('[data-period]');
   perEl.value = ensurePeriodPrefix(perEl.value);
 }
@@ -1180,13 +819,15 @@ function applyPreset(itemEl){
   const typeEl = itemEl.querySelector('[data-type]');
   const dimEl = itemEl.querySelector('[data-dim]');
   const titleEl = itemEl.querySelector('[data-title]');
+  const noteEl = itemEl.querySelector('[data-note]');
   const periodEl = itemEl.querySelector('[data-period]');
   const modeEl = itemEl.querySelector('[data-price-mode]');
 
   const p = presetFromType(typeEl.value);
 
   if(p.dim) dimEl.value = p.dim;
-  if(!titleEl.value && p.title) titleEl.value = p.title;
+  if(p.title) titleEl.value = p.title;
+  if(p.note) noteEl.value = p.note;
 
   const curPer = (periodEl.value ?? '').trim();
   const defaults = new Set(['cena za 3 mesiace','cena za jednu návštevu','']);
@@ -1211,7 +852,6 @@ function wireItem(itemEl){
 
   typeInput.addEventListener('change', () => { applyPreset(itemEl); recalcItem(itemEl); });
   typeInput.addEventListener('blur', () => { applyPreset(itemEl); recalcItem(itemEl); });
-
   itemEl.querySelector('[data-price-mode]').addEventListener('change', () => togglePriceMode(itemEl));
 
   itemEl.querySelectorAll('input, select, textarea').forEach(el => {
@@ -1222,7 +862,7 @@ function wireItem(itemEl){
 
   imgInput.addEventListener('change', () => {
     const f = imgInput.files && imgInput.files[0];
-    if(!f){ setThumb(itemEl, ''); return; }
+    if(!f){ setThumb(itemEl,''); return; }
     const reader = new FileReader();
     reader.onload = () => setThumb(itemEl, String(reader.result || ''));
     reader.readAsDataURL(f);
@@ -1232,20 +872,15 @@ function wireItem(itemEl){
     const prev = itemEl.previousElementSibling;
     const next = itemEl.nextElementSibling;
     const grp = getItemGroupId(itemEl);
-
     itemEl.remove();
 
     if(prev && prev.matches('[data-or-sep]')){
       const after = prev.nextElementSibling;
-      if(!after || !after.matches('[data-item]') || getItemGroupId(after) !== grp){
-        prev.remove();
-      }
+      if(!after || !after.matches('[data-item]') || getItemGroupId(after) !== grp) prev.remove();
     }
     if(next && next.matches('[data-or-sep]')){
       const after = next.nextElementSibling;
-      if(!after || !after.matches('[data-item]')){
-        next.remove();
-      }
+      if(!after || !after.matches('[data-item]')) next.remove();
     }
   });
 
@@ -1264,7 +899,6 @@ function wireItem(itemEl){
     const temp = document.createElement('div');
     temp.appendChild(newNode);
     const newItemEl = temp.firstElementChild;
-
     newItemEl.dataset.orGroup = groupId;
 
     const sepEl = itemEl.nextElementSibling;
@@ -1273,20 +907,11 @@ function wireItem(itemEl){
     wireItem(newItemEl);
 
     newItemEl.querySelector('[data-type]').value = itemEl.querySelector('[data-type]').value;
-    newItemEl.querySelector('[data-dim]').value = itemEl.querySelector('[data-dim]').value;
-    newItemEl.querySelector('[data-title]').value = itemEl.querySelector('[data-title]').value;
-    newItemEl.querySelector('[data-note]').value = itemEl.querySelector('[data-note]').value;
-    newItemEl.querySelector('[data-period]').value = itemEl.querySelector('[data-period]').value;
-
-    newItemEl.querySelector('[data-qty]').value = '';
-    newItemEl.querySelector('[data-price]').value = '';
-    newItemEl.querySelector('[data-discount]').value = '';
-    newItemEl.querySelector('[data-fixed-total]').value = '';
-
+    applyPreset(newItemEl);
     recalcItem(newItemEl);
   });
 
-  setThumb(itemEl, '');
+  setThumb(itemEl,'');
   togglePriceMode(itemEl);
   recalcItem(itemEl);
 }
@@ -1299,9 +924,7 @@ function addItem(itemsWrap){
   return itemEl;
 }
 
-/* ===============================
-   DIGITAL PANEL LOGIC
-================================ */
+/* DP */
 function dpSetThumb(scopeEl, dataUrl){
   const thumb = scopeEl.querySelector('[data-thumb]');
   thumb.innerHTML = '';
@@ -1315,29 +938,19 @@ function dpSetThumb(scopeEl, dataUrl){
   thumb.appendChild(img);
   scopeEl.dataset.img = dataUrl;
 }
-
 function dpAddRate(secEl){
   const ratesWrap = secEl.querySelector('[data-dp-rates]');
   const node = tplDpRate.content.cloneNode(true);
   ratesWrap.appendChild(node);
   const row = ratesWrap.lastElementChild;
-
   row.querySelector('[data-del]').addEventListener('click', () => row.remove());
-
-  // keep centered seconds
-  row.querySelector('[data-sec]').addEventListener('input', () => {});
 }
-
 function dpAddImageSlot(dpImagesWrap){
   const box = document.createElement('div');
   box.style.minWidth = '220px';
-  box.innerHTML = `
-    <label>Fotka (voliteľné)</label>
-    <input type="file" accept="image/*" data-img>
-  `;
+  box.innerHTML = `<label>Fotka (voliteľné)</label><input type="file" accept="image/*" data-img>`;
   const thumb = document.createElement('div');
   thumb.className = 'thumb';
-  thumb.setAttribute('data-thumb','');
   thumb.innerHTML = `<span class="small">bez obrázka</span>`;
   dpImagesWrap.appendChild(box);
   dpImagesWrap.appendChild(thumb);
@@ -1345,24 +958,7 @@ function dpAddImageSlot(dpImagesWrap){
   const input = box.querySelector('[data-img]');
   input.addEventListener('change', () => {
     const f = input.files && input.files[0];
-    if(!f){
-      thumb.innerHTML = `<span class="small">bez obrázka</span>`;
-      thumb.dataset.img = '';
-      thumb.setAttribute('data-img','');
-      thumb.dataset.url = '';
-      thumb._dataUrl = '';
-      thumb.dataset.dataUrl = '';
-      thumb.dataset.src = '';
-      thumb.dataset.value = '';
-      thumb.dataset.img = '';
-      thumb.dataset.thumb = '';
-      thumb.dataset.file = '';
-      thumb.dataset.ok = '';
-      thumb.dataset.any = '';
-      thumb.dataset.x = '';
-      thumb._img = '';
-      return;
-    }
+    if(!f){ thumb.innerHTML = `<span class="small">bez obrázka</span>`; thumb.dataset.dataUrl=''; return; }
     const reader = new FileReader();
     reader.onload = () => {
       const url = String(reader.result || '');
@@ -1375,7 +971,6 @@ function dpAddImageSlot(dpImagesWrap){
     reader.readAsDataURL(f);
   });
 }
-
 function dpAddSpec(secEl){
   const specsWrap = secEl.querySelector('[data-dp-specs]');
   const node = tplDpSpec.content.cloneNode(true);
@@ -1392,24 +987,20 @@ function dpAddSpec(secEl){
     mEl.querySelector('[data-del]').addEventListener('click', () => mEl.remove());
   }
   specEl.querySelector('[data-add-month]').addEventListener('click', addMonthRow);
-
   specEl.querySelector('[data-apply-same]').addEventListener('click', () => {
     const v = n(specEl.querySelector('[data-same-panels]').value);
-    monthsWrap.querySelectorAll('[data-dp-month]').forEach(m => {
-      m.querySelector('[data-panels]').value = String(v);
-    });
+    monthsWrap.querySelectorAll('[data-dp-month]').forEach(m => m.querySelector('[data-panels]').value = String(v));
   });
 
-  // spec image
   const imgInput = specEl.querySelector('[data-img]');
   imgInput.addEventListener('change', () => {
     const f = imgInput.files && imgInput.files[0];
-    if(!f){ dpSetThumb(specEl, ''); return; }
+    if(!f){ dpSetThumb(specEl,''); return; }
     const reader = new FileReader();
     reader.onload = () => dpSetThumb(specEl, String(reader.result || ''));
     reader.readAsDataURL(f);
   });
-  dpSetThumb(specEl, '');
+  dpSetThumb(specEl,'');
 
   addMonthRow();
 }
@@ -1418,23 +1009,18 @@ function wireSection(secEl){
   const kindSel = secEl.querySelector('[data-sec-kind]');
   const stdWrap = secEl.querySelector('[data-standard]');
   const dpWrap = secEl.querySelector('[data-dp]');
-
   const itemsWrap = secEl.querySelector('[data-items]');
 
   secEl.querySelector('[data-del-section]').addEventListener('click', () => secEl.remove());
   secEl.querySelector('[data-add-item]').addEventListener('click', () => addItem(itemsWrap));
 
-  // DP buttons
   secEl.querySelector('[data-dp-add-rate]').addEventListener('click', () => dpAddRate(secEl));
   secEl.querySelector('[data-dp-add-spec]').addEventListener('click', () => dpAddSpec(secEl));
 
-  // DP image slots (2 default like screenshot feel)
   const dpImagesWrap = secEl.querySelector('[data-dp-images]');
   dpImagesWrap.innerHTML = '';
   dpAddImageSlot(dpImagesWrap);
   dpAddImageSlot(dpImagesWrap);
-
-  // default DP note text (empty by request)
   secEl.querySelector('[data-dp-note]').value = '';
 
   function applyKind(){
@@ -1442,56 +1028,35 @@ function wireSection(secEl){
     if(k === 'dp'){
       stdWrap.style.display = 'none';
       dpWrap.style.display = 'block';
-
-      // auto set section name
       const nameEl = secEl.querySelector('[data-sec-name]');
-      if(!nameEl.value.trim()){
-        nameEl.value = 'Digitálny panel v čakárni lekára';
-      }
+      if(!nameEl.value.trim()) nameEl.value = 'Digitálny panel v čakárni lekára';
 
-      // ensure at least 2 rate rows
       const ratesWrap = secEl.querySelector('[data-dp-rates]');
       if(ratesWrap.children.length === 0){
-        dpAddRate(secEl);
-        dpAddRate(secEl);
-        // default 15/30
+        dpAddRate(secEl); dpAddRate(secEl);
         const rows = ratesWrap.querySelectorAll('[data-dp-rate]');
         if(rows[0]) rows[0].querySelector('[data-sec]').value = '15';
         if(rows[1]) rows[1].querySelector('[data-sec]').value = '30';
       }
-
-      // ensure 1 spec
       const specsWrap = secEl.querySelector('[data-dp-specs]');
-      if(specsWrap.children.length === 0){
-        dpAddSpec(secEl);
-      }
+      if(specsWrap.children.length === 0) dpAddSpec(secEl);
     }else{
       stdWrap.style.display = 'block';
       dpWrap.style.display = 'none';
-      if(itemsWrap.children.length === 0){
-        addItem(itemsWrap);
-      }
+      if(itemsWrap.children.length === 0) addItem(itemsWrap);
     }
   }
   kindSel.addEventListener('change', applyKind);
-
   applyKind();
 }
 
-/* ===============================
-   SECTION LOGIC
-================================ */
 function addSection(){
   const node = tplSection.content.cloneNode(true);
   sectionsWrap.appendChild(node);
-  const secEl = sectionsWrap.lastElementChild;
-
-  wireSection(secEl);
+  wireSection(sectionsWrap.lastElementChild);
 }
 
-/* ===============================
-   PDF STATE COLLECT
-================================ */
+/* COLLECT */
 function collectStandardItem(child, imagesMode){
   const type = child.querySelector('[data-type]').value.trim();
   const dim = child.querySelector('[data-dim]').value.trim();
@@ -1508,25 +1073,12 @@ function collectStandardItem(child, imagesMode){
   const discount = n(child.querySelector('[data-discount]').value);
   const fixedTotal = n(child.querySelector('[data-fixed-total]').value);
 
-  let unitUsed = 0;
-  let total = 0;
-
-  if(priceMode === 'fixed'){
-    total = fixedTotal;
-    unitUsed = fixedTotal;
-  } else {
-    unitUsed = (discount > 0) ? discount : price;
-    total = unitUsed * qty;
-  }
+  let unitUsed=0, total=0;
+  if(priceMode === 'fixed'){ total = fixedTotal; unitUsed = fixedTotal; }
+  else { unitUsed = (discount>0)?discount:price; total = unitUsed * qty; }
 
   const img = (imagesMode === 'with') ? (child.dataset.img || '') : '';
-
-  return {
-    type, dim, title, note, extra, period,
-    priceMode, qtyMode, qty,
-    price, discount, fixedTotal,
-    unitUsed, total, img
-  };
+  return { type, dim, title, note, extra, period, priceMode, qtyMode, qty, price, discount, fixedTotal, unitUsed, total, img };
 }
 
 function collectDP(secEl, imagesMode){
@@ -1535,40 +1087,31 @@ function collectDP(secEl, imagesMode){
     const sec = n(r.querySelector('[data-sec]').value);
     const base = n(r.querySelector('[data-base]').value);
     const disc = n(r.querySelector('[data-disc]').value);
-    if(sec > 0) rates.push({ sec, base, disc });
+    if(sec>0) rates.push({ sec, base, disc });
   });
-  // sort by seconds
   rates.sort((a,b)=>a.sec-b.sec);
 
   const showColSum = secEl.querySelector('[data-dp-show-colsum]').checked;
   const noteOn = secEl.querySelector('[data-dp-note-on]').checked;
   const noteText = (secEl.querySelector('[data-dp-note]').value || '').trim();
 
-  // dp images (two slots)
   const dpImgs = [];
   if(imagesMode === 'with'){
     const thumbs = secEl.querySelectorAll('[data-dp-images] .thumb');
-    thumbs.forEach(t => {
-      const url = t.dataset.dataUrl || '';
-      if(url) dpImgs.push(url);
-    });
+    thumbs.forEach(t => { const url=t.dataset.dataUrl||''; if(url) dpImgs.push(url); });
   }
 
   const specs = [];
   secEl.querySelectorAll('[data-dp-spec]').forEach(specEl => {
     const spec = (specEl.querySelector('[data-spec]').value || '').trim();
     const specImg = (imagesMode === 'with') ? (specEl.dataset.img || '') : '';
-
     const months = [];
     specEl.querySelectorAll('[data-dp-month]').forEach(mEl => {
       const month = (mEl.querySelector('[data-month]').value || '').trim();
       const panels = n(mEl.querySelector('[data-panels]').value);
       const useDisc = mEl.querySelector('[data-use-disc]').checked;
-      if(month){
-        months.push({ month, panels, useDisc });
-      }
+      if(month) months.push({ month, panels, useDisc });
     });
-
     specs.push({ spec, specImg, months });
   });
 
@@ -1578,8 +1121,7 @@ function collectDP(secEl, imagesMode){
 function collectState(){
   const title = document.getElementById('offerTitle').value.trim() || 'Cenová ponuka';
   const subtitle = document.getElementById('offerSubtitle').value.trim();
-
-  const imagesMode = document.getElementById('pdfImages').value; // with/without
+  const imagesMode = document.getElementById('pdfImages').value;
   const showGrand = document.getElementById('pdfShowGrand').value === 'yes';
   const stdNoteOn = document.getElementById('chkStdNote').checked;
 
@@ -1590,51 +1132,34 @@ function collectState(){
     const kind = secEl.querySelector('[data-sec-kind]').value;
 
     if(kind === 'dp'){
-      const dp = collectDP(secEl, imagesMode);
-      sections.push({ kind:'dp', secName, secPeriod, dp });
-      return;
+      sections.push({ kind:'dp', secName, secPeriod, dp: collectDP(secEl, imagesMode) });
+    }else{
+      const items = [];
+      const container = secEl.querySelector('[data-items]');
+      Array.from(container.children).forEach(child => {
+        if(child.matches && child.matches('[data-or-sep]')) items.push({ __or:true });
+        else if(child.matches && child.matches('[data-item]')) items.push(collectStandardItem(child, imagesMode));
+      });
+      sections.push({ kind:'standard', secName, secPeriod, items });
     }
-
-    const items = [];
-    const container = secEl.querySelector('[data-items]');
-    Array.from(container.children).forEach(child => {
-      if(child.matches && child.matches('[data-or-sep]')){
-        items.push({ __or:true });
-        return;
-      }
-      if(!(child.matches && child.matches('[data-item]'))) return;
-      items.push(collectStandardItem(child, imagesMode));
-    });
-
-    sections.push({ kind:'standard', secName, secPeriod, items });
   });
 
   return { title, subtitle, imagesMode, showGrand, stdNoteOn, sections };
 }
 
-/* ===============================
-   PDF RENDER HELPERS
-================================ */
+/* PDF helpers */
 function moneyCellWithDiscount(base, disc){
   const wrap = document.createElement('div');
   if(disc > 0 && base > 0){
-    const old = document.createElement('span');
-    old.className = 'pv-money-old';
-    old.textContent = formatMoney(base);
-    const nw = document.createElement('span');
-    nw.className = 'pv-money-new';
-    nw.textContent = formatMoney(disc);
-    wrap.appendChild(old);
-    wrap.appendChild(nw);
+    const old = document.createElement('span'); old.className='pv-money-old'; old.textContent=formatMoney(base);
+    const nw = document.createElement('span'); nw.className='pv-money-new'; nw.textContent=formatMoney(disc);
+    wrap.appendChild(old); wrap.appendChild(nw);
   }else{
-    wrap.textContent = (base > 0) ? formatMoney(base) : '';
+    wrap.textContent = (base>0)?formatMoney(base):'';
   }
   return wrap;
 }
 
-/* ===============================
-   PDF RENDER
-================================ */
 function renderPDF(){
   const state = collectState();
 
@@ -1642,61 +1167,41 @@ function renderPDF(){
   document.getElementById('pvSubtitle').textContent = state.subtitle;
 
   const printPage = document.getElementById('printPage');
+  if(state.imagesMode === 'without') printPage.classList.add('pv-no-images');
+  else printPage.classList.remove('pv-no-images');
 
-  // images mode affects layout (full width)
-  if(state.imagesMode === 'without'){
-    printPage.classList.add('pv-no-images');
-  } else {
-    printPage.classList.remove('pv-no-images');
-  }
-
-  // logo show/hide: if missing file, hide on error
   const pvLogo = document.getElementById('pvLogo');
   pvLogo.onerror = () => { pvLogo.style.display = 'none'; };
   pvLogo.style.display = 'block';
 
-  // feel show/hide
   const pvFeel = document.getElementById('pvFeel');
   pvFeel.onerror = () => { pvFeel.style.display = 'none'; };
   pvFeel.style.display = 'block';
 
-  // footer generated
   document.getElementById('pvGen').textContent = 'Generované: ' + nowStamp();
 
-  // gutter images (collect from ALL sections in order: standard items + dp images/spec images)
   const pvGutter = document.getElementById('pvGutter');
   pvGutter.innerHTML = '';
   if(state.imagesMode === 'with'){
     state.sections.forEach(s => {
       if(s.kind === 'standard'){
         s.items.forEach(it => {
-          if(it.__or) return;
-          if(!it.img) return;
-          const box = document.createElement('div');
-          box.className = 'pv-img';
-          const img = document.createElement('img');
-          img.src = it.img;
-          box.appendChild(img);
-          pvGutter.appendChild(box);
+          if(it.__or || !it.img) return;
+          const box = document.createElement('div'); box.className='pv-img';
+          const img = document.createElement('img'); img.src = it.img;
+          box.appendChild(img); pvGutter.appendChild(box);
         });
       }else{
-        // dp section: dpImgs first, then spec images
-        (s.dp.dpImgs || []).forEach(url => {
-          const box = document.createElement('div');
-          box.className = 'pv-img';
-          const img = document.createElement('img');
-          img.src = url;
-          box.appendChild(img);
-          pvGutter.appendChild(box);
+        (s.dp.dpImgs||[]).forEach(url => {
+          const box=document.createElement('div'); box.className='pv-img';
+          const img=document.createElement('img'); img.src=url;
+          box.appendChild(img); pvGutter.appendChild(box);
         });
-        (s.dp.specs || []).forEach(sp => {
+        (s.dp.specs||[]).forEach(sp => {
           if(!sp.specImg) return;
-          const box = document.createElement('div');
-          box.className = 'pv-img';
-          const img = document.createElement('img');
-          img.src = sp.specImg;
-          box.appendChild(img);
-          pvGutter.appendChild(box);
+          const box=document.createElement('div'); box.className='pv-img';
+          const img=document.createElement('img'); img.src=sp.specImg;
+          box.appendChild(img); pvGutter.appendChild(box);
         });
       }
     });
@@ -1705,17 +1210,13 @@ function renderPDF(){
   const pvSections = document.getElementById('pvSections');
   pvSections.innerHTML = '';
 
-  // grand total optional (sum only standard totals + dp totals of months first rate? -> we keep original behavior: sum all dp month totals across all shown seconds)
   let grandTotal = 0;
-
-  // we will also inject standard note "under standard sections" once
   let anyStandard = false;
 
   state.sections.forEach(s => {
     const secDiv = document.createElement('div');
     secDiv.className = 'pv-section';
 
-    // section title
     const name = document.createElement('div');
     name.className = 'pv-section-name';
     name.textContent = s.secName || '';
@@ -1730,12 +1231,22 @@ function renderPDF(){
       anyStandard = true;
 
       const table = document.createElement('table');
-      table.className = 'pv-table';
+      table.className = 'pv-table pv-std-table';
+
+      // FIX: colgroup for perfect header/data alignment
+      const colg = document.createElement('colgroup');
+      colg.innerHTML = `
+        <col style="width:44%">
+        <col style="width:20%">
+        <col style="width:10%">
+        <col style="width:13%">
+        <col style="width:13%">
+      `;
+      table.appendChild(colg);
 
       const thead = document.createElement('thead');
       const trh = document.createElement('tr');
 
-      // NO "Zvýh. cena" column – discount rendered inside "Cena"
       const headers = [
         { cls:'c-item', txt:'Položka' },
         { cls:'c-spec', txt:'Špecifikácia' },
@@ -1788,7 +1299,6 @@ function renderPDF(){
           pp.textContent = it.period;
           tdItem.appendChild(pp);
         }
-
         tr.appendChild(tdItem);
 
         const tdSpec = document.createElement('td');
@@ -1798,47 +1308,37 @@ function renderPDF(){
 
         const tdQty = document.createElement('td');
         tdQty.className = 'c-qty';
-
         if(it.qtyMode === 'max'){
-          tdQty.innerHTML = `max.<br><strong>${it.qty || 0}</strong>`;
+          tdQty.innerHTML = `<span class="pv-qty-max">max.<br><strong>${it.qty || 0}</strong></span>`;
         }else{
-          tdQty.textContent = String(it.qty || 0);
+          tdQty.innerHTML = `<strong>${it.qty || 0}</strong>`;
         }
         tr.appendChild(tdQty);
 
         const tdPrice = document.createElement('td');
         tdPrice.className = 'c-price';
-
         if(it.priceMode === 'fixed'){
           tdPrice.textContent = it.fixedTotal > 0 ? formatMoney(it.fixedTotal) : '';
-        } else {
-          // discount style here
-          if(it.discount > 0 && it.price > 0){
-            tdPrice.appendChild(moneyCellWithDiscount(it.price, it.discount));
-          }else{
-            tdPrice.textContent = it.price > 0 ? formatMoney(it.price) : '';
-          }
+        }else{
+          if(it.discount > 0 && it.price > 0) tdPrice.appendChild(moneyCellWithDiscount(it.price, it.discount));
+          else tdPrice.textContent = it.price > 0 ? formatMoney(it.price) : '';
         }
         tr.appendChild(tdPrice);
 
         const tdTotal = document.createElement('td');
         tdTotal.className = 'c-total';
         const strong = document.createElement('strong');
-        const shown = it.qtyMode === 'max' ? ('max. ' + formatMoney(it.total)) : formatMoney(it.total);
-        strong.textContent = shown;
+        strong.textContent = it.qtyMode === 'max' ? ('max. ' + formatMoney(it.total)) : formatMoney(it.total);
         tdTotal.appendChild(strong);
         tr.appendChild(tdTotal);
 
         grandTotal += it.total;
-
         tbody.appendChild(tr);
       });
 
       table.appendChild(tbody);
       secDiv.appendChild(table);
 
-      // extras at end of section (not near title)
-      // collect all extras in this section, show after table
       const extras = s.items.filter(x => x && !x.__or && x.extra).map(x => x.extra).filter(Boolean);
       if(extras.length){
         const exDiv = document.createElement('div');
@@ -1855,16 +1355,10 @@ function renderPDF(){
       return;
     }
 
-    // DIGITAL PANEL section
+    // DP section – IMPORTANT FIX: no extra DP title here (was causing double title)
     const dp = s.dp;
 
-    // heading (only once — no duplicate)
-    const dpHead = document.createElement('div');
-    dpHead.className = 'pv-dp-head';
-    dpHead.textContent = 'Digitálny panel v čakárni lekára';
-    secDiv.appendChild(dpHead);
-
-    // rate table (seconds)
+    // rate table
     const dpTable = document.createElement('table');
     dpTable.className = 'pv-table pv-dp-table';
 
@@ -1894,11 +1388,8 @@ function renderPDF(){
       const td3 = document.createElement('td');
       td3.className = 'pv-dp-price';
       td3.style.textAlign = 'right';
-      if(r.disc > 0 && r.base > 0){
-        td3.appendChild(moneyCellWithDiscount(r.base, r.disc));
-      }else{
-        td3.textContent = r.base > 0 ? formatMoney(r.base) : '';
-      }
+      if(r.disc > 0 && r.base > 0) td3.appendChild(moneyCellWithDiscount(r.base, r.disc));
+      else td3.textContent = r.base > 0 ? formatMoney(r.base) : '';
       tr.appendChild(td3);
 
       tb2.appendChild(tr);
@@ -1906,7 +1397,6 @@ function renderPDF(){
     dpTable.appendChild(tb2);
     secDiv.appendChild(dpTable);
 
-    // months tables per spec
     const usedRates = (dp.rates || []).filter(r => r && r.sec > 0);
 
     (dp.specs || []).forEach(sp => {
@@ -1918,7 +1408,6 @@ function renderPDF(){
       st.textContent = sp.spec || '';
       block.appendChild(st);
 
-      // table with max 3 columns = by usedRates (we don't hard cap but practical)
       const tbl = document.createElement('table');
       tbl.className = 'pv-dp-month-table';
 
@@ -1940,8 +1429,6 @@ function renderPDF(){
       tbl.appendChild(th);
 
       const body = document.createElement('tbody');
-
-      // totals per column for this spec
       const colSums = usedRates.map(()=>0);
 
       (sp.months || []).forEach(m => {
@@ -1966,10 +1453,8 @@ function renderPDF(){
           const total = (m.panels || 0) * (unit || 0);
 
           if(useDisc && r.base > 0){
-            // show old + new (even though total uses new)
             const baseTotal = (m.panels || 0) * (r.base || 0);
-            const discTotal = total;
-            td.appendChild(moneyCellWithDiscount(baseTotal, discTotal));
+            td.appendChild(moneyCellWithDiscount(baseTotal, total));
           }else{
             td.textContent = (total > 0) ? formatMoney(total) : '';
           }
@@ -1983,7 +1468,6 @@ function renderPDF(){
         body.appendChild(tr);
       });
 
-      // optional "Spolu" per columns
       if(dp.showColSum){
         const trSum = document.createElement('tr');
         trSum.style.borderTop = '2px solid #000';
@@ -2010,11 +1494,9 @@ function renderPDF(){
 
       tbl.appendChild(body);
       block.appendChild(tbl);
-
       secDiv.appendChild(block);
     });
 
-    // dp note under dp section (not at end of document)
     if(dp.noteOn && dp.noteText){
       const note = document.createElement('div');
       note.className = 'pv-note-block';
@@ -2029,7 +1511,6 @@ function renderPDF(){
     pvSections.appendChild(secDiv);
   });
 
-  // Standard note (once) under standard sections (orange circle request)
   const pvStdNote = document.getElementById('pvStdNote');
   pvStdNote.innerHTML = '';
   if(state.stdNoteOn && anyStandard){
@@ -2044,7 +1525,6 @@ function renderPDF(){
     pvStdNote.appendChild(line);
   }
 
-  // grand optional
   const pvGrandWrap = document.getElementById('pvGrandWrap');
   pvGrandWrap.innerHTML = '';
   if(state.showGrand){
@@ -2065,14 +1545,11 @@ function renderPDF(){
   }
 }
 
-/* ===============================
-   BUTTONS
-================================ */
+/* BUTTONS */
 document.getElementById('btnAddSection').addEventListener('click', addSection);
 document.getElementById('btnAddSectionBottom').addEventListener('click', addSection);
 
 document.getElementById('btnPrint').addEventListener('click', () => {
-  // ask filename (prefix date)
   const base = (document.getElementById('offerTitle').value || 'Cenová ponuka').trim();
   const suggested = `${fileDatePrefix()}_${base.replace(/\s+/g,' ').trim()}`;
   const chosen = prompt('Názov súboru (automaticky pridáme dátum na začiatok):', suggested) || suggested;
@@ -2083,7 +1560,6 @@ document.getElementById('btnPrint').addEventListener('click', () => {
   renderPDF();
   setTimeout(() => {
     window.print();
-    // restore title after print dialog
     setTimeout(() => { document.title = oldTitle; }, 600);
   }, 120);
 });
@@ -2100,9 +1576,7 @@ document.getElementById('btnReset').addEventListener('click', () => {
   addSection();
 });
 
-/* ===============================
-   INIT
-================================ */
+/* INIT */
 applyImagesSetting();
 addSection();
 </script>
