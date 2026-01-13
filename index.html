@@ -96,7 +96,7 @@ textarea{ min-height:70px; resize:vertical; }
 
 .preview-row{ margin-top:10px; display:flex; gap:12px; align-items:flex-start; flex-wrap:wrap; }
 .thumb{
-  width:120px; height:90px; border:1px solid #ddd; border-radius:10px; /* jemnejšie rohy */
+  width:120px; height:90px; border:1px solid #ddd; border-radius:10px;
   overflow:hidden; background:#f6f6f6; display:flex; align-items:center; justify-content:center;
 }
 .thumb img{ width:100%; height:100%; object-fit:cover; border-radius:9px; }
@@ -157,18 +157,24 @@ textarea{ min-height:70px; resize:vertical; }
 .pv-logo{ position:absolute; top:10mm; right:14mm; width:26mm; height:auto; opacity:0.95; }
 
 .pv-gutter{
-  position:absolute; left:14mm; top:46mm; bottom:26mm;
+  position:absolute; left:14mm; top:18mm; bottom:26mm;
   width:42mm; display:flex; flex-direction:column; gap:10mm;
+
+  /* FIX: obrázky nesmú liezť do textu */
+  z-index:0;
 }
 .pv-gutter .pv-img{
   width:100%; border-radius:3mm; overflow:hidden;
   border:1px solid #ddd; background:#f6f6f6;
 }
-  .pv-gutter .pv-img{ height:32mm; }
-.pv-gutter .pv-img img{ width:100%; height:100%; object-fit:cover; }
-  
 .pv-gutter .pv-img img{ width:100%; height:auto; display:block; }
-.pv-content{ margin-left:48mm; }
+
+/* FIX: posun obsahu doprava mimo šírku gutteru (14mm + 42mm = 56mm) */
+.pv-content{
+  margin-left:60mm;   /* bolo 48mm */
+  position:relative;  /* pre istotu */
+  z-index:2;          /* text nad obrázkami */
+}
 
 .pv-header{ margin-bottom:12mm; }
 .pv-title{ font-size:34px; font-weight:800; }
@@ -1197,7 +1203,7 @@ function collectDP(secEl, imagesMode){
   const noteOn = secEl.querySelector('[data-dp-note-on]').checked;
 
   let noteText = (secEl.querySelector('[data-dp-note]').value || '').trim();
-  if(noteOn && !noteText) noteText = DEFAULT_DP_NOTE_TEXT; /* FIX: aj keď je prázdne, vytlačí sa */
+  if(noteOn && !noteText) noteText = DEFAULT_DP_NOTE_TEXT;
 
   const dpImgs = [];
   if(imagesMode === 'with'){
@@ -1689,7 +1695,3 @@ addSection();
 
 </body>
 </html>
-
-
-
-
