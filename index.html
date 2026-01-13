@@ -150,7 +150,7 @@ textarea{ min-height:70px; resize:vertical; }
 .print-page{
   width:210mm; min-height:297mm;
   margin:0 auto; background:#fff;
-  padding:38mm 14mm 22mm 14mm;
+  padding:0;
   position:relative;
 }
 
@@ -314,7 +314,7 @@ textarea{ min-height:70px; resize:vertical; }
   body{ margin:0; }
 
   /* ďalšie strany – cca o 2 cm nižšie */
-  @page{ margin:38mm 14mm 22mm 14mm; }
+  @page{ margin:20mm 14mm 22mm 14mm; }
 
   /* prvá strana ostane „po starom“ */
   @page :first{ margin:18mm 14mm 22mm 14mm; }
@@ -1686,5 +1686,6 @@ addSection();
 
 </body>
 </html>
+
 
 
