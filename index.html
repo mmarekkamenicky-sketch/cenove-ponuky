@@ -153,7 +153,6 @@ textarea{ min-height:70px; resize:vertical; }
   position:relative;
 }
 
-/* IDS logo */
 .pv-logo{ position:absolute; top:10mm; right:14mm; width:26mm; height:auto; opacity:0.95; }
 
 .pv-gutter{
@@ -219,11 +218,6 @@ textarea{ min-height:70px; resize:vertical; }
 .pv-std-table .c-price,
 .pv-std-table .c-total{ text-align:right; }
 
-/* FIX: header alignments to match body (this fixes “90” looking off) */
-.pv-std-table th.c-qty,
-.pv-std-table th.c-price,
-.pv-std-table th.c-total{ text-align:right; }
-
 .pv-qty-max{
   display:inline-block;
   text-align:right;
@@ -236,9 +230,6 @@ textarea{ min-height:70px; resize:vertical; }
 .pv-dp-sec{ width:16%; text-align:center; }
 .pv-dp-price{ width:24%; text-align:right; }
 .pv-dp-name{ width:60%; }
-
-/* FIX: center header “Počet sekúnd” too */
-.pv-dp-table th.pv-dp-sec{ text-align:center; }
 
 .pv-dp-block{ margin-top:6mm; break-inside:avoid; page-break-inside:avoid; }
 .pv-dp-spec-title{ font-size:12px; font-weight:900; margin-top:4mm; }
@@ -391,7 +382,9 @@ textarea{ min-height:70px; resize:vertical; }
 
       <div id="pvSections"></div>
 
-      <div id="pvStdNote"></div>
+      <!-- NOTE: pvStdNote exists in DOM, but we no longer use it (note is now placed under standard sections). -->
+      <div id="pvStdNote" style="display:none;"></div>
+
       <div id="pvGrandWrap"></div>
 
       <div class="pv-note-block" style="margin-top:8mm; font-weight:900;">Ceny sú bez DPH.</div>
@@ -426,6 +419,7 @@ textarea{ min-height:70px; resize:vertical; }
   <option value="Odovzdanie materiálov"></option>
   <option value="Tlač materiálov"></option>
 
+  <!-- NEW COMBO OPTIONS -->
   <option value="B1 plagát s umiestnením letáku do uška pod B1 plagát"></option>
   <option value="A3 plagát s umiestnením letáku pod plagátom v stojane IDS"></option>
 </datalist>
@@ -722,6 +716,7 @@ function presetFromType(rawType){
     return { dim:'', title:'Umiestnenie letákov', period:'cena za 3 mesiace' };
   }
 
+  // NEW combo presets:
   if(t === 'b1 plagát s umiestnením letáku do uška pod b1 plagát'){
     return {
       dim:'70 × 100 cm',
@@ -953,28 +948,19 @@ function dpAddRate(secEl){
   row.querySelector('[data-del]').addEventListener('click', () => row.remove());
 }
 function dpAddImageSlot(dpImagesWrap){
-  const slot = document.createElement('div');
-  slot.style.display = 'flex';
-  slot.style.flexDirection = 'column';
-  slot.style.gap = '8px';
-  slot.innerHTML = `
-    <div style="min-width:220px;">
-      <label>Fotka (voliteľné)</label>
-      <input type="file" accept="image/*" data-img>
-    </div>
-    <div class="thumb" data-thumb><span class="small">bez obrázka</span></div>
-  `;
-  dpImagesWrap.appendChild(slot);
+  const box = document.createElement('div');
+  box.style.minWidth = '220px';
+  box.innerHTML = `<label>Fotka (voliteľné)</label><input type="file" accept="image/*" data-img>`;
+  const thumb = document.createElement('div');
+  thumb.className = 'thumb';
+  thumb.innerHTML = `<span class="small">bez obrázka</span>`;
+  dpImagesWrap.appendChild(box);
+  dpImagesWrap.appendChild(thumb);
 
-  const input = slot.querySelector('[data-img]');
-  const thumb = slot.querySelector('[data-thumb]');
+  const input = box.querySelector('[data-img]');
   input.addEventListener('change', () => {
     const f = input.files && input.files[0];
-    if(!f){
-      thumb.innerHTML = `<span class="small">bez obrázka</span>`;
-      thumb.dataset.dataUrl = '';
-      return;
-    }
+    if(!f){ thumb.innerHTML = `<span class="small">bez obrázka</span>`; thumb.dataset.dataUrl=''; return; }
     const reader = new FileReader();
     reader.onload = () => {
       const url = String(reader.result || '');
@@ -1044,11 +1030,8 @@ function wireSection(secEl){
     if(k === 'dp'){
       stdWrap.style.display = 'none';
       dpWrap.style.display = 'block';
-
-      // FIX: never duplicate the title in input (set only if empty OR different non-dp placeholder)
       const nameEl = secEl.querySelector('[data-sec-name]');
-      const want = 'Digitálny panel v čakárni lekára';
-      if(!nameEl.value.trim()) nameEl.value = want;
+      if(!nameEl.value.trim()) nameEl.value = 'Digitálny panel v čakárni lekára';
 
       const ratesWrap = secEl.querySelector('[data-dp-rates]');
       if(ratesWrap.children.length === 0){
@@ -1116,7 +1099,7 @@ function collectDP(secEl, imagesMode){
 
   const dpImgs = [];
   if(imagesMode === 'with'){
-    const thumbs = secEl.querySelectorAll('[data-dp-images] [data-thumb]');
+    const thumbs = secEl.querySelectorAll('[data-dp-images] .thumb');
     thumbs.forEach(t => { const url=t.dataset.dataUrl||''; if(url) dpImgs.push(url); });
   }
 
@@ -1146,13 +1129,11 @@ function collectState(){
 
   const sections = [];
   sectionsWrap.querySelectorAll('[data-section]').forEach(secEl => {
-    let secName = secEl.querySelector('[data-sec-name]').value.trim();
+    const secName = secEl.querySelector('[data-sec-name]').value.trim();
     const secPeriod = secEl.querySelector('[data-sec-period]').value.trim();
     const kind = secEl.querySelector('[data-sec-kind]').value;
 
-    // EXTRA SAFETY: if DP, force exact section name (prevents weird duplicates/concats from copy/paste)
     if(kind === 'dp'){
-      if(!secName) secName = 'Digitálny panel v čakárni lekára';
       sections.push({ kind:'dp', secName, secPeriod, dp: collectDP(secEl, imagesMode) });
     }else{
       const items = [];
@@ -1232,7 +1213,6 @@ function renderPDF(){
   pvSections.innerHTML = '';
 
   let grandTotal = 0;
-  let anyStandard = false;
 
   state.sections.forEach(s => {
     const secDiv = document.createElement('div');
@@ -1249,11 +1229,10 @@ function renderPDF(){
     secDiv.appendChild(per);
 
     if(s.kind === 'standard'){
-      anyStandard = true;
-
       const table = document.createElement('table');
       table.className = 'pv-table pv-std-table';
 
+      // colgroup => perfect alignment
       const colg = document.createElement('colgroup');
       colg.innerHTML = `
         <col style="width:44%">
@@ -1359,12 +1338,22 @@ function renderPDF(){
       table.appendChild(tbody);
       secDiv.appendChild(table);
 
+      // item extra notes
       const extras = s.items.filter(x => x && !x.__or && x.extra).map(x => x.extra).filter(Boolean);
       if(extras.length){
         const exDiv = document.createElement('div');
         exDiv.className = 'pv-note-block';
         exDiv.innerHTML = extras.map(t => `<div>${t}</div>`).join('');
         secDiv.appendChild(exDiv);
+      }
+
+      // ✅ ONLY CHANGE: "Súčasťou kampane..." is now right under this standard section (not at end of document)
+      if(state.stdNoteOn){
+        const ndiv = document.createElement('div');
+        ndiv.className = 'pv-note-block';
+        ndiv.textContent =
+          'Súčasťou kampane je kompletná fotodokumentácia plôch. V prípade odovzdania zásielok je súčasťou kampane kompletný zoznam odovzdaných zásielok.';
+        secDiv.appendChild(ndiv);
       }
 
       const divLine = document.createElement('div');
@@ -1375,7 +1364,7 @@ function renderPDF(){
       return;
     }
 
-    // DP section — no extra duplicated title in PDF (only section name above)
+    // DP section (no duplicate title)
     const dp = s.dp;
 
     const dpTable = document.createElement('table');
@@ -1530,19 +1519,9 @@ function renderPDF(){
     pvSections.appendChild(secDiv);
   });
 
+  // We no longer output the std note at the end of document.
   const pvStdNote = document.getElementById('pvStdNote');
-  pvStdNote.innerHTML = '';
-  if(state.stdNoteOn && anyStandard){
-    const ndiv = document.createElement('div');
-    ndiv.className = 'pv-note-block';
-    ndiv.textContent =
-      'Súčasťou kampane je kompletná fotodokumentácia plôch. V prípade odovzdania zásielok je súčasťou kampane kompletný zoznam odovzdaných zásielok.';
-    pvStdNote.appendChild(ndiv);
-
-    const line = document.createElement('div');
-    line.className = 'pv-divider';
-    pvStdNote.appendChild(line);
-  }
+  if(pvStdNote) pvStdNote.innerHTML = '';
 
   const pvGrandWrap = document.getElementById('pvGrandWrap');
   pvGrandWrap.innerHTML = '';
