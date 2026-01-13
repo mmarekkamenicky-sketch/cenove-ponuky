@@ -96,10 +96,10 @@ textarea{ min-height:70px; resize:vertical; }
 
 .preview-row{ margin-top:10px; display:flex; gap:12px; align-items:flex-start; flex-wrap:wrap; }
 .thumb{
-  width:120px; height:90px; border:1px solid #ddd; border-radius:12px;
+  width:120px; height:90px; border:1px solid #ddd; border-radius:10px; /* jemnejšie rohy */
   overflow:hidden; background:#f6f6f6; display:flex; align-items:center; justify-content:center;
 }
-.thumb img{ width:100%; height:100%; object-fit:cover; border-radius:10px; }
+.thumb img{ width:100%; height:100%; object-fit:cover; border-radius:9px; }
 .note-box{ margin-top:10px; }
 
 .images-off .img-controls{ display:none !important; }
@@ -131,7 +131,7 @@ textarea{ min-height:70px; resize:vertical; }
   display:grid; grid-template-columns: 180px 160px 200px 40px; gap:10px; align-items:center;
 }
 @media (max-width:900px){ .dp-month{ grid-template-columns:1fr; } }
-.dp-inline{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:10px; }
+.dp-inline{ display:flex; gap:10px; flex-wrap:wrap; align-items:flex-start; margin-top:10px; }
 
 .chip{
   display:inline-flex; align-items:center; gap:8px;
@@ -141,7 +141,8 @@ textarea{ min-height:70px; resize:vertical; }
 .chip input{ width:18px; height:18px; }
 
 .dp-img{ margin-top:10px; display:flex; gap:12px; flex-wrap:wrap; align-items:flex-start; }
-.dp-img .thumb{ width:140px; height:105px; }
+.dp-img .thumb{ width:140px; height:105px; border-radius:10px; }
+.dp-img .thumb img{ border-radius:9px; }
 
 /* PRINT / PDF */
 .print-view{ display:none; }
@@ -153,8 +154,12 @@ textarea{ min-height:70px; resize:vertical; }
   position:relative;
 }
 
-.pv-logo{ position:absolute; top:0; right:0; width:26mm; }
-.pv-gutter{ position:absolute; left:0; top:0; bottom:18mm; width:42mm; }
+.pv-logo{ position:absolute; top:10mm; right:14mm; width:26mm; height:auto; opacity:0.95; }
+
+.pv-gutter{
+  position:absolute; left:14mm; top:18mm; bottom:26mm;
+  width:42mm; display:flex; flex-direction:column; gap:10mm;
+}
 .pv-gutter .pv-img{
   width:100%; border-radius:3mm; overflow:hidden;
   border:1px solid #ddd; background:#f6f6f6;
@@ -254,12 +259,11 @@ textarea{ min-height:70px; resize:vertical; }
 .pv-dp-month-table .m-panels{ width:16%; text-align:right; padding-right:10px; }
 .pv-dp-month-table .m-col{ text-align:right; }
 
-/* ✅ ZMENA #1: posun spodnej lišty nižšie cca o 1,5 cm */
 .pv-footer{
-  position:fixed; left:0; right:0; bottom:-15mm;
+  position:fixed; left:0; right:0; bottom:0;
   height:18mm;
   display:flex; align-items:flex-end; justify-content:center;
-  padding:0 14mm 6mm 14mm;
+  padding:0 14mm 6mm 14mm; /* späť ako bolo */
   font-size:10.5px; color:#000;
 }
 .pv-footer .inner{
@@ -285,18 +289,51 @@ textarea{ min-height:70px; resize:vertical; }
   color:#111;
 }
 
+/* PASSWORD OVERLAY */
+.lock{
+  position:fixed; inset:0; background:#fff; z-index:99999;
+  display:flex; align-items:center; justify-content:center;
+  padding:24px;
+}
+.lock-card{
+  width:min(520px, 92vw);
+  border:1px solid #ddd;
+  border-radius:18px;
+  padding:18px;
+  box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+.lock-title{ font-size:18px; font-weight:900; margin:0 0 6px 0; }
+.lock-sub{ margin:0 0 14px 0; color:#666; font-size:13px; }
+.lock-row{ display:flex; gap:10px; align-items:center; }
+.lock-row input{ flex:1; font-weight:800; }
+.lock-err{ margin-top:10px; color:#c40000; font-weight:800; display:none; }
+
 @media print{
   .wrap{ display:none !important; }
   .print-view{ display:block !important; }
   body{ margin:0; }
-  @page{ margin:18mm 14mm 22mm 14mm; }
+  @page{ margin:0; } /* späť ako bolo = footer pekne sadne */
+  .lock{ display:none !important; }
 }
 </style>
 </head>
 
 <body>
 
-<div class="wrap" id="appRoot">
+<!-- PASSWORD -->
+<div class="lock" id="lock">
+  <div class="lock-card">
+    <div class="lock-title">Zadajte kód</div>
+    <p class="lock-sub">Táto stránka je chránená. Zadajte prístupový kód.</p>
+    <div class="lock-row">
+      <input id="lockInput" type="password" placeholder="Kód" autocomplete="off" />
+      <button class="btn primary" id="lockBtn" type="button">OK</button>
+    </div>
+    <div class="lock-err" id="lockErr">Nesprávny kód.</div>
+  </div>
+</div>
+
+<div class="wrap" id="appRoot" style="display:none;">
   <h1>Cenová ponuka – formulár</h1>
 
   <div class="toolbar">
@@ -414,7 +451,6 @@ textarea{ min-height:70px; resize:vertical; }
   <option value="Odovzdanie materiálov"></option>
   <option value="Tlač materiálov"></option>
 
-  <!-- NEW COMBO OPTIONS -->
   <option value="B1 plagát s umiestnením letáku do uška pod B1 plagát"></option>
   <option value="A3 plagát s umiestnením letáku pod plagátom v stojane IDS"></option>
 </datalist>
@@ -480,7 +516,6 @@ textarea{ min-height:70px; resize:vertical; }
 
         <div data-dp-rates></div>
 
-        <!-- DP note toggle -->
         <div class="dp-inline">
           <span class="chip">
             <input type="checkbox" data-dp-note-on>
@@ -685,17 +720,50 @@ textarea{ min-height:70px; resize:vertical; }
 </template>
 
 <script>
-/* 🔒 Jednoduché heslo pri otvorení (client-side) */
-(function gate(){
-  const PASS = "Ids159263";
-  const entered = prompt("Zadajte prístupový kód:");
-  if(entered !== PASS){
-    document.documentElement.innerHTML = "";
-    document.write("<div style='font-family:Onest,system-ui,sans-serif;padding:24px;font-weight:800;'>Prístup zamietnutý.</div>");
-    throw new Error("Access denied");
-  }
-})();
+/* ===== PASSWORD ===== */
+const PASS = 'Ids159263';
+const lock = document.getElementById('lock');
+const lockInput = document.getElementById('lockInput');
+const lockBtn = document.getElementById('lockBtn');
+const lockErr = document.getElementById('lockErr');
+const appRoot = document.getElementById('appRoot');
 
+function unlock(){
+  lock.style.display = 'none';
+  appRoot.style.display = '';
+  sessionStorage.setItem('idsUnlocked','1');
+}
+function tryUnlock(){
+  if((lockInput.value || '') === PASS){
+    lockErr.style.display = 'none';
+    unlock();
+  }else{
+    lockErr.style.display = 'block';
+    lockInput.focus();
+    lockInput.select();
+  }
+}
+lockBtn.addEventListener('click', tryUnlock);
+lockInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') tryUnlock(); });
+
+if(sessionStorage.getItem('idsUnlocked') === '1'){
+  unlock();
+}else{
+  lockInput.focus();
+}
+
+/* ===== DEFAULT DP NOTE (fix: vždy sa má vedieť vytlačiť) ===== */
+const DEFAULT_DP_NOTE_TEXT =
+`Súčasťou kampane u digitálnych panelov je:
+Aktuálny počet fungujúcich panelov v daný mesiac, dĺžka slučky, priemerná návštevnosť za daný mesiac, plánovaný počet prehraní za daný mesiac, reálny počet prehraní za daný mesiac, počet možných videní za daný mesiac.
+Komunikácia na pacienta prebieha prostredníctvom dynamickej slučky zloženej z krátkych animovaných sekvencií.
+Slučka má 8 - 10 minút a skladá sa z časti vyhradeného pre lekára (30 %), edukačnej časti (30 %) a komerčnej časti (40%).
+Komerčná časť je obmedzená, aby bola Vaša kampaň čo najviac viditeľná.
+Rozmer digitálneho panelu je 55 x 100 cm, umiestnený priamo v čakárni lekára.
+Počty panelov sú odhadované.
+Fakturovať budeme len reálny počet panelov v daný mesiac.`;
+
+/* ===== APP ===== */
 const moneyFmt = new Intl.NumberFormat('sk-SK', { style:'currency', currency:'EUR' });
 function n(v){ const x = Number(v); return Number.isFinite(x) ? x : 0; }
 function formatMoney(val){ return moneyFmt.format(val); }
@@ -729,7 +797,6 @@ function presetFromType(rawType){
     return { dim:'', title:'Umiestnenie letákov', period:'cena za 3 mesiace' };
   }
 
-  // NEW combo presets:
   if(t === 'b1 plagát s umiestnením letáku do uška pod b1 plagát'){
     return {
       dim:'70 × 100 cm',
@@ -757,7 +824,6 @@ function presetFromType(rawType){
   return { dim:'', title:rawType || '', period:'cena za 3 mesiace' };
 }
 
-const appRoot = document.getElementById('appRoot');
 const sectionsWrap = document.getElementById('sections');
 const tplSection = document.getElementById('tplSection');
 const tplItem = document.getElementById('tplItem');
@@ -958,6 +1024,16 @@ function dpAddRate(secEl){
   const node = tplDpRate.content.cloneNode(true);
   ratesWrap.appendChild(node);
   const row = ratesWrap.lastElementChild;
+
+  /* prednastavené ceny */
+  const secVal = row.querySelector('[data-sec]');
+  const baseVal = row.querySelector('[data-base]');
+  if(ratesWrap.children.length === 1){
+    secVal.value = '15'; baseVal.value = '11.50';
+  }else if(ratesWrap.children.length === 2){
+    secVal.value = '30'; baseVal.value = '19.50';
+  }
+
   row.querySelector('[data-del]').addEventListener('click', () => row.remove());
 }
 function dpAddImageSlot(dpImagesWrap){
@@ -1036,7 +1112,10 @@ function wireSection(secEl){
   dpImagesWrap.innerHTML = '';
   dpAddImageSlot(dpImagesWrap);
   dpAddImageSlot(dpImagesWrap);
-  secEl.querySelector('[data-dp-note]').value = '';
+
+  /* FIX: DP text je pripravený a funguje */
+  const dpNoteTa = secEl.querySelector('[data-dp-note]');
+  if(!dpNoteTa.value.trim()) dpNoteTa.value = DEFAULT_DP_NOTE_TEXT;
   secEl.querySelector('[data-dp-note-on]').checked = false;
 
   function applyKind(){
@@ -1049,18 +1128,8 @@ function wireSection(secEl){
 
       const ratesWrap = secEl.querySelector('[data-dp-rates]');
       if(ratesWrap.children.length === 0){
-        dpAddRate(secEl); dpAddRate(secEl);
-        const rows = ratesWrap.querySelectorAll('[data-dp-rate]');
-
-        /* ✅ ZMENA #2: prednastavené ceny */
-        if(rows[0]){
-          rows[0].querySelector('[data-sec]').value = '15';
-          rows[0].querySelector('[data-base]').value = '11.50';
-        }
-        if(rows[1]){
-          rows[1].querySelector('[data-sec]').value = '30';
-          rows[1].querySelector('[data-base]').value = '19.50';
-        }
+        dpAddRate(secEl);
+        dpAddRate(secEl);
       }
       const specsWrap = secEl.querySelector('[data-dp-specs]');
       if(specsWrap.children.length === 0) dpAddSpec(secEl);
@@ -1117,7 +1186,9 @@ function collectDP(secEl, imagesMode){
 
   const showColSum = secEl.querySelector('[data-dp-show-colsum]').checked;
   const noteOn = secEl.querySelector('[data-dp-note-on]').checked;
-  const noteText = (secEl.querySelector('[data-dp-note]').value || '').trim();
+
+  let noteText = (secEl.querySelector('[data-dp-note]').value || '').trim();
+  if(noteOn && !noteText) noteText = DEFAULT_DP_NOTE_TEXT; /* FIX: aj keď je prázdne, vytlačí sa */
 
   const dpImgs = [];
   if(imagesMode === 'with'){
@@ -1381,7 +1452,6 @@ function renderPDF(){
       return;
     }
 
-    // DP section
     const dp = s.dp;
 
     const dpTable = document.createElement('table');
@@ -1538,6 +1608,7 @@ function renderPDF(){
 
   const pvStdNote = document.getElementById('pvStdNote');
   pvStdNote.innerHTML = '';
+
   if(state.stdNoteOn && anyStandard && lastStandardSectionEl){
     const ndiv = document.createElement('div');
     ndiv.className = 'pv-note-block';
