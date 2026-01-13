@@ -153,12 +153,8 @@ textarea{ min-height:70px; resize:vertical; }
   position:relative;
 }
 
-.pv-logo{ position:absolute; top:10mm; right:14mm; width:26mm; height:auto; opacity:0.95; }
-
-.pv-gutter{
-  position:absolute; left:14mm; top:18mm; bottom:26mm;
-  width:42mm; display:flex; flex-direction:column; gap:10mm;
-}
+.pv-logo{ position:absolute; top:0; right:0; width:26mm; }
+.pv-gutter{ position:absolute; left:0; top:0; bottom:18mm; width:42mm; }
 .pv-gutter .pv-img{
   width:100%; border-radius:3mm; overflow:hidden;
   border:1px solid #ddd; background:#f6f6f6;
@@ -292,7 +288,7 @@ textarea{ min-height:70px; resize:vertical; }
   .wrap{ display:none !important; }
   .print-view{ display:block !important; }
   body{ margin:0; }
-  @page{ margin:0; }
+  @page{ margin:18mm 14mm 22mm 14mm; }
 }
 </style>
 </head>
@@ -1600,3 +1596,4 @@ addSection();
 
 </body>
 </html>
+
