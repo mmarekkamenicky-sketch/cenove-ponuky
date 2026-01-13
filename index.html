@@ -312,7 +312,13 @@ textarea{ min-height:70px; resize:vertical; }
   .wrap{ display:none !important; }
   .print-view{ display:block !important; }
   body{ margin:0; }
-  @page{ margin:0; } /* späť ako bolo = footer pekne sadne */
+
+  /* ďalšie strany – cca o 2 cm nižšie */
+  @page{ margin:38mm 14mm 22mm 14mm; }
+
+  /* prvá strana ostane „po starom“ */
+  @page :first{ margin:18mm 14mm 22mm 14mm; }
+
   .lock{ display:none !important; }
 }
 </style>
@@ -1680,4 +1686,5 @@ addSection();
 
 </body>
 </html>
+
 
