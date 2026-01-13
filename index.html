@@ -147,54 +147,57 @@ textarea{ min-height:70px; resize:vertical; }
 /* PRINT / PDF */
 .print-view{ display:none; }
 
-/* === GRID FIX (už žiadne stláčanie fotiek pri veľa obrázkoch) === */
+/* ====== PRINT LAYOUT (FIXED) ======
+   - fotky väčšie a bez orezania (contain)
+   - viac vľavo (gutter margin-left)
+   - vyššie (gutter margin-top)
+   - stále bez prekrývania textu
+*/
 .print-page{
   width:210mm;
   min-height:297mm;
-  margin:0 auto; background:#fff;
+  margin:0 auto;
+  background:#fff;
   padding:0;
   position:relative;
-
   display:grid;
-  grid-template-columns:42mm 1fr; /* ľavý stĺpec fotky, pravý text */
-  column-gap:6mm;
-  align-items:start;
+  grid-template-columns:55mm 1fr; /* bolo 42mm => fotky maličké */
+  column-gap:7mm;                /* jemne viac vzduchu */
 }
 
 .pv-logo{ position:absolute; top:10mm; right:14mm; width:26mm; height:auto; opacity:0.95; }
 
-/* gutter viac doľava + vyššie */
 .pv-gutter{
-  position:relative;
-  width:auto;
+  grid-column:1;
+  margin-left:5mm;   /* viac vľavo */
+  margin-top:12mm;   /* vyššie */
+  margin-bottom:26mm;
   display:flex; flex-direction:column; gap:10mm;
-  margin-left:10mm;   /* krajšie ku kraju (namiesto absolute left) */
-  margin-top:14mm;    /* vyššie (ako si chcel) */
 }
 
-/* FIX: jednotná výška boxu, obrázok bez deformácie */
 .pv-gutter .pv-img{
   width:100%;
-  height:26mm;          /* kľúčové: nebude sa “stláčať” */
-  border-radius:2mm;    /* jemné rohy */
+  height:34mm;       /* väčší rámik */
+  border-radius:2mm; /* jemné zaoblenie */
   overflow:hidden;
   border:1px solid #ddd;
-  background:#f6f6f6;
+  background:#fff;
+  padding:2mm;       /* aby fotka nebola nalepená na okraj rámika */
   break-inside:avoid;
   page-break-inside:avoid;
 }
+
 .pv-gutter .pv-img img{
   width:100%;
   height:100%;
-  object-fit:cover;     /* žiadna deformácia */
+  object-fit:contain; /* KĽÚČ: nič sa neoreže */
   display:block;
 }
 
-/* text už nerieši margin-left – je v druhom stĺpci gridu */
 .pv-content{
-  margin-left:0;
-  margin-top:14mm;
-  padding-right:14mm;   /* aby to vizuálne sedelo s pravým okrajom */
+  grid-column:2;
+  margin-top:14mm; /* nech je content pekne zarovnaný s fotkami */
+  padding-right:14mm;
 }
 
 /* ====== koniec fixu ====== */
@@ -311,16 +314,7 @@ textarea{ min-height:70px; resize:vertical; }
 .pv-footer .right{ text-align:right; font-weight:800; }
 
 .pv-no-images .pv-gutter{ display:none; }
-.pv-no-images .pv-content{
-  grid-column:1 / -1;
-  margin-left:0;
-  padding-left:14mm;
-}
-
-/* keď sú obrázky vypnuté, nech obsah ide cez celú šírku */
-.pv-no-images .print-page{
-  grid-template-columns: 1fr;
-}
+.pv-no-images .pv-content{ grid-column:1 / span 2; margin-top:14mm; padding-right:14mm; }
 
 .pv-or-row td{
   padding:10px 0;
