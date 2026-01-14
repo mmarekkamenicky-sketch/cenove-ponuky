@@ -1,462 +1,308 @@
 <!doctype html>
 <html lang="sk">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Cenová ponuka</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cenová ponuka</title>
 
-<!-- FONT: Onest -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- FONT: Onest -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
 
-<style>
-*{ box-sizing:border-box; }
-body{ margin:0; font-family:"Onest", system-ui, sans-serif; background:#fff; color:#000; }
-.wrap{ max-width:1200px; margin:0 auto; padding:24px; }
-h1{ margin:0 0 14px 0; font-size:28px; font-weight:800; }
+  <style>
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family:"Onest", system-ui, sans-serif;
+      background:#fff;
+      color:#000;
+    }
+    .wrap{ max-width:1200px; margin:0 auto; padding:24px; }
+    h1{ margin:0 0 14px 0; font-size:28px; font-weight:800; }
 
-/* BUTTONS */
-.toolbar{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:12px 0 16px; }
-.btn{ border-radius:999px; padding:10px 16px; border:1px solid #000; background:#fff; font-weight:800; cursor:pointer; }
-.btn.primary{ background:#000; color:#fff; }
-.btn.secondary{ background:#f2f2f2; border-color:#d0d0d0; }
-.btn.ghost{ background:#fff; border-color:#d0d0d0; }
+    /* BUTTONS */
+    .toolbar{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:12px 0 16px; }
+    .btn{ border-radius:999px; padding:10px 16px; border:1px solid #000; background:#fff; font-weight:800; cursor:pointer; }
+    .btn.primary{ background:#000; color:#fff; }
+    .btn.secondary{ background:#f2f2f2; border-color:#d0d0d0; }
+    .btn.ghost{ background:#fff; border-color:#d0d0d0; }
+    .icon-btn{
+      width:40px; height:40px; border-radius:999px; border:1px solid #d0d0d0;
+      background:#f2f2f2; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    }
+    .icon-btn.danger{ background:#fff0f0; border-color:#ffb3b3; color:#c40000; }
+    .hint{ color:#666; font-size:13px; margin-top:4px; }
 
-.icon-btn{
-  width:40px; height:40px; border-radius:999px;
-  border:1px solid #d0d0d0; background:#f2f2f2;
-  cursor:pointer; display:flex; align-items:center; justify-content:center;
-}
-.icon-btn.danger{
-  background:#fff0f0; border-color:#ffb3b3; color:#c40000;
-}
-.hint{ color:#666; font-size:13px; margin-top:4px; }
+    /* FORM */
+    label{ font-size:12px; text-transform:uppercase; letter-spacing:.08em; font-weight:800; display:block; margin-bottom:4px; color:#111; }
+    input, select, textarea{
+      width:100%; padding:10px 12px; border-radius:12px; border:1px solid #ccc;
+      font-family:inherit; font-size:14px; background:#fff;
+    }
+    input[type="number"]{ text-align:right; }
+    textarea{ min-height:70px; resize:vertical; }
+    .small{ font-size:12px; color:#666; }
+    .select-important{ border-color:#1e63ff !important; box-shadow:0 0 0 2px rgba(30,99,255,.12); font-weight:800; color:#0b2f9e; }
 
-/* FORM */
-label{
-  font-size:12px; text-transform:uppercase; letter-spacing:.08em;
-  font-weight:800; display:block; margin-bottom:4px; color:#111;
-}
-input, select, textarea{
-  width:100%; padding:10px 12px; border-radius:12px;
-  border:1px solid #ccc; font-family:inherit; font-size:14px; background:#fff;
-}
-input[type="number"]{ text-align:right; }
-textarea{ min-height:70px; resize:vertical; }
-.small{ font-size:12px; color:#666; }
-.select-important{
-  border-color:#1e63ff !important;
-  box-shadow:0 0 0 2px rgba(30,99,255,.12);
-  font-weight:800;
-  color:#0b2f9e;
-}
+    /* CARDS */
+    .card{ border:1px solid #ddd; border-radius:16px; padding:16px; margin-bottom:16px; }
+    .card h2{ margin:0 0 12px 0; font-size:18px; font-weight:800; }
 
-/* CARDS */
-.card{ border:1px solid #ddd; border-radius:16px; padding:16px; margin-bottom:16px; }
-.card h2{ margin:0 0 12px 0; font-size:18px; font-weight:800; }
+    /* GRID */
+    .grid-2{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .grid-3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; }
+    .grid-4{ display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:14px; }
+    @media (max-width:900px){ .grid-2,.grid-3,.grid-4{ grid-template-columns:1fr; } }
 
-/* GRID */
-.grid-2{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-.grid-3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; }
-.grid-4{ display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:14px; }
-@media (max-width:900px){ .grid-2,.grid-3,.grid-4{ grid-template-columns:1fr; } }
+    /* SECTIONS */
+    .sections{ display:flex; flex-direction:column; gap:14px; }
+    .section{ border:2px solid #000; border-radius:16px; padding:14px; }
+    .section-head{
+      display:flex; gap:10px; justify-content:space-between; align-items:flex-start; flex-wrap:wrap;
+      margin-bottom:10px; padding-bottom:10px; border-bottom:1px dashed #ddd;
+    }
+    .section-title{ display:grid; grid-template-columns:1fr 220px 220px; gap:12px; width:100%; }
+    @media (max-width:900px){ .section-title{ grid-template-columns:1fr; } }
+    .section-actions{ display:flex; gap:10px; align-items:center; justify-content:flex-end; flex-wrap:wrap; }
+    .section-bottom{ margin-top:12px; padding-top:12px; border-top:1px dashed #ddd; display:flex; justify-content:flex-end; gap:10px; flex-wrap:wrap; }
 
-/* SECTIONS */
-.sections{ display:flex; flex-direction:column; gap:14px; }
-.section{ border:2px solid #000; border-radius:16px; padding:14px; }
-.section-head{
-  display:flex; gap:10px; justify-content:space-between; align-items:flex-start;
-  flex-wrap:wrap; margin-bottom:10px; padding-bottom:10px; border-bottom:1px dashed #ddd;
-}
-.section-title{ display:grid; grid-template-columns:1fr 220px 220px; gap:12px; width:100%; }
-@media (max-width:900px){ .section-title{ grid-template-columns:1fr; } }
-.section-actions{ display:flex; gap:10px; align-items:center; justify-content:flex-end; flex-wrap:wrap; }
-.section-bottom{
-  margin-top:12px; padding-top:12px; border-top:1px dashed #ddd;
-  display:flex; justify-content:flex-end; gap:10px; flex-wrap:wrap;
-}
+    /* STANDARD ITEMS */
+    .items{ display:flex; flex-direction:column; gap:12px; margin-top:12px; }
+    .item{ border:1px solid #ddd; border-radius:14px; padding:12px; }
+    .item-head{ display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:10px; }
+    .item-head .left{ font-weight:800; }
+    .item-head .right{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+    .item-foot{ margin-top:10px; display:flex; justify-content:space-between; align-items:flex-end; gap:12px; flex-wrap:wrap; }
+    .price-block{ text-align:right; min-width:260px; }
+    .price-old{ font-size:12px; color:#777; text-decoration:line-through; min-height:16px; }
+    .price-main{ font-weight:800; font-size:18px; }
+    .price-period{ margin-top:2px; font-size:11px; color:#777; }
+    .or-sep{
+      text-align:center; font-weight:900; letter-spacing:.12em; color:#111; background:#f3f3f3;
+      border:1px solid #ddd; border-radius:999px; padding:8px 10px; margin:2px 0;
+    }
+    .preview-row{ margin-top:10px; display:flex; gap:12px; align-items:flex-start; flex-wrap:wrap; }
+    .thumb{
+      width:120px; height:90px; border:1px solid #ddd; border-radius:10px;
+      overflow:hidden; background:#f6f6f6; display:flex; align-items:center; justify-content:center;
+    }
+    .thumb img{ width:100%; height:100%; object-fit:cover; border-radius:9px; }
+    .note-box{ margin-top:10px; }
+    .images-off .img-controls{ display:none !important; }
 
-/* STANDARD ITEMS */
-.items{ display:flex; flex-direction:column; gap:12px; margin-top:12px; }
-.item{ border:1px solid #ddd; border-radius:14px; padding:12px; }
-.item-head{ display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:10px; }
-.item-head .left{ font-weight:800; }
-.item-head .right{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
-.item-foot{ margin-top:10px; display:flex; justify-content:space-between; align-items:flex-end; gap:12px; flex-wrap:wrap; }
-.price-block{ text-align:right; min-width:260px; }
-.price-old{ font-size:12px; color:#777; text-decoration:line-through; min-height:16px; }
-.price-main{ font-weight:800; font-size:18px; }
-.price-period{ margin-top:2px; font-size:11px; color:#777; }
+    /* DP EDIT */
+    .dp-wrap{ margin-top:10px; }
+    .dp-card{ border:1px solid #ddd; border-radius:14px; padding:12px; }
+    .dp-head{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; flex-wrap:wrap; margin-bottom:10px; }
+    .dp-title{ font-weight:900; font-size:16px; }
+    .dp-actions{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    .dp-row{ display:grid; grid-template-columns:120px 1fr 1fr 40px; gap:10px; align-items:end; margin-top:10px; }
+    .dp-row .sec{ text-align:center; font-weight:900; }
+    .dp-row .sec input{ text-align:center; font-weight:900; }
+    .dp-row .kill{ display:flex; justify-content:flex-end; }
+    .dp-row .kill button{ width:40px; height:40px; }
+    .dp-specs{ margin-top:12px; display:flex; flex-direction:column; gap:12px; }
+    .dp-spec{ border:1px solid #ddd; border-radius:14px; padding:12px; }
+    .dp-spec-head{ display:grid; grid-template-columns:1fr 180px 180px 40px; gap:10px; align-items:end; }
+    @media (max-width:900px){ .dp-spec-head{ grid-template-columns:1fr; } }
+    .dp-months{ margin-top:10px; display:flex; flex-direction:column; gap:8px; }
+    .dp-month{ display:grid; grid-template-columns:180px 160px 200px 40px; gap:10px; align-items:center; }
+    @media (max-width:900px){ .dp-month{ grid-template-columns:1fr; } }
+    .dp-inline{ display:flex; gap:10px; flex-wrap:wrap; align-items:flex-start; margin-top:10px; }
+    .chip{
+      display:inline-flex; align-items:center; gap:8px;
+      border:1px solid #ddd; border-radius:999px; padding:8px 12px; background:#f7f7f7;
+      font-weight:800; font-size:13px;
+    }
+    .chip input{ width:18px; height:18px; }
+    .dp-img{ margin-top:10px; display:flex; gap:12px; flex-wrap:wrap; align-items:flex-start; }
+    .dp-img .thumb{ width:140px; height:105px; border-radius:10px; }
+    .dp-img .thumb img{ border-radius:9px; }
 
-.or-sep{
-  text-align:center; font-weight:900; letter-spacing:.12em; color:#111;
-  background:#f3f3f3; border:1px solid #ddd; border-radius:999px; padding:8px 10px; margin:2px 0;
-}
+    /* PRINT / PDF */
+    .print-view{ display:none; }
+    .print-page{ width:210mm; min-height:297mm; margin:0 auto; background:#fff; padding:0; position:relative; }
+    .pv-logo{ position:absolute; top:10mm; right:14mm; width:26mm; height:auto; opacity:0.95; }
 
-.preview-row{ margin-top:10px; display:flex; gap:12px; align-items:flex-start; flex-wrap:wrap; }
-.thumb{
-  width:120px; height:90px; border:1px solid #ddd; border-radius:10px;
-  overflow:hidden; background:#f6f6f6; display:flex; align-items:center; justify-content:center;
-}
-.thumb img{ width:100%; height:100%; object-fit:cover; border-radius:9px; }
-.note-box{ margin-top:10px; }
+    .pv-gutter{
+      position:absolute; left:14mm; top:18mm; bottom:26mm; width:42mm;
+      display:flex; flex-direction:column; gap:10mm;
+    }
+    .pv-gutter .pv-img{ width:100%; border-radius:3mm; overflow:hidden; border:1px solid #ddd; background:#f6f6f6; }
+    .pv-gutter .pv-img img{ width:100%; height:auto; display:block; }
 
-.images-off .img-controls{ display:none !important; }
+    .pv-content{ margin-left:48mm; }
+    .pv-header{ margin-bottom:12mm; }
+    .pv-title{ font-size:34px; font-weight:800; }
+    .pv-subtitle{ font-size:16px; margin-top:4px; font-weight:500; }
+    .pv-section{ margin-top:12mm; break-inside:avoid; page-break-inside:avoid; }
+    .pv-section-name{ font-size:13px; font-weight:800; }
+    .pv-section-period{ margin-top:2mm; font-size:12px; font-weight:500; color:#111; }
 
-/* DP EDIT */
-.dp-wrap{ margin-top:10px; }
-.dp-card{ border:1px solid #ddd; border-radius:14px; padding:12px; }
-.dp-head{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; flex-wrap:wrap; margin-bottom:10px; }
-.dp-title{ font-weight:900; font-size:16px; }
-.dp-actions{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    /* TABLES */
+    .pv-table{ margin-top:6mm; width:100%; border-collapse:collapse; table-layout:fixed; font-size:11.5px; }
+    .pv-table th{ text-align:left; font-size:10px; text-transform:uppercase; letter-spacing:.08em; border-bottom:1px solid #000; padding:0 0 6px 0; }
+    .pv-table td{ padding:8px 0; vertical-align:top; }
+    .pv-table tr{ break-inside:avoid; page-break-inside:avoid; }
+    .pv-item-title{ font-weight:800; }
+    .pv-item-note{ font-size:10.5px; margin-top:2px; color:#111; }
+    .pv-item-period{ margin-top:3px; font-size:10px; color:#666; }
+    .pv-note-block{ margin-top:6mm; font-size:10.7px; color:#111; line-height:1.35; break-inside:avoid; page-break-inside:avoid; }
+    .pv-money-old{ font-size:10.5px; color:#777; text-decoration:line-through; display:block; line-height:1.05; }
+    .pv-money-new{ font-size:11.5px; font-weight:900; display:block; line-height:1.05; }
+    .pv-divider{ margin-top:8mm; border-top:1px solid #000; }
 
-.dp-row{
-  display:grid; grid-template-columns: 120px 1fr 1fr 40px; gap:10px; align-items:end; margin-top:10px;
-}
-.dp-row .sec{ text-align:center; font-weight:900; }
-.dp-row .sec input{ text-align:center; font-weight:900; }
-.dp-row .kill{ display:flex; justify-content:flex-end; }
-.dp-row .kill button{ width:40px; height:40px; }
+    /* Standard table col alignments */
+    .pv-std-table .c-qty, .pv-std-table .c-price, .pv-std-table .c-total{ text-align:right; }
+    .pv-qty-max{ display:inline-block; text-align:right; line-height:1.05; }
+    .pv-qty-max strong{ font-weight:900; }
 
-.dp-specs{ margin-top:12px; display:flex; flex-direction:column; gap:12px; }
-.dp-spec{ border:1px solid #ddd; border-radius:14px; padding:12px; }
-.dp-spec-head{
-  display:grid; grid-template-columns: 1fr 180px 180px 40px; gap:10px; align-items:end;
-}
-@media (max-width:900px){ .dp-spec-head{ grid-template-columns:1fr; } }
+    /* DP */
+    .pv-dp-table th, .pv-dp-table td{ font-size:11.2px; }
+    .pv-dp-sec{ width:16%; text-align:center; }
+    .pv-dp-price{ width:24%; text-align:right; }
+    .pv-dp-name{ width:60%; }
+    .pv-dp-block{ margin-top:6mm; break-inside:avoid; page-break-inside:avoid; }
+    .pv-dp-spec-title{ font-size:12px; font-weight:900; margin-top:4mm; }
 
-.dp-months{ margin-top:10px; display:flex; flex-direction:column; gap:8px; }
-.dp-month{
-  display:grid; grid-template-columns: 180px 160px 200px 40px; gap:10px; align-items:center;
-}
-@media (max-width:900px){ .dp-month{ grid-template-columns:1fr; } }
-.dp-inline{ display:flex; gap:10px; flex-wrap:wrap; align-items:flex-start; margin-top:10px; }
+    .pv-dp-month-table{ margin-top:3mm; width:100%; border-collapse:collapse; table-layout:fixed; font-size:11.2px; }
+    .pv-dp-month-table th{ text-align:left; font-size:9.5px; text-transform:uppercase; letter-spacing:.08em; border-bottom:1px solid #000; padding-bottom:6px; }
+    .pv-dp-month-table td{ padding:7px 0; border-bottom:1px solid #eee; }
+    .pv-dp-month-table tr:last-child td{ border-bottom:none; }
+    .pv-dp-month-table .m-month{ width:22%; }
+    .pv-dp-month-table .m-panels{ width:16%; text-align:right; padding-right:10px; }
+    .pv-dp-month-table .m-col{ text-align:right; }
 
-.chip{
-  display:inline-flex; align-items:center; gap:8px;
-  border:1px solid #ddd; border-radius:999px; padding:8px 12px;
-  background:#f7f7f7; font-weight:800; font-size:13px;
-}
-.chip input{ width:18px; height:18px; }
+    .pv-footer{
+      position:fixed; left:0; right:0; bottom:0; height:18mm;
+      display:flex; align-items:flex-end; justify-content:center;
+      padding:0 14mm 6mm 14mm;
+      font-size:10.5px; color:#000;
+    }
+    .pv-footer .inner{ width:210mm; display:grid; grid-template-columns: 1fr 1fr 1fr; align-items:end; }
+    .pv-footer .left{ display:flex; align-items:flex-end; gap:8px; }
+    .pv-footer img{ width:28mm; height:auto; opacity:.95; }
+    .pv-footer .mid{ text-align:center; }
+    .pv-footer .mid a{ color:#000; text-decoration:underline; font-weight:800; }
+    .pv-footer .right{ text-align:right; font-weight:800; }
 
-.dp-img{ margin-top:10px; display:flex; gap:12px; flex-wrap:wrap; align-items:flex-start; }
-.dp-img .thumb{ width:140px; height:105px; border-radius:10px; }
-.dp-img .thumb img{ border-radius:9px; }
+    .pv-no-images .pv-gutter{ display:none; }
+    .pv-no-images .pv-content{ margin-left:0; }
 
-/* PRINT / PDF */
-.print-view{ display:none; }
+    .pv-or-row td{ padding:10px 0; text-align:center !important; font-weight:900; letter-spacing:.12em; color:#111; }
 
-/* === PDF PAGE === */
-.print-page{
-  width:210mm;
-  margin:0 auto;
-  background:#fff;
-  position:relative;
-  padding:0;
-}
+    /* PASSWORD OVERLAY */
+    .lock{ position:fixed; inset:0; background:#fff; z-index:99999; display:flex; align-items:center; justify-content:center; padding:24px; }
+    .lock-card{ width:min(520px, 92vw); border:1px solid #ddd; border-radius:18px; padding:18px; box-shadow:0 10px 30px rgba(0,0,0,.08); }
+    .lock-title{ font-size:18px; font-weight:900; margin:0 0 6px 0; }
+    .lock-sub{ margin:0 0 14px 0; color:#666; font-size:13px; }
+    .lock-row{ display:flex; gap:10px; align-items:center; }
+    .lock-row input{ flex:1; font-weight:800; }
+    .lock-err{ margin-top:10px; color:#c40000; font-weight:800; display:none; }
 
-/* logo hore vpravo */
-.pv-logo{ position:absolute; top:10mm; right:14mm; width:26mm; height:auto; opacity:0.95; }
-
-/* === GRID LAYOUT (ako „správna“ ukážka) ===
-   ľavý stĺpec = fotky
-   pravý stĺpec = text/tablky
-*/
-.pv-grid{
-  display:grid;
-  grid-template-columns: 44mm 1fr;   /* fotky + obsah */
-  gap:8mm;                           /* medzera medzi fotkami a obsahom */
-  padding-top:14mm;                  /* vyššie */
-  padding-left:10mm;                 /* viac vľavo (bližšie ku kraju) */
-  padding-right:14mm;
-  padding-bottom:26mm;
-}
-
-/* ľavý stĺpec */
-.pv-gutter{
-  display:flex;
-  flex-direction:column;
-  gap:10mm;
-}
-
-/* fotka box – jemné rohy, bez deformácie, bez cropu */
-.pv-img{
-  width:100%;
-  height:34mm;              /* pevná výška -> stále „plnohodnotné“ */
-  border-radius:2mm;        /* jemné zaoblenie */
-  overflow:hidden;
-  border:1px solid #ddd;
-  background:#f6f6f6;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-.pv-img img{
-  width:100%;
-  height:100%;
-  object-fit:contain;       /* !!! NEOREZAŤ, NEDEFORMOVAŤ */
-  display:block;
-}
-
-/* pravý stĺpec */
-.pv-content{ min-width:0; }
-
-.pv-header{ margin-bottom:10mm; }
-.pv-title{ font-size:34px; font-weight:800; }
-.pv-subtitle{ font-size:16px; margin-top:4px; font-weight:500; }
-
-/* SECTIONS */
-.pv-section{ margin-top:12mm; break-inside:avoid; page-break-inside:avoid; }
-.pv-section-name{ font-size:13px; font-weight:800; }
-.pv-section-period{ margin-top:2mm; font-size:12px; font-weight:500; color:#111; }
-
-/* TABLES */
-.pv-table{
-  margin-top:6mm; width:100%;
-  border-collapse:collapse; table-layout:fixed;
-  font-size:11.5px;
-}
-.pv-table th{
-  text-align:left;
-  font-size:10px; text-transform:uppercase; letter-spacing:.08em;
-  border-bottom:1px solid #000;
-  padding:0 0 6px 0;
-}
-.pv-table td{
-  padding:8px 0;
-  vertical-align:top;
-}
-.pv-table tr{ break-inside:avoid; page-break-inside:avoid; }
-
-.pv-item-title{ font-weight:800; }
-.pv-item-note{ font-size:10.5px; margin-top:2px; color:#111; }
-.pv-item-period{ margin-top:3px; font-size:10px; color:#666; }
-
-.pv-note-block{
-  margin-top:6mm;
-  font-size:10.7px;
-  color:#111;
-  line-height:1.35;
-  break-inside:avoid;
-  page-break-inside:avoid;
-}
-
-.pv-money-old{
-  font-size:10.5px; color:#777; text-decoration:line-through;
-  display:block; line-height:1.05;
-}
-.pv-money-new{
-  font-size:11.5px; font-weight:900;
-  display:block; line-height:1.05;
-}
-.pv-divider{ margin-top:8mm; border-top:1px solid #000; }
-
-/* Standard table col alignments */
-.pv-std-table .c-qty,
-.pv-std-table .c-price,
-.pv-std-table .c-total{ text-align:right; }
-
-.pv-qty-max{
-  display:inline-block;
-  text-align:right;
-  line-height:1.05;
-}
-.pv-qty-max strong{ font-weight:900; }
-
-/* DP */
-.pv-dp-table th, .pv-dp-table td{ font-size:11.2px; }
-.pv-dp-sec{ width:16%; text-align:center; }
-.pv-dp-price{ width:24%; text-align:right; }
-.pv-dp-name{ width:60%; }
-
-.pv-dp-block{ margin-top:6mm; break-inside:avoid; page-break-inside:avoid; }
-.pv-dp-spec-title{ font-size:12px; font-weight:900; margin-top:4mm; }
-
-.pv-dp-month-table{
-  margin-top:3mm;
-  width:100%;
-  border-collapse:collapse;
-  table-layout:fixed;
-  font-size:11.2px;
-}
-.pv-dp-month-table th{
-  text-align:left;
-  font-size:9.5px;
-  text-transform:uppercase;
-  letter-spacing:.08em;
-  border-bottom:1px solid #000;
-  padding-bottom:6px;
-}
-.pv-dp-month-table td{
-  padding:7px 0;
-  border-bottom:1px solid #eee;
-}
-.pv-dp-month-table tr:last-child td{ border-bottom:none; }
-.pv-dp-month-table .m-month{ width:22%; }
-.pv-dp-month-table .m-panels{ width:16%; text-align:right; padding-right:10px; }
-.pv-dp-month-table .m-col{ text-align:right; }
-
-.pv-or-row td{
-  padding:10px 0;
-  text-align:center !important;
-  font-weight:900;
-  letter-spacing:.12em;
-  color:#111;
-}
-
-/* footer */
-.pv-footer{
-  position:fixed; left:0; right:0; bottom:0;
-  height:18mm;
-  display:flex; align-items:flex-end; justify-content:center;
-  padding:0 14mm 6mm 14mm; /* späť ako bolo */
-  font-size:10.5px; color:#000;
-}
-.pv-footer .inner{
-  width:210mm;
-  display:grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  align-items:end;
-}
-.pv-footer .left{ display:flex; align-items:flex-end; gap:8px; }
-.pv-footer img{ width:28mm; height:auto; opacity:.95; }
-.pv-footer .mid{ text-align:center; }
-.pv-footer .mid a{ color:#000; text-decoration:underline; font-weight:800; }
-.pv-footer .right{ text-align:right; font-weight:800; }
-
-/* bez obrázkov => fotostĺpec sa skryje a obsah ide na celú šírku */
-.pv-no-images .pv-grid{ grid-template-columns: 1fr; }
-.pv-no-images .pv-gutter{ display:none; }
-
-/* PASSWORD OVERLAY */
-.lock{
-  position:fixed; inset:0; background:#fff; z-index:99999;
-  display:flex; align-items:center; justify-content:center;
-  padding:24px;
-}
-.lock-card{
-  width:min(520px, 92vw);
-  border:1px solid #ddd;
-  border-radius:18px;
-  padding:18px;
-  box-shadow:0 10px 30px rgba(0,0,0,.08);
-}
-.lock-title{ font-size:18px; font-weight:900; margin:0 0 6px 0; }
-.lock-sub{ margin:0 0 14px 0; color:#666; font-size:13px; }
-.lock-row{ display:flex; gap:10px; align-items:center; }
-.lock-row input{ flex:1; font-weight:800; }
-.lock-err{ margin-top:10px; color:#c40000; font-weight:800; display:none; }
-
-@media print{
-  .wrap{ display:none !important; }
-  .print-view{ display:block !important; }
-  body{ margin:0; }
-
-  /* ďalšie strany – cca o 2 cm nižšie */
-  @page{ margin:20mm 14mm 22mm 14mm; }
-
-  /* prvá strana ostane „po starom“ */
-  @page :first{ margin:18mm 14mm 22mm 14mm; }
-
-  /* aby 1-stranový dokument nerobil prázdnu 2. stranu */
-  .print-page{ min-height:auto !important; }
-
-  .lock{ display:none !important; }
-}
-</style>
+    @media print{
+      .wrap{ display:none !important; }
+      .print-view{ display:block !important; }
+      body{ margin:0; }
+      @page{ margin:20mm 14mm 22mm 14mm; }
+      @page :first{ margin:18mm 14mm 22mm 14mm; }
+      .lock{ display:none !important; }
+    }
+  </style>
 </head>
 
 <body>
-
-<!-- PASSWORD -->
-<div class="lock" id="lock">
-  <div class="lock-card">
-    <div class="lock-title">Zadajte kód</div>
-    <p class="lock-sub">Táto stránka je chránená. Zadajte prístupový kód.</p>
-    <div class="lock-row">
-      <input id="lockInput" type="password" placeholder="Kód" autocomplete="off" />
-      <button class="btn primary" id="lockBtn" type="button">OK</button>
-    </div>
-    <div class="lock-err" id="lockErr">Nesprávny kód.</div>
-  </div>
-</div>
-
-<div class="wrap" id="appRoot" style="display:none;">
-  <h1>Cenová ponuka – formulár</h1>
-
-  <div class="toolbar">
-    <button class="btn primary" id="btnPrint" type="button">Export do PDF</button>
-    <button class="btn secondary" id="btnAddSection" type="button">+ Pridať sekciu</button>
-    <button class="btn ghost" id="btnReset" type="button">Vymazať (demo)</button>
-  </div>
-  <div class="hint">Zvýhodnenie v PDF: pôvodná cena preškrtnutá + pod ňou nová tučná cena (bez samostatného stĺpca).</div>
-
-  <div class="card">
-    <h2>Základ ponuky</h2>
-
-    <div class="grid-2">
-      <div>
-        <label for="offerTitle">Názov ponuky</label>
-        <input id="offerTitle" value="Cenová ponuka">
+  <!-- PASSWORD -->
+  <div class="lock" id="lock">
+    <div class="lock-card">
+      <div class="lock-title">Zadajte kód</div>
+      <p class="lock-sub">Táto stránka je chránená. Zadajte prístupový kód.</p>
+      <div class="lock-row">
+        <input id="lockInput" type="password" placeholder="Kód" autocomplete="off" />
+        <button class="btn primary" id="lockBtn" type="button">OK</button>
       </div>
-      <div>
-        <label for="offerSubtitle">Podnadpis</label>
-        <input id="offerSubtitle" placeholder="napr. Digitálny panel v čakárni pediatra" value="">
-      </div>
-    </div>
-
-    <div class="grid-2" style="margin-top:12px;">
-      <div>
-        <label for="pdfImages">PDF obrázky</label>
-        <select id="pdfImages" class="select-important">
-          <option value="with" selected>S obrázkami</option>
-          <option value="without">Bez obrázkov (celá šírka)</option>
-        </select>
-      </div>
-      <div>
-        <label for="pdfShowGrand">Zobraziť finálny súčet (Spolu) v PDF?</label>
-        <select id="pdfShowGrand" class="select-important">
-          <option value="yes">Áno</option>
-          <option value="no" selected>Nie</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="grid-2" style="margin-top:12px;">
-      <div class="chip">
-        <input type="checkbox" id="chkStdNote" checked>
-        <span>V PDF pridať text „Súčasťou kampane…“ pod štandardné plochy</span>
-      </div>
-      <div class="chip">
-        <input type="checkbox" checked disabled>
-        <span>„Ceny sú bez DPH.“ (vždy na konci PDF)</span>
-      </div>
+      <div class="lock-err" id="lockErr">Nesprávny kód.</div>
     </div>
   </div>
 
-  <div class="card">
-    <h2>Sekcie</h2>
-    <div class="sections" id="sections"></div>
+  <div class="wrap" id="appRoot" style="display:none;">
+    <h1>Cenová ponuka – formulár</h1>
 
-    <div class="end-settings">
+    <div class="toolbar">
+      <button class="btn primary" id="btnPrint" type="button">Export do PDF</button>
+      <button class="btn secondary" id="btnAddSection" type="button">+ Pridať sekciu</button>
+      <button class="btn ghost" id="btnReset" type="button">Vymazať (demo)</button>
+    </div>
+
+    <div class="hint">Zvýhodnenie v PDF: pôvodná cena preškrtnutá + pod ňou nová tučná cena (bez samostatného stĺpca).</div>
+
+    <div class="card">
+      <h2>Základ ponuky</h2>
+
       <div class="grid-2">
-        <div class="small">
-          Súbory: <strong>ids-logo.png</strong> (hore vpravo), <strong>feel.png</strong> (footer).
+        <div>
+          <label for="offerTitle">Názov ponuky</label>
+          <input id="offerTitle" value="Cenová ponuka">
         </div>
-        <div style="text-align:right;">
-          <button class="btn secondary" id="btnAddSectionBottom" type="button">+ Pridať sekciu</button>
+        <div>
+          <label for="offerSubtitle">Podnadpis</label>
+          <input id="offerSubtitle" placeholder="napr. Digitálny panel v čakárni pediatra" value="">
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-top:12px;">
+        <div>
+          <label for="pdfImages">PDF obrázky</label>
+          <select id="pdfImages" class="select-important">
+            <option value="with" selected>S obrázkami</option>
+            <option value="without">Bez obrázkov (celá šírka)</option>
+          </select>
+        </div>
+        <div>
+          <label for="pdfShowGrand">Zobraziť finálny súčet (Spolu) v PDF?</label>
+          <select id="pdfShowGrand" class="select-important">
+            <option value="yes">Áno</option>
+            <option value="no" selected>Nie</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-top:12px;">
+        <div class="chip">
+          <input type="checkbox" id="chkStdNote" checked>
+          <span>V PDF pridať text „Súčasťou kampane…“ pod štandardné plochy</span>
+        </div>
+        <div class="chip">
+          <input type="checkbox" checked disabled>
+          <span>„Ceny sú bez DPH.“ (vždy na konci PDF)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Sekcie</h2>
+      <div class="sections" id="sections"></div>
+
+      <div class="end-settings">
+        <div class="grid-2">
+          <div class="small">
+            Súbory: <strong>ids-logo.png</strong> (hore vpravo), <strong>feel.png</strong> (footer).
+          </div>
+          <div style="text-align:right;">
+            <button class="btn secondary" id="btnAddSectionBottom" type="button">+ Pridať sekciu</button>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<section class="print-view" id="printView">
-  <div class="print-page" id="printPage">
-    <img class="pv-logo" id="pvLogo" src="ids-logo.png" alt="IDS logo" />
-
-    <div class="pv-grid" id="pvGrid">
+  <section class="print-view" id="printView">
+    <div class="print-page" id="printPage">
+      <img class="pv-logo" id="pvLogo" src="ids-logo.png" alt="IDS logo" />
       <div class="pv-gutter" id="pvGutter"></div>
 
       <div class="pv-content">
@@ -472,1262 +318,1349 @@ textarea{ min-height:70px; resize:vertical; }
         <div class="pv-note-block" style="margin-top:8mm; font-weight:900;">Ceny sú bez DPH.</div>
       </div>
     </div>
-  </div>
 
-  <div class="pv-footer">
-    <div class="inner">
-      <div class="left">
-        <img id="pvFeel" src="feel.png" alt="feel the good network" />
-      </div>
-      <div class="mid">
-        <a href="https://www.ids-media.sk" target="_blank" rel="noopener">www.ids-media.sk</a>
-      </div>
-      <div class="right" id="pvGen">Generované: —</div>
-    </div>
-  </div>
-</section>
-
-<datalist id="dlSectionNames">
-  <option value="Komunikácia v čakárni pediatra"></option>
-  <option value="Komunikácia v čakárni gynekológa"></option>
-  <option value="Komunikácia v čakárni praktického lekára"></option>
-  <option value="Osobná návšteva lekára"></option>
-</datalist>
-
-<datalist id="dlTypes">
-  <option value="A3 plagát"></option>
-  <option value="B1 plagát"></option>
-  <option value="Statický plagát"></option>
-  <option value="Umiestnenie letákov"></option>
-  <option value="Odovzdanie materiálov"></option>
-  <option value="Tlač materiálov"></option>
-
-  <option value="B1 plagát s umiestnením letáku do uška pod B1 plagát"></option>
-  <option value="A3 plagát s umiestnením letáku pod plagátom v stojane IDS"></option>
-</datalist>
-
-<datalist id="dlMonths">
-  <option value="Január"></option><option value="Február"></option><option value="Marec"></option>
-  <option value="Apríl"></option><option value="Máj"></option><option value="Jún"></option>
-  <option value="Júl"></option><option value="August"></option><option value="September"></option>
-  <option value="Október"></option><option value="November"></option><option value="December"></option>
-</datalist>
-
-<datalist id="dlSpecs">
-  <option value="Praktický lekár"></option>
-  <option value="Pediater"></option>
-  <option value="Gynekológ"></option>
-</datalist>
-
-<template id="tplSection">
-  <div class="section" data-section>
-    <div class="section-head">
-      <div class="section-title">
-        <div>
-          <label>Názov sekcie</label>
-          <input data-sec-name list="dlSectionNames" placeholder="napr. Komunikácia v čakárni pediatra" value="">
+    <div class="pv-footer">
+      <div class="inner">
+        <div class="left">
+          <img id="pvFeel" src="feel.png" alt="feel the good network" />
         </div>
-        <div>
-          <label>Obdobie (Q)</label>
-          <input data-sec-period placeholder="napr. Q2 2026" value="">
+        <div class="mid">
+          <a href="https://www.ids-media.sk" target="_blank" rel="noopener">www.ids-media.sk</a>
         </div>
-        <div>
-          <label>Typ sekcie</label>
-          <select data-sec-kind class="select-important">
-            <option value="standard" selected>Štandardné plochy</option>
-            <option value="dp">Digitálny panel</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="section-actions">
-        <button class="icon-btn danger" type="button" title="Odstrániť sekciu" data-del-section>🗑️</button>
+        <div class="right" id="pvGen">Generované: —</div>
       </div>
     </div>
+  </section>
 
-    <div data-standard>
-      <div class="items" data-items></div>
-      <div class="section-bottom">
-        <button class="btn secondary" type="button" data-add-item>+ Pridať položku</button>
-      </div>
-    </div>
+  <datalist id="dlSectionNames">
+    <option value="Komunikácia v čakárni pediatra"></option>
+    <option value="Komunikácia v čakárni gynekológa"></option>
+    <option value="Komunikácia v čakárni praktického lekára"></option>
+    <option value="Osobná návšteva lekára"></option>
+  </datalist>
 
-    <div data-dp class="dp-wrap" style="display:none;">
-      <div class="dp-card">
-        <div class="dp-head">
+  <datalist id="dlTypes">
+    <option value="A3 plagát"></option>
+    <option value="B1 plagát"></option>
+    <option value="Statický plagát"></option>
+    <option value="Umiestnenie letákov"></option>
+    <option value="Odovzdanie materiálov"></option>
+    <option value="Tlač materiálov"></option>
+    <option value="B1 plagát s umiestnením letáku do uška pod B1 plagát"></option>
+    <option value="A3 plagát s umiestnením letáku pod plagátom v stojane IDS"></option>
+  </datalist>
+
+  <datalist id="dlMonths">
+    <option value="Január"></option><option value="Február"></option><option value="Marec"></option>
+    <option value="Apríl"></option><option value="Máj"></option><option value="Jún"></option>
+    <option value="Júl"></option><option value="August"></option><option value="September"></option>
+    <option value="Október"></option><option value="November"></option><option value="December"></option>
+  </datalist>
+
+  <datalist id="dlSpecs">
+    <option value="Praktický lekár"></option>
+    <option value="Pediater"></option>
+    <option value="Gynekológ"></option>
+  </datalist>
+
+  <template id="tplSection">
+    <div class="section" data-section>
+      <div class="section-head">
+        <div class="section-title">
           <div>
-            <div class="dp-title">Digitálny panel – cenník sekundáže</div>
-            <div class="small">Zvýhodnenie: pôvodná (preškrtnutá) + nová tučná pod ňou.</div>
+            <label>Názov sekcie</label>
+            <input data-sec-name list="dlSectionNames" placeholder="napr. Komunikácia v čakárni pediatra" value="">
           </div>
-          <div class="dp-actions">
-            <span class="chip"><input type="checkbox" data-dp-show-colsum checked> <span>Zobraziť „Spolu“ v stĺpcoch (15/20/30)</span></span>
-            <button class="btn secondary" type="button" data-dp-add-rate>+ Pridať sekundáž</button>
+          <div>
+            <label>Obdobie (Q)</label>
+            <input data-sec-period placeholder="napr. Q2 2026" value="">
           </div>
-        </div>
-
-        <div data-dp-rates></div>
-
-        <div class="dp-inline">
-          <span class="chip">
-            <input type="checkbox" data-dp-note-on>
-            <span>Doplnkový text k digitálnym panelom (v PDF) – áno/nie</span>
-          </span>
-          <div class="small" style="margin-top:2px; color:#888;">
-            (nenápadné – zobrazí sa iba raz pod digitálnymi panelmi)
+          <div>
+            <label>Typ sekcie</label>
+            <select data-sec-kind class="select-important">
+              <option value="standard" selected>Štandardné plochy</option>
+              <option value="dp">Digitálny panel</option>
+            </select>
           </div>
         </div>
-
-        <div class="small" style="margin-top:10px; font-weight:800;">Fotografie k digitálnym panelom (voliteľné)</div>
-        <div class="dp-img img-controls" data-dp-images></div>
-
-        <div class="note-box" style="margin-top:10px;">
-          <label>Text pod digitálne panely (voliteľné)</label>
-          <textarea data-dp-note></textarea>
+        <div class="section-actions">
+          <button class="icon-btn danger" type="button" title="Odstrániť sekciu" data-del-section>🗑️</button>
         </div>
       </div>
 
-      <div class="dp-specs" data-dp-specs></div>
+      <div data-standard>
+        <div class="items" data-items></div>
+        <div class="section-bottom">
+          <button class="btn secondary" type="button" data-add-item>+ Pridať položku</button>
+        </div>
+      </div>
 
-      <div class="section-bottom">
-        <button class="btn secondary" type="button" data-dp-add-spec>+ Pridať špecializáciu</button>
+      <div data-dp class="dp-wrap" style="display:none;">
+        <div class="dp-card">
+          <div class="dp-head">
+            <div>
+              <div class="dp-title">Digitálny panel – cenník sekundáže</div>
+              <div class="small">Zvýhodnenie: pôvodná (preškrtnutá) + nová tučná pod ňou.</div>
+            </div>
+
+            <div class="dp-actions">
+              <span class="chip">
+                <input type="checkbox" data-dp-show-colsum checked>
+                <span>Zobraziť „Spolu“ v stĺpcoch (15/20/30)</span>
+              </span>
+              <button class="btn secondary" type="button" data-dp-add-rate>+ Pridať sekundáž</button>
+            </div>
+          </div>
+
+          <div data-dp-rates></div>
+
+          <div class="dp-inline">
+            <span class="chip">
+              <input type="checkbox" data-dp-note-on>
+              <span>Doplnkový text k digitálnym panelom (v PDF) – áno/nie</span>
+            </span>
+            <div class="small" style="margin-top:2px; color:#888;">
+              (nenápadné – zobrazí sa iba raz pod digitálnymi panelmi)
+            </div>
+          </div>
+
+          <div class="small" style="margin-top:10px; font-weight:800;">Fotografie k digitálnym panelom (voliteľné)</div>
+          <div class="dp-img img-controls" data-dp-images></div>
+
+          <div class="note-box" style="margin-top:10px;">
+            <label>Text pod digitálne panely (voliteľné)</label>
+            <textarea data-dp-note></textarea>
+          </div>
+        </div>
+
+        <div class="dp-specs" data-dp-specs></div>
+
+        <div class="section-bottom">
+          <button class="btn secondary" type="button" data-dp-add-spec>+ Pridať špecializáciu</button>
+        </div>
       </div>
     </div>
-  </div>
-</template>
+  </template>
 
-<template id="tplOrSep">
-  <div class="or-sep" data-or-sep>A L E B O</div>
-</template>
+  <template id="tplOrSep">
+    <div class="or-sep" data-or-sep>A L E B O</div>
+  </template>
 
-<template id="tplItem">
-  <div class="item" data-item>
-    <div class="item-head">
-      <div class="left">Položka v tejto sekcii</div>
-      <div class="right">
-        <button class="btn ghost" type="button" data-add-or>+ ALEBO</button>
-        <button class="icon-btn danger" type="button" title="Odstrániť položku" data-del-item>🗑️</button>
+  <template id="tplItem">
+    <div class="item" data-item>
+      <div class="item-head">
+        <div class="left">Položka v tejto sekcii</div>
+        <div class="right">
+          <button class="btn ghost" type="button" data-add-or>+ ALEBO</button>
+          <button class="icon-btn danger" type="button" title="Odstrániť položku" data-del-item>🗑️</button>
+        </div>
       </div>
-    </div>
 
-    <div class="grid-2">
-      <div>
-        <label>Typ produktu (voľný text)</label>
-        <input data-type list="dlTypes" placeholder="napr. B1 plagát">
+      <div class="grid-2">
+        <div>
+          <label>Typ produktu (voľný text)</label>
+          <input data-type list="dlTypes" placeholder="napr. B1 plagát">
+        </div>
+        <div>
+          <label>Rozmer</label>
+          <input data-dim placeholder="—">
+        </div>
       </div>
-      <div>
-        <label>Rozmer</label>
-        <input data-dim placeholder="—">
-      </div>
-    </div>
 
-    <div class="grid-2" style="margin-top:12px;">
-      <div>
-        <label>Názov položky (prepísateľné)</label>
-        <input data-title placeholder="napr. B1 plagát">
+      <div class="grid-2" style="margin-top:12px;">
+        <div>
+          <label>Názov položky (prepísateľné)</label>
+          <input data-title placeholder="napr. B1 plagát">
+        </div>
+        <div>
+          <label>Doplnenie / poznámka (riadok pod názvom)</label>
+          <input data-note placeholder="napr. S umiestnením letákov">
+        </div>
       </div>
-      <div>
-        <label>Doplnenie / poznámka (riadok pod názvom)</label>
-        <input data-note placeholder="napr. S umiestnením letákov">
-      </div>
-    </div>
 
-    <div class="grid-2" style="margin-top:12px;">
-      <div>
-        <label>Cenový režim</label>
-        <select data-price-mode class="select-important">
-          <option value="unit" selected>Cena za kus × počet</option>
-          <option value="fixed">Fixná cena spolu</option>
-        </select>
-      </div>
-      <div>
-        <label>Počet</label>
-        <div class="grid-2" style="grid-template-columns:1fr 1fr; gap:10px;">
-          <select data-qtymode class="select-important">
-            <option value="exact" selected>Presný</option>
-            <option value="max">Max</option>
+      <div class="grid-2" style="margin-top:12px;">
+        <div>
+          <label>Cenový režim</label>
+          <select data-price-mode class="select-important">
+            <option value="unit" selected>Cena za kus × počet</option>
+            <option value="fixed">Fixná cena spolu</option>
           </select>
-          <input data-qty type="number" min="0" step="1" value="1">
+        </div>
+        <div>
+          <label>Počet</label>
+          <div class="grid-2" style="grid-template-columns:1fr 1fr; gap:10px;">
+            <select data-qtymode class="select-important">
+              <option value="exact" selected>Presný</option>
+              <option value="max">Max</option>
+            </select>
+            <input data-qty type="number" min="0" step="1" value="1">
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="grid-2" style="margin-top:12px;" data-unit-wrap>
-      <div>
-        <label>Cena za kus</label>
-        <input data-price type="number" min="0" step="0.01" placeholder="0.00">
+      <div class="grid-2" style="margin-top:12px;" data-unit-wrap>
+        <div>
+          <label>Cena za kus</label>
+          <input data-price type="number" min="0" step="0.01" placeholder="0.00">
+        </div>
+        <div>
+          <label>Zvýhodnená cena za kus (voliteľné)</label>
+          <input data-discount type="number" min="0" step="0.01" placeholder="0.00">
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-top:12px; display:none;" data-fixed-wrap>
+        <div>
+          <label>Fixná cena spolu</label>
+          <input data-fixed-total type="number" min="0" step="0.01" placeholder="0.00">
+        </div>
+        <div></div>
+      </div>
+
+      <div class="item-foot">
+        <div style="min-width:260px;">
+          <label>Obdobie pod položkou</label>
+          <input data-period placeholder="napr. cena za 3 mesiace">
+        </div>
+        <div class="price-block">
+          <div class="price-old" data-old></div>
+          <div class="price-main" data-total>0,00 €</div>
+          <div class="price-period">(výpočet podľa zvoleného režimu)</div>
+        </div>
+      </div>
+
+      <div class="preview-row img-controls">
+        <div>
+          <label>Obrázok (voliteľné)</label>
+          <input data-img type="file" accept="image/*">
+        </div>
+        <div class="thumb" data-thumb><span class="small">bez obrázka</span></div>
+      </div>
+
+      <div class="note-box">
+        <label>Vlastná poznámka pod položkou (voliteľné)</label>
+        <textarea data-extra placeholder=""></textarea>
+      </div>
+    </div>
+  </template>
+
+  <template id="tplDpRate">
+    <div class="dp-row" data-dp-rate>
+      <div class="sec">
+        <label>Sekundy</label>
+        <input data-sec type="number" min="1" step="1" value="15">
       </div>
       <div>
-        <label>Zvýhodnená cena za kus (voliteľné)</label>
-        <input data-discount type="number" min="0" step="0.01" placeholder="0.00">
-      </div>
-    </div>
-
-    <div class="grid-2" style="margin-top:12px; display:none;" data-fixed-wrap>
-      <div>
-        <label>Fixná cena spolu</label>
-        <input data-fixed-total type="number" min="0" step="0.01" placeholder="0.00">
-      </div>
-      <div></div>
-    </div>
-
-    <div class="item-foot">
-      <div style="min-width:260px;">
-        <label>Obdobie pod položkou</label>
-        <input data-period placeholder="napr. cena za 3 mesiace">
-      </div>
-
-      <div class="price-block">
-        <div class="price-old" data-old></div>
-        <div class="price-main" data-total>0,00 €</div>
-        <div class="price-period">(výpočet podľa zvoleného režimu)</div>
-      </div>
-    </div>
-
-    <div class="preview-row img-controls">
-      <div>
-        <label>Obrázok (voliteľné)</label>
-        <input data-img type="file" accept="image/*">
-      </div>
-      <div class="thumb" data-thumb><span class="small">bez obrázka</span></div>
-    </div>
-
-    <div class="note-box">
-      <label>Vlastná poznámka pod položkou (voliteľné)</label>
-      <textarea data-extra placeholder=""></textarea>
-    </div>
-  </div>
-</template>
-
-<template id="tplDpRate">
-  <div class="dp-row" data-dp-rate>
-    <div class="sec">
-      <label>Sekundy</label>
-      <input data-sec type="number" min="1" step="1" value="15">
-    </div>
-    <div>
-      <label>Bežná cena / 1 panel / mesiac</label>
-      <input data-base type="number" min="0" step="0.01" placeholder="0.00">
-    </div>
-    <div>
-      <label>Zvýhodnená cena (voliteľné)</label>
-      <input data-disc type="number" min="0" step="0.01" placeholder="0.00">
-    </div>
-    <div class="kill">
-      <button class="icon-btn danger" type="button" title="Odstrániť" data-del>🗑️</button>
-    </div>
-  </div>
-</template>
-
-<template id="tplDpSpec">
-  <div class="dp-spec" data-dp-spec>
-    <div class="dp-spec-head">
-      <div>
-        <label>Špecializácia</label>
-        <input data-spec list="dlSpecs" placeholder="napr. Pediater" value="Pediater">
+        <label>Bežná cena / 1 panel / mesiac</label>
+        <input data-base type="number" min="0" step="0.01" placeholder="0.00">
       </div>
       <div>
-        <label>Rovnaký počet všade</label>
-        <input data-same-panels type="number" min="0" step="1" placeholder="napr. 110">
+        <label>Zvýhodnená cena (voliteľné)</label>
+        <input data-disc type="number" min="0" step="0.01" placeholder="0.00">
       </div>
-      <div style="display:flex; gap:10px; align-items:flex-end;">
-        <button class="btn secondary" type="button" data-apply-same>Vyplniť všade</button>
-        <button class="btn secondary" type="button" data-add-month>+ Mesiac</button>
+      <div class="kill">
+        <button class="icon-btn danger" type="button" title="Odstrániť" data-del>🗑️</button>
+      </div>
+    </div>
+  </template>
+
+  <template id="tplDpSpec">
+    <div class="dp-spec" data-dp-spec>
+      <div class="dp-spec-head">
+        <div>
+          <label>Špecializácia</label>
+          <input data-spec list="dlSpecs" placeholder="napr. Pediater" value="Pediater">
+        </div>
+        <div>
+          <label>Rovnaký počet všade</label>
+          <input data-same-panels type="number" min="0" step="1" placeholder="napr. 110">
+        </div>
+        <div style="display:flex; gap:10px; align-items:flex-end;">
+          <button class="btn secondary" type="button" data-apply-same>Vyplniť všade</button>
+          <button class="btn secondary" type="button" data-add-month>+ Mesiac</button>
+        </div>
+        <div style="display:flex; justify-content:flex-end;">
+          <button class="icon-btn danger" type="button" title="Odstrániť špecializáciu" data-del>🗑️</button>
+        </div>
+      </div>
+
+      <div class="dp-months" data-months></div>
+
+      <div class="dp-img img-controls" style="margin-top:10px;">
+        <div style="min-width:220px;">
+          <label>Fotka k špecializácii (voliteľné)</label>
+          <input data-img type="file" accept="image/*">
+        </div>
+        <div class="thumb" data-thumb><span class="small">bez obrázka</span></div>
+      </div>
+    </div>
+  </template>
+
+  <template id="tplDpMonth">
+    <div class="dp-month" data-dp-month>
+      <div>
+        <label>Termín</label>
+        <input data-month list="dlMonths" placeholder="Apríl">
+      </div>
+      <div>
+        <label>Počet panelov</label>
+        <input data-panels type="number" min="0" step="1" value="0">
+      </div>
+      <div class="chip">
+        <input data-use-disc type="checkbox">
+        <span>Použiť zvýhodnenú cenu (ak existuje)</span>
       </div>
       <div style="display:flex; justify-content:flex-end;">
-        <button class="icon-btn danger" type="button" title="Odstrániť špecializáciu" data-del>🗑️</button>
+        <button class="icon-btn danger" type="button" title="Odstrániť riadok" data-del>🗑️</button>
       </div>
     </div>
+  </template>
 
-    <div class="dp-months" data-months></div>
+  <script>
+    /* ===== PASSWORD ===== */
+    const PASS = 'Ids159263';
+    const lock = document.getElementById('lock');
+    const lockInput = document.getElementById('lockInput');
+    const lockBtn = document.getElementById('lockBtn');
+    const lockErr = document.getElementById('lockErr');
+    const appRoot = document.getElementById('appRoot');
 
-    <div class="dp-img img-controls" style="margin-top:10px;">
-      <div style="min-width:220px;">
-        <label>Fotka k špecializácii (voliteľné)</label>
-        <input data-img type="file" accept="image/*">
-      </div>
-      <div class="thumb" data-thumb><span class="small">bez obrázka</span></div>
-    </div>
-  </div>
-</template>
+    function unlock() {
+      lock.style.display = 'none';
+      appRoot.style.display = '';
+      sessionStorage.setItem('idsUnlocked', '1');
+    }
 
-<template id="tplDpMonth">
-  <div class="dp-month" data-dp-month>
-    <div>
-      <label>Termín</label>
-      <input data-month list="dlMonths" placeholder="Apríl">
-    </div>
-    <div>
-      <label>Počet panelov</label>
-      <input data-panels type="number" min="0" step="1" value="0">
-    </div>
-    <div class="chip">
-      <input data-use-disc type="checkbox">
-      <span>Použiť zvýhodnenú cenu (ak existuje)</span>
-    </div>
-    <div style="display:flex; justify-content:flex-end;">
-      <button class="icon-btn danger" type="button" title="Odstrániť riadok" data-del>🗑️</button>
-    </div>
-  </div>
-</template>
+    function tryUnlock() {
+      if ((lockInput.value || '') === PASS) {
+        lockErr.style.display = 'none';
+        unlock();
+      } else {
+        lockErr.style.display = 'block';
+        lockInput.focus();
+        lockInput.select();
+      }
+    }
 
-<script>
-/* ===== PASSWORD ===== */
-const PASS = 'Ids159263';
-const lock = document.getElementById('lock');
-const lockInput = document.getElementById('lockInput');
-const lockBtn = document.getElementById('lockBtn');
-const lockErr = document.getElementById('lockErr');
-const appRoot = document.getElementById('appRoot');
+    lockBtn.addEventListener('click', tryUnlock);
+    lockInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') tryUnlock(); });
 
-function unlock(){
-  lock.style.display = 'none';
-  appRoot.style.display = '';
-  sessionStorage.setItem('idsUnlocked','1');
-}
-function tryUnlock(){
-  if((lockInput.value || '') === PASS){
-    lockErr.style.display = 'none';
-    unlock();
-  }else{
-    lockErr.style.display = 'block';
-    lockInput.focus();
-    lockInput.select();
-  }
-}
-lockBtn.addEventListener('click', tryUnlock);
-lockInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') tryUnlock(); });
+    if (sessionStorage.getItem('idsUnlocked') === '1') {
+      unlock();
+    } else {
+      lockInput.focus();
+    }
 
-if(sessionStorage.getItem('idsUnlocked') === '1'){
-  unlock();
-}else{
-  lockInput.focus();
-}
-
-/* ===== DEFAULT DP NOTE ===== */
-const DEFAULT_DP_NOTE_TEXT =
-`Súčasťou kampane u digitálnych panelov je:
-Aktuálny počet fungujúcich panelov v daný mesiac, dĺžka slučky, priemerná návštevnosť za daný mesiac, plánovaný počet prehraní za daný mesiac, reálny počet prehraní za daný mesiac, počet možných videní za daný mesiac.
+    /* ===== DEFAULT DP NOTE (fix: vždy sa má vedieť vytlačiť) ===== */
+    const DEFAULT_DP_NOTE_TEXT =
+`Súčasťou kampane u digitálnych panelov je: Aktuálny počet fungujúcich panelov v daný mesiac, dĺžka slučky, priemerná návštevnosť za daný mesiac, plánovaný počet prehraní za daný mesiac, reálny počet prehraní za daný mesiac, počet možných videní za daný mesiac.
 Komunikácia na pacienta prebieha prostredníctvom dynamickej slučky zloženej z krátkych animovaných sekvencií.
 Slučka má 8 - 10 minút a skladá sa z časti vyhradeného pre lekára (30 %), edukačnej časti (30 %) a komerčnej časti (40%).
 Komerčná časť je obmedzená, aby bola Vaša kampaň čo najviac viditeľná.
 Rozmer digitálneho panelu je 55 x 100 cm, umiestnený priamo v čakárni lekára.
-Počty panelov sú odhadované.
-Fakturovať budeme len reálny počet panelov v daný mesiac.`;
+Počty panelov sú odhadované. Fakturovať budeme len reálny počet panelov v daný mesiac.`;
 
-/* ===== APP ===== */
-const moneyFmt = new Intl.NumberFormat('sk-SK', { style:'currency', currency:'EUR' });
-function n(v){ const x = Number(v); return Number.isFinite(x) ? x : 0; }
-function formatMoney(val){ return moneyFmt.format(val); }
-function normalize(s){ return (s || '').trim().toLowerCase(); }
-function pad2(x){ return String(x).padStart(2,'0'); }
-function nowStamp(){ const d=new Date(); return `${pad2(d.getDate())}.${pad2(d.getMonth()+1)}.${d.getFullYear()} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`; }
-function fileDatePrefix(){ const d=new Date(); return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`; }
-function ensurePeriodPrefix(p){
-  const s=(p||'').trim();
-  if(!s) return s;
-  const low=s.toLowerCase();
-  if(low.startsWith('cena ')) return s;
-  if(low.startsWith('za ')) return 'cena ' + s;
-  return s;
-}
+    /* ===== APP ===== */
+    const moneyFmt = new Intl.NumberFormat('sk-SK', { style: 'currency', currency: 'EUR' });
+    function n(v){ const x = Number(v); return Number.isFinite(x) ? x : 0; }
+    function formatMoney(val){ return moneyFmt.format(val); }
+    function normalize(s){ return (s || '').trim().toLowerCase(); }
+    function pad2(x){ return String(x).padStart(2,'0'); }
 
-/* PRESETS */
-function presetFromType(rawType){
-  const t = normalize(rawType);
-
-  if(t === 'a3 plagát' || t === 'a3 plakat'){
-    return { dim:'42 × 29,7 cm', title:'A3 plagát', period:'cena za 3 mesiace' };
-  }
-  if(t === 'b1 plagát' || t === 'b1 plakat' || t === 'b1'){
-    return { dim:'70 × 100 cm', title:'B1 plagát', period:'cena za 3 mesiace' };
-  }
-  if(t === 'statický plagát' || t === 'staticky plakat'){
-    return { dim:'42 × 29,7 cm', title:'Statický plagát', period:'cena za jednu návštevu' };
-  }
-  if(t === 'umiestnenie letákov'){
-    return { dim:'', title:'Umiestnenie letákov', period:'cena za 3 mesiace' };
-  }
-
-  if(t === 'b1 plagát s umiestnením letáku do uška pod b1 plagát'){
-    return {
-      dim:'70 × 100 cm',
-      title:'B1 plagát',
-      note:'S umiestnením letáku do uška pod B1 plagát',
-      period:'cena za 3 mesiace'
-    };
-  }
-  if(t === 'a3 plagát s umiestnením letáku pod plagátom v stojane ids'){
-    return {
-      dim:'42 × 29,7 cm',
-      title:'A3 plagát',
-      note:'S umiestnením letáku pod plagátom v stojane IDS',
-      period:'cena za 3 mesiace'
-    };
-  }
-
-  if(t === 'odovzdanie materiálov'){
-    return { dim:'', title:'Odovzdanie materiálov', period:'cena za jednu návštevu' };
-  }
-  if(t === 'tlač materiálov' || t === 'tlac materialov'){
-    return { dim:'', title:'Tlač materiálov', period:'', suggestMode:'fixed' };
-  }
-
-  return { dim:'', title:rawType || '', period:'cena za 3 mesiace' };
-}
-
-const sectionsWrap = document.getElementById('sections');
-const tplSection = document.getElementById('tplSection');
-const tplItem = document.getElementById('tplItem');
-const tplOrSep = document.getElementById('tplOrSep');
-
-const tplDpRate = document.getElementById('tplDpRate');
-const tplDpSpec = document.getElementById('tplDpSpec');
-const tplDpMonth = document.getElementById('tplDpMonth');
-
-const pdfImagesSel = document.getElementById('pdfImages');
-
-function applyImagesSetting(){
-  const mode = pdfImagesSel.value;
-  if(mode === 'without') appRoot.classList.add('images-off');
-  else appRoot.classList.remove('images-off');
-}
-pdfImagesSel.addEventListener('change', applyImagesSetting);
-
-/* STANDARD ITEMS */
-function setThumb(itemEl, dataUrl){
-  const thumb = itemEl.querySelector('[data-thumb]');
-  thumb.innerHTML = '';
-  if(!dataUrl){
-    thumb.innerHTML = '<span class="small">bez obrázka</span>';
-    itemEl.dataset.img = '';
-    return;
-  }
-  const img = document.createElement('img');
-  img.src = dataUrl;
-  thumb.appendChild(img);
-  itemEl.dataset.img = dataUrl;
-}
-function getItemGroupId(itemEl){ return itemEl.dataset.orGroup || ''; }
-
-function togglePriceMode(itemEl){
-  const mode = itemEl.querySelector('[data-price-mode]').value;
-  const unitWrap = itemEl.querySelector('[data-unit-wrap]');
-  const fixedWrap = itemEl.querySelector('[data-fixed-wrap]');
-  if(mode === 'fixed'){ unitWrap.style.display='none'; fixedWrap.style.display='grid'; }
-  else { unitWrap.style.display='grid'; fixedWrap.style.display='none'; }
-  recalcItem(itemEl);
-}
-
-function recalcItem(itemEl){
-  const priceMode = itemEl.querySelector('[data-price-mode]').value;
-  const qtyMode = itemEl.querySelector('[data-qtymode]').value;
-
-  const qty = n(itemEl.querySelector('[data-qty]').value);
-  const unitPrice = n(itemEl.querySelector('[data-price]').value);
-  const disc = n(itemEl.querySelector('[data-discount]').value);
-  const fixedTotal = n(itemEl.querySelector('[data-fixed-total]').value);
-
-  let total = 0;
-  let oldText = '';
-
-  if(priceMode === 'fixed'){
-    total = fixedTotal;
-    oldText = '';
-  }else{
-    const unit = disc > 0 ? disc : unitPrice;
-    total = unit * qty;
-    if(disc > 0 && unitPrice > 0) oldText = formatMoney(unitPrice);
-  }
-
-  itemEl.querySelector('[data-old]').textContent = oldText;
-  const shown = (qtyMode === 'max') ? ('max. ' + formatMoney(total)) : formatMoney(total);
-  itemEl.querySelector('[data-total]').textContent = shown;
-
-  const perEl = itemEl.querySelector('[data-period]');
-  perEl.value = ensurePeriodPrefix(perEl.value);
-}
-
-function applyPreset(itemEl){
-  const typeEl = itemEl.querySelector('[data-type]');
-  const dimEl = itemEl.querySelector('[data-dim]');
-  const titleEl = itemEl.querySelector('[data-title]');
-  const noteEl = itemEl.querySelector('[data-note]');
-  const periodEl = itemEl.querySelector('[data-period]');
-  const modeEl = itemEl.querySelector('[data-price-mode]');
-
-  const p = presetFromType(typeEl.value);
-
-  if(p.dim) dimEl.value = p.dim;
-  if(p.title) titleEl.value = p.title;
-  if(p.note) noteEl.value = p.note;
-
-  const curPer = (periodEl.value ?? '').trim();
-  const defaults = new Set(['cena za 3 mesiace','cena za jednu návštevu','']);
-  if(curPer === '' || defaults.has(curPer.toLowerCase())){
-    periodEl.value = p.period ?? 'cena za 3 mesiace';
-  }
-  periodEl.value = ensurePeriodPrefix(periodEl.value);
-
-  if(p.suggestMode === 'fixed'){
-    modeEl.value = 'fixed';
-    togglePriceMode(itemEl);
-  }
-}
-
-function wireItem(itemEl){
-  const typeInput = itemEl.querySelector('[data-type]');
-  const imgInput = itemEl.querySelector('[data-img]');
-
-  if((itemEl.querySelector('[data-period]').value || '').trim() === ''){
-    itemEl.querySelector('[data-period]').value = 'cena za 3 mesiace';
-  }
-
-  typeInput.addEventListener('change', () => { applyPreset(itemEl); recalcItem(itemEl); });
-  typeInput.addEventListener('blur', () => { applyPreset(itemEl); recalcItem(itemEl); });
-  itemEl.querySelector('[data-price-mode]').addEventListener('change', () => togglePriceMode(itemEl));
-
-  itemEl.querySelectorAll('input, select, textarea').forEach(el => {
-    if(el.matches('[data-img]')) return;
-    el.addEventListener('input', () => recalcItem(itemEl));
-    el.addEventListener('change', () => recalcItem(itemEl));
-  });
-
-  imgInput.addEventListener('change', () => {
-    const f = imgInput.files && imgInput.files[0];
-    if(!f){ setThumb(itemEl,''); return; }
-    const reader = new FileReader();
-    reader.onload = () => setThumb(itemEl, String(reader.result || ''));
-    reader.readAsDataURL(f);
-  });
-
-  itemEl.querySelector('[data-del-item]').addEventListener('click', () => {
-    const prev = itemEl.previousElementSibling;
-    const next = itemEl.nextElementSibling;
-    const grp = getItemGroupId(itemEl);
-    itemEl.remove();
-
-    if(prev && prev.matches('[data-or-sep]')){
-      const after = prev.nextElementSibling;
-      if(!after || !after.matches('[data-item]') || getItemGroupId(after) !== grp) prev.remove();
-    }
-    if(next && next.matches('[data-or-sep]')){
-      const after = next.nextElementSibling;
-      if(!after || !after.matches('[data-item]')) next.remove();
-    }
-  });
-
-  itemEl.querySelector('[data-add-or]').addEventListener('click', () => {
-    const itemsWrap = itemEl.parentElement;
-    const groupId = getItemGroupId(itemEl) || ('g' + Math.random().toString(16).slice(2));
-    itemEl.dataset.orGroup = groupId;
-
-    const maybeNext = itemEl.nextElementSibling;
-    if(!(maybeNext && maybeNext.matches('[data-or-sep]'))){
-      const sepNode = tplOrSep.content.cloneNode(true);
-      itemsWrap.insertBefore(sepNode, itemEl.nextElementSibling);
+    function nowStamp(){
+      const d = new Date();
+      return `${pad2(d.getDate())}.${pad2(d.getMonth()+1)}.${d.getFullYear()} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
     }
 
-    const newNode = tplItem.content.cloneNode(true);
-    const temp = document.createElement('div');
-    temp.appendChild(newNode);
-    const newItemEl = temp.firstElementChild;
-    newItemEl.dataset.orGroup = groupId;
+    function fileDatePrefix(){
+      const d = new Date();
+      return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
+    }
 
-    const sepEl = itemEl.nextElementSibling;
-    itemsWrap.insertBefore(newItemEl, sepEl.nextElementSibling);
+    function ensurePeriodPrefix(p){
+      const s = (p||'').trim();
+      if(!s) return s;
+      const low = s.toLowerCase();
+      if(low.startsWith('cena ')) return s;
+      if(low.startsWith('za ')) return 'cena ' + s;
+      return s;
+    }
 
-    wireItem(newItemEl);
+    /* PRESETS */
+    function presetFromType(rawType){
+      const t = normalize(rawType);
+      if(t === 'a3 plagát' || t === 'a3 plakat'){
+        return { dim:'42 × 29,7 cm', title:'A3 plagát', period:'cena za 3 mesiace' };
+      }
+      if(t === 'b1 plagát' || t === 'b1 plakat' || t === 'b1'){
+        return { dim:'70 × 100 cm', title:'B1 plagát', period:'cena za 3 mesiace' };
+      }
+      if(t === 'statický plagát' || t === 'staticky plakat'){
+        return { dim:'42 × 29,7 cm', title:'Statický plagát', period:'cena za jednu návštevu' };
+      }
+      if(t === 'umiestnenie letákov'){
+        return { dim:'', title:'Umiestnenie letákov', period:'cena za 3 mesiace' };
+      }
+      if(t === 'b1 plagát s umiestnením letáku do uška pod b1 plagát'){
+        return { dim:'70 × 100 cm', title:'B1 plagát', note:'S umiestnením letáku do uška pod B1 plagát', period:'cena za 3 mesiace' };
+      }
+      if(t === 'a3 plagát s umiestnením letáku pod plagátom v stojane ids'){
+        return { dim:'42 × 29,7 cm', title:'A3 plagát', note:'S umiestnením letáku pod plagátom v stojane IDS', period:'cena za 3 mesiace' };
+      }
+      if(t === 'odovzdanie materiálov'){
+        return { dim:'', title:'Odovzdanie materiálov', period:'cena za jednu návštevu' };
+      }
+      if(t === 'tlač materiálov' || t === 'tlac materialov'){
+        return { dim:'', title:'Tlač materiálov', period:'', suggestMode:'fixed' };
+      }
+      return { dim:'', title:rawType || '', period:'cena za 3 mesiace' };
+    }
 
-    newItemEl.querySelector('[data-type]').value = itemEl.querySelector('[data-type]').value;
-    applyPreset(newItemEl);
-    recalcItem(newItemEl);
-  });
+    const sectionsWrap = document.getElementById('sections');
+    const tplSection = document.getElementById('tplSection');
+    const tplItem = document.getElementById('tplItem');
+    const tplOrSep = document.getElementById('tplOrSep');
+    const tplDpRate = document.getElementById('tplDpRate');
+    const tplDpSpec = document.getElementById('tplDpSpec');
+    const tplDpMonth = document.getElementById('tplDpMonth');
+    const pdfImagesSel = document.getElementById('pdfImages');
 
-  setThumb(itemEl,'');
-  togglePriceMode(itemEl);
-  recalcItem(itemEl);
-}
+    function applyImagesSetting(){
+      const mode = pdfImagesSel.value;
+      if(mode === 'without') appRoot.classList.add('images-off');
+      else appRoot.classList.remove('images-off');
+    }
+    pdfImagesSel.addEventListener('change', applyImagesSetting);
 
-function addItem(itemsWrap){
-  const node = tplItem.content.cloneNode(true);
-  itemsWrap.appendChild(node);
-  const itemEl = itemsWrap.lastElementChild;
-  wireItem(itemEl);
-  return itemEl;
-}
-
-/* DP */
-function dpSetThumb(scopeEl, dataUrl){
-  const thumb = scopeEl.querySelector('[data-thumb]');
-  thumb.innerHTML = '';
-  if(!dataUrl){
-    thumb.innerHTML = '<span class="small">bez obrázka</span>';
-    scopeEl.dataset.img = '';
-    return;
-  }
-  const img = document.createElement('img');
-  img.src = dataUrl;
-  thumb.appendChild(img);
-  scopeEl.dataset.img = dataUrl;
-}
-function dpAddRate(secEl){
-  const ratesWrap = secEl.querySelector('[data-dp-rates]');
-  const node = tplDpRate.content.cloneNode(true);
-  ratesWrap.appendChild(node);
-  const row = ratesWrap.lastElementChild;
-
-  /* prednastavené ceny */
-  const secVal = row.querySelector('[data-sec]');
-  const baseVal = row.querySelector('[data-base]');
-  if(ratesWrap.children.length === 1){
-    secVal.value = '15'; baseVal.value = '11.50';
-  }else if(ratesWrap.children.length === 2){
-    secVal.value = '30'; baseVal.value = '19.50';
-  }
-
-  row.querySelector('[data-del]').addEventListener('click', () => row.remove());
-}
-function dpAddImageSlot(dpImagesWrap){
-  const box = document.createElement('div');
-  box.style.minWidth = '220px';
-  box.innerHTML = `<label>Fotka (voliteľné)</label><input type="file" accept="image/*" data-img>`;
-  const thumb = document.createElement('div');
-  thumb.className = 'thumb';
-  thumb.innerHTML = `<span class="small">bez obrázka</span>`;
-  dpImagesWrap.appendChild(box);
-  dpImagesWrap.appendChild(thumb);
-
-  const input = box.querySelector('[data-img]');
-  input.addEventListener('change', () => {
-    const f = input.files && input.files[0];
-    if(!f){ thumb.innerHTML = `<span class="small">bez obrázka</span>`; thumb.dataset.dataUrl=''; return; }
-    const reader = new FileReader();
-    reader.onload = () => {
-      const url = String(reader.result || '');
+    /* STANDARD ITEMS */
+    function setThumb(itemEl, dataUrl){
+      const thumb = itemEl.querySelector('[data-thumb]');
       thumb.innerHTML = '';
+      if(!dataUrl){
+        thumb.innerHTML = '<span class="small">bez obrázka</span>';
+        itemEl.dataset.img = '';
+        return;
+      }
       const img = document.createElement('img');
-      img.src = url;
+      img.src = dataUrl;
       thumb.appendChild(img);
-      thumb.dataset.dataUrl = url;
-    };
-    reader.readAsDataURL(f);
-  });
-}
-function dpAddSpec(secEl){
-  const specsWrap = secEl.querySelector('[data-dp-specs]');
-  const node = tplDpSpec.content.cloneNode(true);
-  specsWrap.appendChild(node);
-  const specEl = specsWrap.lastElementChild;
+      itemEl.dataset.img = dataUrl;
+    }
 
-  specEl.querySelector('[data-del]').addEventListener('click', () => specEl.remove());
+    function getItemGroupId(itemEl){
+      return itemEl.dataset.orGroup || '';
+    }
 
-  const monthsWrap = specEl.querySelector('[data-months]');
-  function addMonthRow(){
-    const mNode = tplDpMonth.content.cloneNode(true);
-    monthsWrap.appendChild(mNode);
-    const mEl = monthsWrap.lastElementChild;
-    mEl.querySelector('[data-del]').addEventListener('click', () => mEl.remove());
-  }
-  specEl.querySelector('[data-add-month]').addEventListener('click', addMonthRow);
-  specEl.querySelector('[data-apply-same]').addEventListener('click', () => {
-    const v = n(specEl.querySelector('[data-same-panels]').value);
-    monthsWrap.querySelectorAll('[data-dp-month]').forEach(m => m.querySelector('[data-panels]').value = String(v));
-  });
+    function togglePriceMode(itemEl){
+      const mode = itemEl.querySelector('[data-price-mode]').value;
+      const unitWrap = itemEl.querySelector('[data-unit-wrap]');
+      const fixedWrap = itemEl.querySelector('[data-fixed-wrap]');
+      if(mode === 'fixed'){
+        unitWrap.style.display='none';
+        fixedWrap.style.display='grid';
+      } else {
+        unitWrap.style.display='grid';
+        fixedWrap.style.display='none';
+      }
+      recalcItem(itemEl);
+    }
 
-  const imgInput = specEl.querySelector('[data-img]');
-  imgInput.addEventListener('change', () => {
-    const f = imgInput.files && imgInput.files[0];
-    if(!f){ dpSetThumb(specEl,''); return; }
-    const reader = new FileReader();
-    reader.onload = () => dpSetThumb(specEl, String(reader.result || ''));
-    reader.readAsDataURL(f);
-  });
-  dpSetThumb(specEl,'');
+    function recalcItem(itemEl){
+      const priceMode = itemEl.querySelector('[data-price-mode]').value;
+      const qtyMode = itemEl.querySelector('[data-qtymode]').value;
+      const qty = n(itemEl.querySelector('[data-qty]').value);
+      const unitPrice = n(itemEl.querySelector('[data-price]').value);
+      const disc = n(itemEl.querySelector('[data-discount]').value);
+      const fixedTotal = n(itemEl.querySelector('[data-fixed-total]').value);
 
-  addMonthRow();
-}
+      let total = 0;
+      let oldText = '';
 
-function wireSection(secEl){
-  const kindSel = secEl.querySelector('[data-sec-kind]');
-  const stdWrap = secEl.querySelector('[data-standard]');
-  const dpWrap = secEl.querySelector('[data-dp]');
-  const itemsWrap = secEl.querySelector('[data-items]');
+      if(priceMode === 'fixed'){
+        total = fixedTotal;
+        oldText = '';
+      } else {
+        const unit = disc > 0 ? disc : unitPrice;
+        total = unit * qty;
+        if(disc > 0 && unitPrice > 0) oldText = formatMoney(unitPrice);
+      }
 
-  secEl.querySelector('[data-del-section]').addEventListener('click', () => secEl.remove());
-  secEl.querySelector('[data-add-item]').addEventListener('click', () => addItem(itemsWrap));
+      itemEl.querySelector('[data-old]').textContent = oldText;
 
-  secEl.querySelector('[data-dp-add-rate]').addEventListener('click', () => dpAddRate(secEl));
-  secEl.querySelector('[data-dp-add-spec]').addEventListener('click', () => dpAddSpec(secEl));
+      const shown = (qtyMode === 'max')
+        ? ('max. ' + formatMoney(total))
+        : formatMoney(total);
 
-  const dpImagesWrap = secEl.querySelector('[data-dp-images]');
-  dpImagesWrap.innerHTML = '';
-  dpAddImageSlot(dpImagesWrap);
-  dpAddImageSlot(dpImagesWrap);
+      itemEl.querySelector('[data-total]').textContent = shown;
 
-  const dpNoteTa = secEl.querySelector('[data-dp-note]');
-  if(!dpNoteTa.value.trim()) dpNoteTa.value = DEFAULT_DP_NOTE_TEXT;
-  secEl.querySelector('[data-dp-note-on]').checked = false;
+      const perEl = itemEl.querySelector('[data-period]');
+      perEl.value = ensurePeriodPrefix(perEl.value);
+    }
 
-  function applyKind(){
-    const k = kindSel.value;
-    if(k === 'dp'){
-      stdWrap.style.display = 'none';
-      dpWrap.style.display = 'block';
-      const nameEl = secEl.querySelector('[data-sec-name]');
-      if(!nameEl.value.trim()) nameEl.value = 'Digitálny panel v čakárni lekára';
+    function applyPreset(itemEl){
+      const typeEl = itemEl.querySelector('[data-type]');
+      const dimEl = itemEl.querySelector('[data-dim]');
+      const titleEl = itemEl.querySelector('[data-title]');
+      const noteEl = itemEl.querySelector('[data-note]');
+      const periodEl = itemEl.querySelector('[data-period]');
+      const modeEl = itemEl.querySelector('[data-price-mode]');
 
+      const p = presetFromType(typeEl.value);
+
+      if(p.dim) dimEl.value = p.dim;
+      if(p.title) titleEl.value = p.title;
+      if(p.note) noteEl.value = p.note;
+
+      const curPer = (periodEl.value ?? '').trim();
+      const defaults = new Set(['cena za 3 mesiace','cena za jednu návštevu','']);
+      if(curPer === '' || defaults.has(curPer.toLowerCase())){
+        periodEl.value = p.period ?? 'cena za 3 mesiace';
+      }
+
+      periodEl.value = ensurePeriodPrefix(periodEl.value);
+
+      if(p.suggestMode === 'fixed'){
+        modeEl.value = 'fixed';
+        togglePriceMode(itemEl);
+      }
+    }
+
+    function wireItem(itemEl){
+      const typeInput = itemEl.querySelector('[data-type]');
+      const imgInput = itemEl.querySelector('[data-img]');
+
+      if((itemEl.querySelector('[data-period]').value || '').trim() === ''){
+        itemEl.querySelector('[data-period]').value = 'cena za 3 mesiace';
+      }
+
+      typeInput.addEventListener('change', () => { applyPreset(itemEl); recalcItem(itemEl); });
+      typeInput.addEventListener('blur', () => { applyPreset(itemEl); recalcItem(itemEl); });
+
+      itemEl.querySelector('[data-price-mode]').addEventListener('change', () => togglePriceMode(itemEl));
+
+      itemEl.querySelectorAll('input, select, textarea').forEach(el => {
+        if(el.matches('[data-img]')) return;
+        el.addEventListener('input', () => recalcItem(itemEl));
+        el.addEventListener('change', () => recalcItem(itemEl));
+      });
+
+      imgInput.addEventListener('change', () => {
+        const f = imgInput.files && imgInput.files[0];
+        if(!f){ setThumb(itemEl,''); return; }
+        const reader = new FileReader();
+        reader.onload = () => setThumb(itemEl, String(reader.result || ''));
+        reader.readAsDataURL(f);
+      });
+
+      itemEl.querySelector('[data-del-item]').addEventListener('click', () => {
+        const prev = itemEl.previousElementSibling;
+        const next = itemEl.nextElementSibling;
+        const grp = getItemGroupId(itemEl);
+
+        itemEl.remove();
+
+        if(prev && prev.matches('[data-or-sep]')){
+          const after = prev.nextElementSibling;
+          if(!after || !after.matches('[data-item]') || getItemGroupId(after) !== grp) prev.remove();
+        }
+        if(next && next.matches('[data-or-sep]')){
+          const after = next.nextElementSibling;
+          if(!after || !after.matches('[data-item]')) next.remove();
+        }
+      });
+
+      itemEl.querySelector('[data-add-or]').addEventListener('click', () => {
+        const itemsWrap = itemEl.parentElement;
+        const groupId = getItemGroupId(itemEl) || ('g' + Math.random().toString(16).slice(2));
+        itemEl.dataset.orGroup = groupId;
+
+        const maybeNext = itemEl.nextElementSibling;
+        if(!(maybeNext && maybeNext.matches('[data-or-sep]'))){
+          const sepNode = tplOrSep.content.cloneNode(true);
+          itemsWrap.insertBefore(sepNode, itemEl.nextElementSibling);
+        }
+
+        const newNode = tplItem.content.cloneNode(true);
+        const temp = document.createElement('div');
+        temp.appendChild(newNode);
+        const newItemEl = temp.firstElementChild;
+
+        newItemEl.dataset.orGroup = groupId;
+
+        const sepEl = itemEl.nextElementSibling;
+        itemsWrap.insertBefore(newItemEl, sepEl.nextElementSibling);
+
+        wireItem(newItemEl);
+        newItemEl.querySelector('[data-type]').value = itemEl.querySelector('[data-type]').value;
+        applyPreset(newItemEl);
+        recalcItem(newItemEl);
+      });
+
+      setThumb(itemEl,'');
+      togglePriceMode(itemEl);
+      recalcItem(itemEl);
+    }
+
+    function addItem(itemsWrap){
+      const node = tplItem.content.cloneNode(true);
+      itemsWrap.appendChild(node);
+      const itemEl = itemsWrap.lastElementChild;
+      wireItem(itemEl);
+      return itemEl;
+    }
+
+    /* DP */
+    function dpSetThumb(scopeEl, dataUrl){
+      const thumb = scopeEl.querySelector('[data-thumb]');
+      thumb.innerHTML = '';
+      if(!dataUrl){
+        thumb.innerHTML = '<span class="small">bez obrázka</span>';
+        scopeEl.dataset.img = '';
+        return;
+      }
+      const img = document.createElement('img');
+      img.src = dataUrl;
+      thumb.appendChild(img);
+      scopeEl.dataset.img = dataUrl;
+    }
+
+    function dpAddRate(secEl){
       const ratesWrap = secEl.querySelector('[data-dp-rates]');
-      if(ratesWrap.children.length === 0){
-        dpAddRate(secEl);
-        dpAddRate(secEl);
+      const node = tplDpRate.content.cloneNode(true);
+      ratesWrap.appendChild(node);
+      const row = ratesWrap.lastElementChild;
+
+      /* prednastavené ceny */
+      const secVal = row.querySelector('[data-sec]');
+      const baseVal = row.querySelector('[data-base]');
+      if(ratesWrap.children.length === 1){
+        secVal.value = '15';
+        baseVal.value = '11.50';
+      } else if(ratesWrap.children.length === 2){
+        secVal.value = '30';
+        baseVal.value = '19.50';
       }
-      const specsWrap = secEl.querySelector('[data-dp-specs]');
-      if(specsWrap.children.length === 0) dpAddSpec(secEl);
-    }else{
-      stdWrap.style.display = 'block';
-      dpWrap.style.display = 'none';
-      if(itemsWrap.children.length === 0) addItem(itemsWrap);
+
+      row.querySelector('[data-del]').addEventListener('click', () => row.remove());
     }
-  }
-  kindSel.addEventListener('change', applyKind);
-  applyKind();
-}
 
-function addSection(){
-  const node = tplSection.content.cloneNode(true);
-  sectionsWrap.appendChild(node);
-  wireSection(sectionsWrap.lastElementChild);
-}
-
-/* COLLECT */
-function collectStandardItem(child, imagesMode){
-  const type = child.querySelector('[data-type]').value.trim();
-  const dim = child.querySelector('[data-dim]').value.trim();
-  const title = child.querySelector('[data-title]').value.trim();
-  const note = child.querySelector('[data-note]').value.trim();
-  const extra = child.querySelector('[data-extra]').value.trim();
-  const period = ensurePeriodPrefix((child.querySelector('[data-period]').value || '').trim());
-
-  const priceMode = child.querySelector('[data-price-mode]').value;
-  const qtyMode = child.querySelector('[data-qtymode]').value;
-  const qty = n(child.querySelector('[data-qty]').value);
-
-  const price = n(child.querySelector('[data-price]').value);
-  const discount = n(child.querySelector('[data-discount]').value);
-  const fixedTotal = n(child.querySelector('[data-fixed-total]').value);
-
-  let unitUsed=0, total=0;
-  if(priceMode === 'fixed'){ total = fixedTotal; unitUsed = fixedTotal; }
-  else { unitUsed = (discount>0)?discount:price; total = unitUsed * qty; }
-
-  const img = (imagesMode === 'with') ? (child.dataset.img || '') : '';
-  return { type, dim, title, note, extra, period, priceMode, qtyMode, qty, price, discount, fixedTotal, unitUsed, total, img };
-}
-
-function collectDP(secEl, imagesMode){
-  const rates = [];
-  secEl.querySelectorAll('[data-dp-rate]').forEach(r => {
-    const sec = n(r.querySelector('[data-sec]').value);
-    const base = n(r.querySelector('[data-base]').value);
-    const disc = n(r.querySelector('[data-disc]').value);
-    if(sec>0) rates.push({ sec, base, disc });
-  });
-  rates.sort((a,b)=>a.sec-b.sec);
-
-  const showColSum = secEl.querySelector('[data-dp-show-colsum]').checked;
-  const noteOn = secEl.querySelector('[data-dp-note-on]').checked;
-
-  let noteText = (secEl.querySelector('[data-dp-note]').value || '').trim();
-  if(noteOn && !noteText) noteText = DEFAULT_DP_NOTE_TEXT;
-
-  const dpImgs = [];
-  if(imagesMode === 'with'){
-    const thumbs = secEl.querySelectorAll('[data-dp-images] .thumb');
-    thumbs.forEach(t => { const url=t.dataset.dataUrl||''; if(url) dpImgs.push(url); });
-  }
-
-  const specs = [];
-  secEl.querySelectorAll('[data-dp-spec]').forEach(specEl => {
-    const spec = (specEl.querySelector('[data-spec]').value || '').trim();
-    const specImg = (imagesMode === 'with') ? (specEl.dataset.img || '') : '';
-    const months = [];
-    specEl.querySelectorAll('[data-dp-month]').forEach(mEl => {
-      const month = (mEl.querySelector('[data-month]').value || '').trim();
-      const panels = n(mEl.querySelector('[data-panels]').value);
-      const useDisc = mEl.querySelector('[data-use-disc]').checked;
-      if(month) months.push({ month, panels, useDisc });
-    });
-    specs.push({ spec, specImg, months });
-  });
-
-  return { rates, specs, showColSum, noteOn, noteText, dpImgs };
-}
-
-function collectState(){
-  const title = document.getElementById('offerTitle').value.trim() || 'Cenová ponuka';
-  const subtitle = document.getElementById('offerSubtitle').value.trim();
-  const imagesMode = document.getElementById('pdfImages').value;
-  const showGrand = document.getElementById('pdfShowGrand').value === 'yes';
-  const stdNoteOn = document.getElementById('chkStdNote').checked;
-
-  const sections = [];
-  sectionsWrap.querySelectorAll('[data-section]').forEach(secEl => {
-    const secName = secEl.querySelector('[data-sec-name]').value.trim();
-    const secPeriod = secEl.querySelector('[data-sec-period]').value.trim();
-    const kind = secEl.querySelector('[data-sec-kind]').value;
-
-    if(kind === 'dp'){
-      sections.push({ kind:'dp', secName, secPeriod, dp: collectDP(secEl, imagesMode) });
-    }else{
-      const items = [];
-      const container = secEl.querySelector('[data-items]');
-      Array.from(container.children).forEach(child => {
-        if(child.matches && child.matches('[data-or-sep]')) items.push({ __or:true });
-        else if(child.matches && child.matches('[data-item]')) items.push(collectStandardItem(child, imagesMode));
-      });
-      sections.push({ kind:'standard', secName, secPeriod, items });
-    }
-  });
-
-  return { title, subtitle, imagesMode, showGrand, stdNoteOn, sections };
-}
-
-/* PDF helpers */
-function moneyCellWithDiscount(base, disc){
-  const wrap = document.createElement('div');
-  if(disc > 0 && base > 0){
-    const old = document.createElement('span'); old.className='pv-money-old'; old.textContent=formatMoney(base);
-    const nw = document.createElement('span'); nw.className='pv-money-new'; nw.textContent=formatMoney(disc);
-    wrap.appendChild(old); wrap.appendChild(nw);
-  }else{
-    wrap.textContent = (base>0)?formatMoney(base):'';
-  }
-  return wrap;
-}
-
-function renderPDF(){
-  const state = collectState();
-
-  document.getElementById('pvTitle').textContent = state.title;
-  document.getElementById('pvSubtitle').textContent = state.subtitle;
-
-  const printPage = document.getElementById('printPage');
-  if(state.imagesMode === 'without') printPage.classList.add('pv-no-images');
-  else printPage.classList.remove('pv-no-images');
-
-  const pvLogo = document.getElementById('pvLogo');
-  pvLogo.onerror = () => { pvLogo.style.display = 'none'; };
-  pvLogo.style.display = 'block';
-
-  const pvFeel = document.getElementById('pvFeel');
-  pvFeel.onerror = () => { pvFeel.style.display = 'none'; };
-  pvFeel.style.display = 'block';
-
-  document.getElementById('pvGen').textContent = 'Generované: ' + nowStamp();
-
-  /* LEFT IMAGES */
-  const pvGutter = document.getElementById('pvGutter');
-  pvGutter.innerHTML = '';
-  if(state.imagesMode === 'with'){
-    state.sections.forEach(s => {
-      if(s.kind === 'standard'){
-        s.items.forEach(it => {
-          if(it.__or || !it.img) return;
-          const box = document.createElement('div'); box.className='pv-img';
-          const img = document.createElement('img'); img.src = it.img;
-          box.appendChild(img); pvGutter.appendChild(box);
-        });
-      }else{
-        (s.dp.dpImgs||[]).forEach(url => {
-          const box=document.createElement('div'); box.className='pv-img';
-          const img=document.createElement('img'); img.src=url;
-          box.appendChild(img); pvGutter.appendChild(box);
-        });
-        (s.dp.specs||[]).forEach(sp => {
-          if(!sp.specImg) return;
-          const box=document.createElement('div'); box.className='pv-img';
-          const img=document.createElement('img'); img.src=sp.specImg;
-          box.appendChild(img); pvGutter.appendChild(box);
-        });
-      }
-    });
-  }
-
-  const pvSections = document.getElementById('pvSections');
-  pvSections.innerHTML = '';
-
-  let grandTotal = 0;
-  let anyStandard = false;
-  let lastStandardSectionEl = null;
-
-  state.sections.forEach(s => {
-    const secDiv = document.createElement('div');
-    secDiv.className = 'pv-section';
-
-    const name = document.createElement('div');
-    name.className = 'pv-section-name';
-    name.textContent = s.secName || '';
-    secDiv.appendChild(name);
-
-    const per = document.createElement('div');
-    per.className = 'pv-section-period';
-    per.textContent = s.secPeriod || '';
-    secDiv.appendChild(per);
-
-    if(s.kind === 'standard'){
-      anyStandard = true;
-
-      const table = document.createElement('table');
-      table.className = 'pv-table pv-std-table';
-
-      const colg = document.createElement('colgroup');
-      colg.innerHTML = `
-        <col style="width:44%">
-        <col style="width:20%">
-        <col style="width:10%">
-        <col style="width:13%">
-        <col style="width:13%">
+    function dpAddImageSlot(dpImagesWrap){
+      const slot = document.createElement('div');
+      slot.style.minWidth = '220px';
+      slot.innerHTML = `
+        <label>Fotka (voliteľné)</label>
+        <input type="file" accept="image/*" data-img>
       `;
-      table.appendChild(colg);
 
-      const thead = document.createElement('thead');
-      const trh = document.createElement('tr');
+      const thumb = document.createElement('div');
+      thumb.className = 'thumb';
+      thumb.innerHTML = `<span class="small">bez obrázka</span>`;
 
-      const headers = [
-        { cls:'c-item', txt:'Položka' },
-        { cls:'c-spec', txt:'Špecifikácia' },
-        { cls:'c-qty', txt:'Počet' },
-        { cls:'c-price', txt:'Cena' },
-        { cls:'c-total', txt:'Cena spolu' }
-      ];
-      headers.forEach(h => {
-        const th = document.createElement('th');
-        th.className = h.cls;
-        th.textContent = h.txt;
-        trh.appendChild(th);
+      dpImagesWrap.appendChild(slot);
+      dpImagesWrap.appendChild(thumb);
+
+      const input = slot.querySelector('[data-img]');
+      input.addEventListener('change', () => {
+        const f = input.files && input.files[0];
+        if(!f){
+          thumb.innerHTML = `<span class="small">bez obrázka</span>`;
+          thumb.dataset.dataUrl = '';
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = () => {
+          const url = String(reader.result || '');
+          thumb.innerHTML = '';
+          const img = document.createElement('img');
+          img.src = url;
+          thumb.appendChild(img);
+          thumb.dataset.dataUrl = url;
+        };
+        reader.readAsDataURL(f);
       });
-      thead.appendChild(trh);
-      table.appendChild(thead);
+    }
 
-      const tbody = document.createElement('tbody');
+    function dpAddSpec(secEl){
+      const specsWrap = secEl.querySelector('[data-dp-specs]');
+      const node = tplDpSpec.content.cloneNode(true);
+      specsWrap.appendChild(node);
+      const specEl = specsWrap.lastElementChild;
 
-      s.items.forEach(it => {
-        if(it.__or){
-          const trOr = document.createElement('tr');
-          trOr.className = 'pv-or-row';
-          const td = document.createElement('td');
-          td.colSpan = 5;
-          td.textContent = 'ALEBO';
-          trOr.appendChild(td);
-          tbody.appendChild(trOr);
+      specEl.querySelector('[data-del]').addEventListener('click', () => specEl.remove());
+
+      const monthsWrap = specEl.querySelector('[data-months]');
+
+      function addMonthRow(){
+        const mNode = tplDpMonth.content.cloneNode(true);
+        monthsWrap.appendChild(mNode);
+        const mEl = monthsWrap.lastElementChild;
+        mEl.querySelector('[data-del]').addEventListener('click', () => mEl.remove());
+      }
+
+      specEl.querySelector('[data-add-month]').addEventListener('click', addMonthRow);
+
+      specEl.querySelector('[data-apply-same]').addEventListener('click', () => {
+        const v = n(specEl.querySelector('[data-same-panels]').value);
+        monthsWrap.querySelectorAll('[data-dp-month]').forEach(m => {
+          m.querySelector('[data-panels]').value = String(v);
+        });
+      });
+
+      const imgInput = specEl.querySelector('[data-img]');
+      imgInput.addEventListener('change', () => {
+        const f = imgInput.files && imgInput.files[0];
+        if(!f){ dpSetThumb(specEl,''); return; }
+        const reader = new FileReader();
+        reader.onload = () => dpSetThumb(specEl, String(reader.result || ''));
+        reader.readAsDataURL(f);
+      });
+
+      dpSetThumb(specEl,'');
+      addMonthRow();
+    }
+
+    function wireSection(secEl){
+      const kindSel = secEl.querySelector('[data-sec-kind]');
+      const stdWrap = secEl.querySelector('[data-standard]');
+      const dpWrap = secEl.querySelector('[data-dp]');
+      const itemsWrap = secEl.querySelector('[data-items]');
+
+      secEl.querySelector('[data-del-section]').addEventListener('click', () => secEl.remove());
+      secEl.querySelector('[data-add-item]').addEventListener('click', () => addItem(itemsWrap));
+
+      secEl.querySelector('[data-dp-add-rate]').addEventListener('click', () => dpAddRate(secEl));
+      secEl.querySelector('[data-dp-add-spec]').addEventListener('click', () => dpAddSpec(secEl));
+
+      const dpImagesWrap = secEl.querySelector('[data-dp-images]');
+      dpImagesWrap.innerHTML = '';
+      dpAddImageSlot(dpImagesWrap);
+      dpAddImageSlot(dpImagesWrap);
+
+      /* FIX: DP text je pripravený a funguje */
+      const dpNoteTa = secEl.querySelector('[data-dp-note]');
+      if(!dpNoteTa.value.trim()) dpNoteTa.value = DEFAULT_DP_NOTE_TEXT;
+      secEl.querySelector('[data-dp-note-on]').checked = false;
+
+      function applyKind(){
+        const k = kindSel.value;
+        if(k === 'dp'){
+          stdWrap.style.display = 'none';
+          dpWrap.style.display = 'block';
+
+          const nameEl = secEl.querySelector('[data-sec-name]');
+          if(!nameEl.value.trim()) nameEl.value = 'Digitálny panel v čakárni lekára';
+
+          const ratesWrap = secEl.querySelector('[data-dp-rates]');
+          if(ratesWrap.children.length === 0){
+            dpAddRate(secEl);
+            dpAddRate(secEl);
+          }
+
+          const specsWrap = secEl.querySelector('[data-dp-specs]');
+          if(specsWrap.children.length === 0) dpAddSpec(secEl);
+
+        }else{
+          stdWrap.style.display = 'block';
+          dpWrap.style.display = 'none';
+          if(itemsWrap.children.length === 0) addItem(itemsWrap);
+        }
+      }
+
+      kindSel.addEventListener('change', applyKind);
+      applyKind();
+    }
+
+    function addSection(){
+      const node = tplSection.content.cloneNode(true);
+      sectionsWrap.appendChild(node);
+      wireSection(sectionsWrap.lastElementChild);
+    }
+
+    /* COLLECT */
+    function collectStandardItem(child, imagesMode){
+      const type = child.querySelector('[data-type]').value.trim();
+      const dim = child.querySelector('[data-dim]').value.trim();
+      const title = child.querySelector('[data-title]').value.trim();
+      const note = child.querySelector('[data-note]').value.trim();
+      const extra = child.querySelector('[data-extra]').value.trim();
+      const period = ensurePeriodPrefix((child.querySelector('[data-period]').value || '').trim());
+
+      const priceMode = child.querySelector('[data-price-mode]').value;
+      const qtyMode = child.querySelector('[data-qtymode]').value;
+
+      const qty = n(child.querySelector('[data-qty]').value);
+      const price = n(child.querySelector('[data-price]').value);
+      const discount = n(child.querySelector('[data-discount]').value);
+      const fixedTotal = n(child.querySelector('[data-fixed-total]').value);
+
+      let unitUsed=0, total=0;
+      if(priceMode === 'fixed'){
+        total = fixedTotal;
+        unitUsed = fixedTotal;
+      } else {
+        unitUsed = (discount>0)?discount:price;
+        total = unitUsed * qty;
+      }
+
+      const img = (imagesMode === 'with') ? (child.dataset.img || '') : '';
+
+      return { type, dim, title, note, extra, period, priceMode, qtyMode, qty, price, discount, fixedTotal, unitUsed, total, img };
+    }
+
+    function collectDP(secEl, imagesMode){
+      const rates = [];
+      secEl.querySelectorAll('[data-dp-rate]').forEach(r => {
+        const sec = n(r.querySelector('[data-sec]').value);
+        const base = n(r.querySelector('[data-base]').value);
+        const disc = n(r.querySelector('[data-disc]').value);
+        if(sec>0) rates.push({ sec, base, disc });
+      });
+      rates.sort((a,b)=>a.sec-b.sec);
+
+      const showColSum = secEl.querySelector('[data-dp-show-colsum]').checked;
+      const noteOn = secEl.querySelector('[data-dp-note-on]').checked;
+
+      let noteText = (secEl.querySelector('[data-dp-note]').value || '').trim();
+      if(noteOn && !noteText) noteText = DEFAULT_DP_NOTE_TEXT;
+
+      const dpImgs = [];
+      if(imagesMode === 'with'){
+        const thumbs = secEl.querySelectorAll('[data-dp-images] .thumb');
+        thumbs.forEach(t => {
+          const url = t.dataset.dataUrl || '';
+          if(url) dpImgs.push(url);
+        });
+      }
+
+      const specs = [];
+      secEl.querySelectorAll('[data-dp-spec]').forEach(specEl => {
+        const spec = (specEl.querySelector('[data-spec]').value || '').trim();
+        const specImg = (imagesMode === 'with') ? (specEl.dataset.img || '') : '';
+
+        const months = [];
+        specEl.querySelectorAll('[data-dp-month]').forEach(mEl => {
+          const month = (mEl.querySelector('[data-month]').value || '').trim();
+          const panels = n(mEl.querySelector('[data-panels]').value);
+          const useDisc = mEl.querySelector('[data-use-disc]').checked;
+          if(month) months.push({ month, panels, useDisc });
+        });
+
+        specs.push({ spec, specImg, months });
+      });
+
+      return { rates, specs, showColSum, noteOn, noteText, dpImgs };
+    }
+
+    function collectState(){
+      const title = document.getElementById('offerTitle').value.trim() || 'Cenová ponuka';
+      const subtitle = document.getElementById('offerSubtitle').value.trim();
+      const imagesMode = document.getElementById('pdfImages').value;
+      const showGrand = document.getElementById('pdfShowGrand').value === 'yes';
+      const stdNoteOn = document.getElementById('chkStdNote').checked;
+
+      const sections = [];
+      sectionsWrap.querySelectorAll('[data-section]').forEach(secEl => {
+        const secName = secEl.querySelector('[data-sec-name]').value.trim();
+        const secPeriod = secEl.querySelector('[data-sec-period]').value.trim();
+        const kind = secEl.querySelector('[data-sec-kind]').value;
+
+        if(kind === 'dp'){
+          sections.push({ kind:'dp', secName, secPeriod, dp: collectDP(secEl, imagesMode) });
+        }else{
+          const items = [];
+          const container = secEl.querySelector('[data-items]');
+          Array.from(container.children).forEach(child => {
+            if(child.matches && child.matches('[data-or-sep]')) items.push({ __or:true });
+            else if(child.matches && child.matches('[data-item]')) items.push(collectStandardItem(child, imagesMode));
+          });
+          sections.push({ kind:'standard', secName, secPeriod, items });
+        }
+      });
+
+      return { title, subtitle, imagesMode, showGrand, stdNoteOn, sections };
+    }
+
+    /* PDF helpers */
+    function moneyCellWithDiscount(base, disc){
+      const wrap = document.createElement('div');
+      if(disc > 0 && base > 0){
+        const old = document.createElement('span');
+        old.className='pv-money-old';
+        old.textContent = formatMoney(base);
+
+        const nw = document.createElement('span');
+        nw.className='pv-money-new';
+        nw.textContent = formatMoney(disc);
+
+        wrap.appendChild(old);
+        wrap.appendChild(nw);
+      } else {
+        wrap.textContent = (base>0) ? formatMoney(base) : '';
+      }
+      return wrap;
+    }
+
+    function renderPDF(){
+      const state = collectState();
+
+      document.getElementById('pvTitle').textContent = state.title;
+      document.getElementById('pvSubtitle').textContent = state.subtitle;
+
+      const printPage = document.getElementById('printPage');
+      if(state.imagesMode === 'without') printPage.classList.add('pv-no-images');
+      else printPage.classList.remove('pv-no-images');
+
+      const pvLogo = document.getElementById('pvLogo');
+      pvLogo.onerror = () => { pvLogo.style.display = 'none'; };
+      pvLogo.style.display = 'block';
+
+      const pvFeel = document.getElementById('pvFeel');
+      pvFeel.onerror = () => { pvFeel.style.display = 'none'; };
+      pvFeel.style.display = 'block';
+
+      document.getElementById('pvGen').textContent = 'Generované: ' + nowStamp();
+
+      const pvGutter = document.getElementById('pvGutter');
+      pvGutter.innerHTML = '';
+
+      if(state.imagesMode === 'with'){
+        state.sections.forEach(s => {
+          if(s.kind === 'standard'){
+            s.items.forEach(it => {
+              if(it.__or || !it.img) return;
+              const box = document.createElement('div');
+              box.className='pv-img';
+              const img = document.createElement('img');
+              img.src = it.img;
+              box.appendChild(img);
+              pvGutter.appendChild(box);
+            });
+          } else {
+            (s.dp.dpImgs||[]).forEach(url => {
+              const box = document.createElement('div');
+              box.className='pv-img';
+              const img = document.createElement('img');
+              img.src = url;
+              box.appendChild(img);
+              pvGutter.appendChild(box);
+            });
+            (s.dp.specs||[]).forEach(sp => {
+              if(!sp.specImg) return;
+              const box = document.createElement('div');
+              box.className='pv-img';
+              const img = document.createElement('img');
+              img.src = sp.specImg;
+              box.appendChild(img);
+              pvGutter.appendChild(box);
+            });
+          }
+        });
+      }
+
+      const pvSections = document.getElementById('pvSections');
+      pvSections.innerHTML = '';
+
+      let grandTotal = 0;
+      let anyStandard = false;
+      let lastStandardSectionEl = null;
+
+      state.sections.forEach(s => {
+        const secDiv = document.createElement('div');
+        secDiv.className = 'pv-section';
+
+        const name = document.createElement('div');
+        name.className = 'pv-section-name';
+        name.textContent = s.secName || '';
+        secDiv.appendChild(name);
+
+        const per = document.createElement('div');
+        per.className = 'pv-section-period';
+        per.textContent = s.secPeriod || '';
+        secDiv.appendChild(per);
+
+        if(s.kind === 'standard'){
+          anyStandard = true;
+
+          const table = document.createElement('table');
+          table.className = 'pv-table pv-std-table';
+
+          const colg = document.createElement('colgroup');
+          colg.innerHTML = `
+            <col style="width:44%">
+            <col style="width:20%">
+            <col style="width:10%">
+            <col style="width:13%">
+            <col style="width:13%">
+          `;
+          table.appendChild(colg);
+
+          const thead = document.createElement('thead');
+          const trh = document.createElement('tr');
+          const headers = [
+            { cls:'c-item', txt:'Položka' },
+            { cls:'c-spec', txt:'Špecifikácia' },
+            { cls:'c-qty',  txt:'Počet' },
+            { cls:'c-price',txt:'Cena' },
+            { cls:'c-total',txt:'Cena spolu' }
+          ];
+          headers.forEach(h => {
+            const th = document.createElement('th');
+            th.className = h.cls;
+            th.textContent = h.txt;
+            trh.appendChild(th);
+          });
+          thead.appendChild(trh);
+          table.appendChild(thead);
+
+          const tbody = document.createElement('tbody');
+
+          s.items.forEach(it => {
+            if(it.__or){
+              const trOr = document.createElement('tr');
+              trOr.className = 'pv-or-row';
+              const td = document.createElement('td');
+              td.colSpan = 5;
+              td.textContent = 'ALEBO';
+              trOr.appendChild(td);
+              tbody.appendChild(trOr);
+              return;
+            }
+
+            const tr = document.createElement('tr');
+
+            const tdItem = document.createElement('td');
+            tdItem.className = 'c-item';
+            const t = document.createElement('div');
+            t.className = 'pv-item-title';
+            t.textContent = it.title || it.type || '—';
+            tdItem.appendChild(t);
+
+            if(it.note){
+              const nn = document.createElement('div');
+              nn.className = 'pv-item-note';
+              nn.textContent = it.note;
+              tdItem.appendChild(nn);
+            }
+            if(it.period){
+              const pp = document.createElement('div');
+              pp.className = 'pv-item-period';
+              pp.textContent = it.period;
+              tdItem.appendChild(pp);
+            }
+            tr.appendChild(tdItem);
+
+            const tdSpec = document.createElement('td');
+            tdSpec.className = 'c-spec';
+            tdSpec.textContent = it.dim || '';
+            tr.appendChild(tdSpec);
+
+            const tdQty = document.createElement('td');
+            tdQty.className = 'c-qty';
+            if(it.qtyMode === 'max'){
+              tdQty.innerHTML = `<span class="pv-qty-max">max.<br><strong>${it.qty || 0}</strong></span>`;
+            } else {
+              tdQty.innerHTML = `<strong>${it.qty || 0}</strong>`;
+            }
+            tr.appendChild(tdQty);
+
+            const tdPrice = document.createElement('td');
+            tdPrice.className = 'c-price';
+            if(it.priceMode === 'fixed'){
+              tdPrice.textContent = it.fixedTotal > 0 ? formatMoney(it.fixedTotal) : '';
+            } else {
+              if(it.discount > 0 && it.price > 0) tdPrice.appendChild(moneyCellWithDiscount(it.price, it.discount));
+              else tdPrice.textContent = it.price > 0 ? formatMoney(it.price) : '';
+            }
+            tr.appendChild(tdPrice);
+
+            const tdTotal = document.createElement('td');
+            tdTotal.className = 'c-total';
+            const strong = document.createElement('strong');
+            strong.textContent = it.qtyMode === 'max' ? ('max. ' + formatMoney(it.total)) : formatMoney(it.total);
+            tdTotal.appendChild(strong);
+            tr.appendChild(tdTotal);
+
+            grandTotal += it.total;
+            tbody.appendChild(tr);
+          });
+
+          table.appendChild(tbody);
+          secDiv.appendChild(table);
+
+          const extras = s.items
+            .filter(x => x && !x.__or && x.extra)
+            .map(x => x.extra)
+            .filter(Boolean);
+
+          if(extras.length){
+            const exDiv = document.createElement('div');
+            exDiv.className = 'pv-note-block';
+            exDiv.innerHTML = extras.map(t => `<div>${t}</div>`).join('');
+            secDiv.appendChild(exDiv);
+          }
+
+          const divLine = document.createElement('div');
+          divLine.className = 'pv-divider';
+          secDiv.appendChild(divLine);
+
+          lastStandardSectionEl = secDiv;
+          pvSections.appendChild(secDiv);
           return;
         }
 
-        const tr = document.createElement('tr');
+        /* DP */
+        const dp = s.dp;
 
-        const tdItem = document.createElement('td');
-        tdItem.className = 'c-item';
+        const dpTable = document.createElement('table');
+        dpTable.className = 'pv-table pv-dp-table';
 
-        const t = document.createElement('div');
-        t.className = 'pv-item-title';
-        t.textContent = it.title || it.type || '—';
-        tdItem.appendChild(t);
+        const thead2 = document.createElement('thead');
+        const tr2 = document.createElement('tr');
 
-        if(it.note){
-          const nn = document.createElement('div');
-          nn.className = 'pv-item-note';
-          nn.textContent = it.note;
-          tdItem.appendChild(nn);
-        }
-        if(it.period){
-          const pp = document.createElement('div');
-          pp.className = 'pv-item-period';
-          pp.textContent = it.period;
-          tdItem.appendChild(pp);
-        }
-        tr.appendChild(tdItem);
+        const thN = document.createElement('th');
+        thN.className='pv-dp-name';
+        thN.textContent='Názov';
 
-        const tdSpec = document.createElement('td');
-        tdSpec.className = 'c-spec';
-        tdSpec.textContent = it.dim || '';
-        tr.appendChild(tdSpec);
+        const thS = document.createElement('th');
+        thS.className='pv-dp-sec';
+        thS.textContent='Počet sekúnd';
 
-        const tdQty = document.createElement('td');
-        tdQty.className = 'c-qty';
-        if(it.qtyMode === 'max'){
-          tdQty.innerHTML = `<span class="pv-qty-max">max.<br><strong>${it.qty || 0}</strong></span>`;
-        }else{
-          tdQty.innerHTML = `<strong>${it.qty || 0}</strong>`;
-        }
-        tr.appendChild(tdQty);
+        const thP = document.createElement('th');
+        thP.className='pv-dp-price';
+        thP.textContent='Cena / 1 panel / mesiac';
 
-        const tdPrice = document.createElement('td');
-        tdPrice.className = 'c-price';
-        if(it.priceMode === 'fixed'){
-          tdPrice.textContent = it.fixedTotal > 0 ? formatMoney(it.fixedTotal) : '';
-        }else{
-          if(it.discount > 0 && it.price > 0) tdPrice.appendChild(moneyCellWithDiscount(it.price, it.discount));
-          else tdPrice.textContent = it.price > 0 ? formatMoney(it.price) : '';
-        }
-        tr.appendChild(tdPrice);
+        tr2.appendChild(thN);
+        tr2.appendChild(thS);
+        tr2.appendChild(thP);
+        thead2.appendChild(tr2);
+        dpTable.appendChild(thead2);
 
-        const tdTotal = document.createElement('td');
-        tdTotal.className = 'c-total';
-        const strong = document.createElement('strong');
-        strong.textContent = it.qtyMode === 'max' ? ('max. ' + formatMoney(it.total)) : formatMoney(it.total);
-        tdTotal.appendChild(strong);
-        tr.appendChild(tdTotal);
+        const tb2 = document.createElement('tbody');
 
-        grandTotal += it.total;
-        tbody.appendChild(tr);
-      });
+        (dp.rates || []).forEach(r => {
+          const tr = document.createElement('tr');
 
-      table.appendChild(tbody);
-      secDiv.appendChild(table);
+          const td1 = document.createElement('td');
+          td1.textContent = 'Spot v digitálnom paneli';
+          tr.appendChild(td1);
 
-      const extras = s.items.filter(x => x && !x.__or && x.extra).map(x => x.extra).filter(Boolean);
-      if(extras.length){
-        const exDiv = document.createElement('div');
-        exDiv.className = 'pv-note-block';
-        exDiv.innerHTML = extras.map(t => `<div>${t}</div>`).join('');
-        secDiv.appendChild(exDiv);
-      }
+          const td2 = document.createElement('td');
+          td2.className = 'pv-dp-sec';
+          td2.style.textAlign = 'center';
+          td2.textContent = String(r.sec || '');
+          tr.appendChild(td2);
 
-      const divLine = document.createElement('div');
-      divLine.className = 'pv-divider';
-      secDiv.appendChild(divLine);
+          const td3 = document.createElement('td');
+          td3.className = 'pv-dp-price';
+          td3.style.textAlign = 'right';
+          if(r.disc > 0 && r.base > 0) td3.appendChild(moneyCellWithDiscount(r.base, r.disc));
+          else td3.textContent = r.base > 0 ? formatMoney(r.base) : '';
+          tr.appendChild(td3);
 
-      lastStandardSectionEl = secDiv;
+          tb2.appendChild(tr);
+        });
 
-      pvSections.appendChild(secDiv);
-      return;
-    }
+        dpTable.appendChild(tb2);
+        secDiv.appendChild(dpTable);
 
-    const dp = s.dp;
+        const usedRates = (dp.rates || []).filter(r => r && r.sec > 0);
 
-    const dpTable = document.createElement('table');
-    dpTable.className = 'pv-table pv-dp-table';
+        (dp.specs || []).forEach(sp => {
+          const block = document.createElement('div');
+          block.className = 'pv-dp-block';
 
-    const thead2 = document.createElement('thead');
-    const tr2 = document.createElement('tr');
-    const thN = document.createElement('th'); thN.className='pv-dp-name'; thN.textContent='Názov';
-    const thS = document.createElement('th'); thS.className='pv-dp-sec'; thS.textContent='Počet sekúnd';
-    const thP = document.createElement('th'); thP.className='pv-dp-price'; thP.textContent='Cena / 1 panel / mesiac';
-    tr2.appendChild(thN); tr2.appendChild(thS); tr2.appendChild(thP);
-    thead2.appendChild(tr2);
-    dpTable.appendChild(thead2);
+          const st = document.createElement('div');
+          st.className = 'pv-dp-spec-title';
+          st.textContent = sp.spec || '';
+          block.appendChild(st);
 
-    const tb2 = document.createElement('tbody');
-    (dp.rates || []).forEach(r => {
-      const tr = document.createElement('tr');
+          const tbl = document.createElement('table');
+          tbl.className = 'pv-dp-month-table';
 
-      const td1 = document.createElement('td');
-      td1.textContent = 'Spot v digitálnom paneli';
-      tr.appendChild(td1);
+          const th = document.createElement('thead');
+          const thr = document.createElement('tr');
 
-      const td2 = document.createElement('td');
-      td2.className = 'pv-dp-sec';
-      td2.style.textAlign = 'center';
-      td2.textContent = String(r.sec || '');
-      tr.appendChild(td2);
+          const h1 = document.createElement('th');
+          h1.className='m-month';
+          h1.textContent='Termín';
 
-      const td3 = document.createElement('td');
-      td3.className = 'pv-dp-price';
-      td3.style.textAlign = 'right';
-      if(r.disc > 0 && r.base > 0) td3.appendChild(moneyCellWithDiscount(r.base, r.disc));
-      else td3.textContent = r.base > 0 ? formatMoney(r.base) : '';
-      tr.appendChild(td3);
+          const h2 = document.createElement('th');
+          h2.className='m-panels';
+          h2.textContent='Počet panelov';
 
-      tb2.appendChild(tr);
-    });
-    dpTable.appendChild(tb2);
-    secDiv.appendChild(dpTable);
+          thr.appendChild(h1);
+          thr.appendChild(h2);
 
-    const usedRates = (dp.rates || []).filter(r => r && r.sec > 0);
+          usedRates.forEach(r => {
+            const hh = document.createElement('th');
+            hh.className = 'm-col';
+            hh.textContent = `Cena spolu za ${r.sec} sekundový spot`;
+            thr.appendChild(hh);
+          });
 
-    (dp.specs || []).forEach(sp => {
-      const block = document.createElement('div');
-      block.className = 'pv-dp-block';
+          th.appendChild(thr);
+          tbl.appendChild(th);
 
-      const st = document.createElement('div');
-      st.className = 'pv-dp-spec-title';
-      st.textContent = sp.spec || '';
-      block.appendChild(st);
+          const body = document.createElement('tbody');
+          const colSums = usedRates.map(()=>0);
 
-      const tbl = document.createElement('table');
-      tbl.className = 'pv-dp-month-table';
+          (sp.months || []).forEach(m => {
+            const tr = document.createElement('tr');
 
-      const th = document.createElement('thead');
-      const thr = document.createElement('tr');
+            const tdM = document.createElement('td');
+            tdM.className='m-month';
+            tdM.textContent = m.month || '';
+            tr.appendChild(tdM);
 
-      const h1 = document.createElement('th'); h1.className='m-month'; h1.textContent='Termín';
-      const h2 = document.createElement('th'); h2.className='m-panels'; h2.textContent='Počet panelov';
-      thr.appendChild(h1); thr.appendChild(h2);
+            const tdP = document.createElement('td');
+            tdP.className='m-panels';
+            tdP.textContent = String(m.panels || 0);
+            tr.appendChild(tdP);
 
-      usedRates.forEach(r => {
-        const hh = document.createElement('th');
-        hh.className = 'm-col';
-        hh.textContent = `Cena spolu za ${r.sec} sekundový spot`;
-        thr.appendChild(hh);
-      });
+            usedRates.forEach((r, idx) => {
+              const td = document.createElement('td');
+              td.className = 'm-col';
 
-      th.appendChild(thr);
-      tbl.appendChild(th);
+              const useDisc = !!m.useDisc && r.disc > 0;
+              const unit = useDisc ? r.disc : r.base;
+              const total = (m.panels || 0) * (unit || 0);
 
-      const body = document.createElement('tbody');
-      const colSums = usedRates.map(()=>0);
+              if(useDisc && r.base > 0){
+                const baseTotal = (m.panels || 0) * (r.base || 0);
+                td.appendChild(moneyCellWithDiscount(baseTotal, total));
+              } else {
+                td.textContent = (total > 0) ? formatMoney(total) : '';
+              }
 
-      (sp.months || []).forEach(m => {
-        const tr = document.createElement('tr');
+              colSums[idx] += total;
+              grandTotal += total;
 
-        const tdM = document.createElement('td');
-        tdM.className='m-month';
-        tdM.textContent = m.month || '';
-        tr.appendChild(tdM);
+              tr.appendChild(td);
+            });
 
-        const tdP = document.createElement('td');
-        tdP.className='m-panels';
-        tdP.textContent = String(m.panels || 0);
-        tr.appendChild(tdP);
+            body.appendChild(tr);
+          });
 
-        usedRates.forEach((r, idx) => {
-          const td = document.createElement('td');
-          td.className = 'm-col';
+          if(dp.showColSum){
+            const trSum = document.createElement('tr');
+            trSum.style.borderTop = '2px solid #000';
 
-          const useDisc = !!m.useDisc && r.disc > 0;
-          const unit = useDisc ? r.disc : r.base;
-          const total = (m.panels || 0) * (unit || 0);
+            const tdA = document.createElement('td');
+            tdA.textContent = 'Spolu';
+            tdA.style.fontWeight = '900';
+            trSum.appendChild(tdA);
 
-          if(useDisc && r.base > 0){
-            const baseTotal = (m.panels || 0) * (r.base || 0);
-            td.appendChild(moneyCellWithDiscount(baseTotal, total));
-          }else{
-            td.textContent = (total > 0) ? formatMoney(total) : '';
+            const tdB = document.createElement('td');
+            tdB.textContent = '';
+            trSum.appendChild(tdB);
+
+            colSums.forEach(sum => {
+              const td = document.createElement('td');
+              td.className='m-col';
+              td.style.fontWeight='900';
+              td.textContent = sum > 0 ? formatMoney(sum) : '';
+              trSum.appendChild(td);
+            });
+
+            body.appendChild(trSum);
           }
 
-          colSums[idx] += total;
-          grandTotal += total;
-
-          tr.appendChild(td);
+          tbl.appendChild(body);
+          block.appendChild(tbl);
+          secDiv.appendChild(block);
         });
 
-        body.appendChild(tr);
+        if(dp.noteOn && dp.noteText){
+          const note = document.createElement('div');
+          note.className = 'pv-note-block';
+          note.textContent = dp.noteText;
+          secDiv.appendChild(note);
+        }
+
+        const divLine = document.createElement('div');
+        divLine.className = 'pv-divider';
+        secDiv.appendChild(divLine);
+
+        pvSections.appendChild(secDiv);
       });
 
-      if(dp.showColSum){
-        const trSum = document.createElement('tr');
-        trSum.style.borderTop = '2px solid #000';
+      /* Std note */
+      const pvStdNote = document.getElementById('pvStdNote');
+      pvStdNote.innerHTML = '';
 
-        const tdA = document.createElement('td');
-        tdA.textContent = 'Spolu';
-        tdA.style.fontWeight = '900';
-        trSum.appendChild(tdA);
+      if(state.stdNoteOn && anyStandard && lastStandardSectionEl){
+        const ndiv = document.createElement('div');
+        ndiv.className = 'pv-note-block';
+        ndiv.textContent = 'Súčasťou kampane je kompletná fotodokumentácia plôch. V prípade odovzdania zásielok je súčasťou kampane kompletný zoznam odovzdaných zásielok.';
 
-        const tdB = document.createElement('td');
-        tdB.textContent = '';
-        trSum.appendChild(tdB);
+        const line = document.createElement('div');
+        line.className = 'pv-divider';
 
-        colSums.forEach(sum => {
-          const td = document.createElement('td');
-          td.className='m-col';
-          td.style.fontWeight='900';
-          td.textContent = sum > 0 ? formatMoney(sum) : '';
-          trSum.appendChild(td);
-        });
-
-        body.appendChild(trSum);
+        lastStandardSectionEl.insertAdjacentElement('afterend', ndiv);
+        ndiv.insertAdjacentElement('afterend', line);
       }
 
-      tbl.appendChild(body);
-      block.appendChild(tbl);
-      secDiv.appendChild(block);
-    });
+      /* Grand */
+      const pvGrandWrap = document.getElementById('pvGrandWrap');
+      pvGrandWrap.innerHTML = '';
 
-    if(dp.noteOn && dp.noteText){
-      const note = document.createElement('div');
-      note.className = 'pv-note-block';
-      note.textContent = dp.noteText;
-      secDiv.appendChild(note);
+      if(state.showGrand){
+        const grand = document.createElement('div');
+        grand.style.marginTop = '8mm';
+        grand.style.display = 'flex';
+        grand.style.justifyContent = 'flex-end';
+
+        const box = document.createElement('div');
+        box.style.width = '260px';
+        box.style.borderTop = '1px solid #000';
+        box.style.paddingTop = '6mm';
+        box.style.textAlign = 'right';
+        box.style.fontSize = '12px';
+
+        box.innerHTML = `
+          <div style="font-weight:800;">Spolu</div>
+          <div style="font-size:16px; font-weight:900; margin-top:2mm;">${formatMoney(grandTotal)}</div>
+        `;
+
+        grand.appendChild(box);
+        pvGrandWrap.appendChild(grand);
+      }
     }
 
-    const divLine = document.createElement('div');
-    divLine.className = 'pv-divider';
-    secDiv.appendChild(divLine);
+    /* BUTTONS */
+    document.getElementById('btnAddSection').addEventListener('click', addSection);
+    document.getElementById('btnAddSectionBottom').addEventListener('click', addSection);
 
-    pvSections.appendChild(secDiv);
-  });
+    document.getElementById('btnPrint').addEventListener('click', () => {
+      const base = (document.getElementById('offerTitle').value || 'Cenová ponuka').trim();
+      const suggested = `${fileDatePrefix()}_${base.replace(/\s+/g,' ').trim()}`;
+      const chosen = prompt('Názov súboru (automaticky pridáme dátum na začiatok):', suggested) || suggested;
 
-  const pvStdNote = document.getElementById('pvStdNote');
-  pvStdNote.innerHTML = '';
+      const oldTitle = document.title;
+      document.title = chosen;
 
-  if(state.stdNoteOn && anyStandard && lastStandardSectionEl){
-    const ndiv = document.createElement('div');
-    ndiv.className = 'pv-note-block';
-    ndiv.textContent =
-      'Súčasťou kampane je kompletná fotodokumentácia plôch. V prípade odovzdania zásielok je súčasťou kampane kompletný zoznam odovzdaných zásielok.';
+      renderPDF();
 
-    const line = document.createElement('div');
-    line.className = 'pv-divider';
+      setTimeout(() => {
+        window.print();
+        setTimeout(() => { document.title = oldTitle; }, 600);
+      }, 120);
+    });
 
-    lastStandardSectionEl.insertAdjacentElement('afterend', ndiv);
-    ndiv.insertAdjacentElement('afterend', line);
-  }
+    document.getElementById('btnReset').addEventListener('click', () => {
+      document.getElementById('offerTitle').value = 'Cenová ponuka';
+      document.getElementById('offerSubtitle').value = '';
+      document.getElementById('pdfImages').value = 'with';
+      document.getElementById('pdfShowGrand').value = 'no';
+      document.getElementById('chkStdNote').checked = true;
+      sectionsWrap.innerHTML = '';
+      applyImagesSetting();
+      addSection();
+    });
 
-  const pvGrandWrap = document.getElementById('pvGrandWrap');
-  pvGrandWrap.innerHTML = '';
-  if(state.showGrand){
-    const grand = document.createElement('div');
-    grand.style.marginTop = '8mm';
-    grand.style.display = 'flex';
-    grand.style.justifyContent = 'flex-end';
-
-    const box = document.createElement('div');
-    box.style.width = '260px';
-    box.style.borderTop = '1px solid #000';
-    box.style.paddingTop = '6mm';
-    box.style.textAlign = 'right';
-    box.style.fontSize = '12px';
-    box.innerHTML = `<div style="font-weight:800;">Spolu</div><div style="font-size:16px; font-weight:900; margin-top:2mm;">${formatMoney(grandTotal)}</div>`;
-    grand.appendChild(box);
-    pvGrandWrap.appendChild(grand);
-  }
-}
-
-/* BUTTONS */
-document.getElementById('btnAddSection').addEventListener('click', addSection);
-document.getElementById('btnAddSectionBottom').addEventListener('click', addSection);
-
-document.getElementById('btnPrint').addEventListener('click', () => {
-  const base = (document.getElementById('offerTitle').value || 'Cenová ponuka').trim();
-  const suggested = `${fileDatePrefix()}_${base.replace(/\s+/g,' ').trim()}`;
-  const chosen = prompt('Názov súboru (automaticky pridáme dátum na začiatok):', suggested) || suggested;
-
-  const oldTitle = document.title;
-  document.title = chosen;
-
-  renderPDF();
-  setTimeout(() => {
-    window.print();
-    setTimeout(() => { document.title = oldTitle; }, 600);
-  }, 120);
-});
-
-document.getElementById('btnReset').addEventListener('click', () => {
-  document.getElementById('offerTitle').value = 'Cenová ponuka';
-  document.getElementById('offerSubtitle').value = '';
-  document.getElementById('pdfImages').value = 'with';
-  document.getElementById('pdfShowGrand').value = 'no';
-  document.getElementById('chkStdNote').checked = true;
-
-  sectionsWrap.innerHTML = '';
-  applyImagesSetting();
-  addSection();
-});
-
-/* INIT */
-applyImagesSetting();
-addSection();
-</script>
-
+    /* INIT */
+    applyImagesSetting();
+    addSection();
+  </script>
 </body>
 </html>
