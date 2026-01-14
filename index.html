@@ -1228,7 +1228,7 @@ Počty panelov sú odhadované. Fakturovať budeme len reálny počet panelov v 
       pvFeel.onerror = () => { pvFeel.style.display = 'none'; };
       pvFeel.style.display = 'block';
 
-      document.getElementById('pvGen').textContent = 'Generované: ' + nowStamp();
+      const pvGen = document.getElementById('pvGen'); if (pvGen) pvGen.textContent = 'Generované: ' + nowStamp();
 
       const pvGutter = document.getElementById('pvGutter');
       pvGutter.innerHTML = '';
@@ -1674,4 +1674,5 @@ Počty panelov sú odhadované. Fakturovať budeme len reálny počet panelov v 
   </script>
 </body>
 </html>
+
 
