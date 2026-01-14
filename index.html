@@ -147,41 +147,44 @@ textarea{ min-height:70px; resize:vertical; }
 /* PRINT / PDF */
 .print-view{ display:none; }
 
+/* === PDF PAGE === */
 .print-page{
   width:210mm;
-  margin:0 auto; background:#fff;
-  padding:14mm 14mm 26mm 10mm; /* viac doľava + vyššie (tvoje želanie) */
+  margin:0 auto;
+  background:#fff;
   position:relative;
+  padding:0;
 }
 
-/* logo vpravo hore – ostane pekne v rohu v rámci paddingu */
-.pv-logo{
-  position:absolute;
-  top:0;
-  right:0;
-  width:26mm; height:auto; opacity:0.95;
-}
+/* logo hore vpravo */
+.pv-logo{ position:absolute; top:10mm; right:14mm; width:26mm; height:auto; opacity:0.95; }
 
-/* ====== KLÚČOVÝ FIX: GRID layout (žiadne absolútne pozicovanie fotiek) ====== */
+/* === GRID LAYOUT (ako „správna“ ukážka) ===
+   ľavý stĺpec = fotky
+   pravý stĺpec = text/tablky
+*/
 .pv-grid{
   display:grid;
-  grid-template-columns: 48mm 1fr;  /* širší stĺpec na fotky = plnšie */
-  column-gap:10mm;
-  align-items:start;
+  grid-template-columns: 44mm 1fr;   /* fotky + obsah */
+  gap:8mm;                           /* medzera medzi fotkami a obsahom */
+  padding-top:14mm;                  /* vyššie */
+  padding-left:10mm;                 /* viac vľavo (bližšie ku kraju) */
+  padding-right:14mm;
+  padding-bottom:26mm;
 }
 
-/* ľavý stĺpec fotiek */
+/* ľavý stĺpec */
 .pv-gutter{
   display:flex;
   flex-direction:column;
   gap:10mm;
 }
 
-/* box fotky: fixná výška -> žiadne zmenšovanie podľa počtu */
-.pv-gutter .pv-img{
+/* fotka box – jemné rohy, bez deformácie, bez cropu */
+.pv-img{
   width:100%;
-  height:34mm;          /* plnohodnotná výška (bez škálovania podľa počtu) */
-  border-radius:2mm;    /* jemné rohy, nie “oblé jak keksík” */
+  height:34mm;              /* pevná výška -> stále „plnohodnotné“ */
+  border-radius:2mm;        /* jemné zaoblenie */
   overflow:hidden;
   border:1px solid #ddd;
   background:#f6f6f6;
@@ -189,23 +192,21 @@ textarea{ min-height:70px; resize:vertical; }
   align-items:center;
   justify-content:center;
 }
-
-/* žiadne orezanie: contain */
-.pv-gutter .pv-img img{
+.pv-img img{
   width:100%;
   height:100%;
-  object-fit:contain;   /* NEKROJÍ */
+  object-fit:contain;       /* !!! NEOREZAŤ, NEDEFORMOVAŤ */
   display:block;
 }
 
-/* pravý obsah */
+/* pravý stĺpec */
 .pv-content{ min-width:0; }
-/* ====== koniec fixu ====== */
 
-.pv-header{ margin-bottom:12mm; }
+.pv-header{ margin-bottom:10mm; }
 .pv-title{ font-size:34px; font-weight:800; }
 .pv-subtitle{ font-size:16px; margin-top:4px; font-weight:500; }
 
+/* SECTIONS */
 .pv-section{ margin-top:12mm; break-inside:avoid; page-break-inside:avoid; }
 .pv-section-name{ font-size:13px; font-weight:800; }
 .pv-section-period{ margin-top:2mm; font-size:12px; font-weight:500; color:#111; }
@@ -231,6 +232,7 @@ textarea{ min-height:70px; resize:vertical; }
 .pv-item-title{ font-weight:800; }
 .pv-item-note{ font-size:10.5px; margin-top:2px; color:#111; }
 .pv-item-period{ margin-top:3px; font-size:10px; color:#666; }
+
 .pv-note-block{
   margin-top:6mm;
   font-size:10.7px;
@@ -239,6 +241,7 @@ textarea{ min-height:70px; resize:vertical; }
   break-inside:avoid;
   page-break-inside:avoid;
 }
+
 .pv-money-old{
   font-size:10.5px; color:#777; text-decoration:line-through;
   display:block; line-height:1.05;
@@ -294,6 +297,15 @@ textarea{ min-height:70px; resize:vertical; }
 .pv-dp-month-table .m-panels{ width:16%; text-align:right; padding-right:10px; }
 .pv-dp-month-table .m-col{ text-align:right; }
 
+.pv-or-row td{
+  padding:10px 0;
+  text-align:center !important;
+  font-weight:900;
+  letter-spacing:.12em;
+  color:#111;
+}
+
+/* footer */
 .pv-footer{
   position:fixed; left:0; right:0; bottom:0;
   height:18mm;
@@ -313,17 +325,9 @@ textarea{ min-height:70px; resize:vertical; }
 .pv-footer .mid a{ color:#000; text-decoration:underline; font-weight:800; }
 .pv-footer .right{ text-align:right; font-weight:800; }
 
-.pv-no-images .pv-gutter{ display:none; }
+/* bez obrázkov => fotostĺpec sa skryje a obsah ide na celú šírku */
 .pv-no-images .pv-grid{ grid-template-columns: 1fr; }
-.pv-no-images .pv-content{ }
-
-.pv-or-row td{
-  padding:10px 0;
-  text-align:center !important;
-  font-weight:900;
-  letter-spacing:.12em;
-  color:#111;
-}
+.pv-no-images .pv-gutter{ display:none; }
 
 /* PASSWORD OVERLAY */
 .lock{
@@ -355,7 +359,7 @@ textarea{ min-height:70px; resize:vertical; }
   /* prvá strana ostane „po starom“ */
   @page :first{ margin:18mm 14mm 22mm 14mm; }
 
-  /* FIX: aby 1-stranový dokument nerobil prázdnu 2. stranu */
+  /* aby 1-stranový dokument nerobil prázdnu 2. stranu */
   .print-page{ min-height:auto !important; }
 
   .lock{ display:none !important; }
@@ -452,7 +456,6 @@ textarea{ min-height:70px; resize:vertical; }
   <div class="print-page" id="printPage">
     <img class="pv-logo" id="pvLogo" src="ids-logo.png" alt="IDS logo" />
 
-    <!-- GRID WRAP -->
     <div class="pv-grid" id="pvGrid">
       <div class="pv-gutter" id="pvGutter"></div>
 
@@ -463,7 +466,6 @@ textarea{ min-height:70px; resize:vertical; }
         </div>
 
         <div id="pvSections"></div>
-
         <div id="pvStdNote"></div>
         <div id="pvGrandWrap"></div>
 
@@ -517,7 +519,6 @@ textarea{ min-height:70px; resize:vertical; }
   <option value="Gynekológ"></option>
 </datalist>
 
-<!-- TEMPLATES (nezmenené) -->
 <template id="tplSection">
   <div class="section" data-section>
     <div class="section-head">
@@ -802,7 +803,7 @@ if(sessionStorage.getItem('idsUnlocked') === '1'){
   lockInput.focus();
 }
 
-/* ===== DEFAULT DP NOTE (fix: vždy sa má vedieť vytlačiť) ===== */
+/* ===== DEFAULT DP NOTE ===== */
 const DEFAULT_DP_NOTE_TEXT =
 `Súčasťou kampane u digitálnych panelov je:
 Aktuálny počet fungujúcich panelov v daný mesiac, dĺžka slučky, priemerná návštevnosť za daný mesiac, plánovaný počet prehraní za daný mesiac, reálny počet prehraní za daný mesiac, počet možných videní za daný mesiac.
@@ -1163,7 +1164,6 @@ function wireSection(secEl){
   dpAddImageSlot(dpImagesWrap);
   dpAddImageSlot(dpImagesWrap);
 
-  /* FIX: DP text je pripravený a funguje */
   const dpNoteTa = secEl.querySelector('[data-dp-note]');
   if(!dpNoteTa.value.trim()) dpNoteTa.value = DEFAULT_DP_NOTE_TEXT;
   secEl.querySelector('[data-dp-note-on]').checked = false;
@@ -1325,6 +1325,7 @@ function renderPDF(){
 
   document.getElementById('pvGen').textContent = 'Generované: ' + nowStamp();
 
+  /* LEFT IMAGES */
   const pvGutter = document.getElementById('pvGutter');
   pvGutter.innerHTML = '';
   if(state.imagesMode === 'with'){
