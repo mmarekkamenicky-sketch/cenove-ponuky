@@ -1403,7 +1403,28 @@ function collectState(){
               box.appendChild(img);
               pvGutter.appendChild(box);
             });
-          } else {
+          } else if(s.kind === 'dp'){
+            (s.dp.dpImgs||[]).forEach(url => {
+              const box = document.createElement('div');
+              box.className='pv-img';
+              const img = document.createElement('img');
+              img.src = url;
+              box.appendChild(img);
+              pvGutter.appendChild(box);
+            });
+            (s.dp.specs||[]).forEach(sp => {
+              if(!sp.specImg) return;
+              const box = document.createElement('div');
+              box.className='pv-img';
+              const img = document.createElement('img');
+              img.src = sp.specImg;
+              box.appendChild(img);
+              pvGutter.appendChild(box);
+            });
+          }
+          /* custom sections have no images in gutter */
+        });
+      } else {
             (s.dp.dpImgs||[]).forEach(url => {
               const box = document.createElement('div');
               box.className='pv-img';
