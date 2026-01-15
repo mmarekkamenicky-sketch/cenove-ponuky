@@ -489,11 +489,11 @@
 
     <div class="small" style="margin-top:10px; font-weight:800;">Hlavička tabuľky (ručne editovateľná)</div>
     <div class="custom-headers">
-      <div><label>Stĺpec 1</label><input data-custom-h1 value="Názov položky"></div>
-      <div><label>Stĺpec 2</label><input data-custom-h2 value="Špecifikácia"></div>
-      <div><label>Stĺpec 3</label><input data-custom-h3 value="Počet ks"></div>
-      <div><label>Stĺpec 4</label><input data-custom-h4 value="Cena / ks"></div>
-      <div><label>Stĺpec 5</label><input data-custom-h5 value="Cena spolu"></div>
+      <div><label>Stĺpec 1</label><input data-custom-h1 placeholder="Názov položky" value=""></div>
+      <div><label>Stĺpec 2</label><input data-custom-h2 placeholder="Špecifikácia" value=""></div>
+      <div><label>Stĺpec 3</label><input data-custom-h3 placeholder="Počet ks" value=""></div>
+      <div><label>Stĺpec 4</label><input data-custom-h4 placeholder="Cena / ks" value=""></div>
+      <div><label>Stĺpec 5</label><input data-custom-h5 placeholder="Cena spolu" value=""></div>
     </div>
 
     <div class="custom-rows" data-custom-rows></div>
@@ -1422,27 +1422,6 @@ function collectState(){
               pvGutter.appendChild(box);
             });
           }
-          /* custom sections have no images in gutter */
-        });
-      } else {
-            (s.dp.dpImgs||[]).forEach(url => {
-              const box = document.createElement('div');
-              box.className='pv-img';
-              const img = document.createElement('img');
-              img.src = url;
-              box.appendChild(img);
-              pvGutter.appendChild(box);
-            });
-            (s.dp.specs||[]).forEach(sp => {
-              if(!sp.specImg) return;
-              const box = document.createElement('div');
-              box.className='pv-img';
-              const img = document.createElement('img');
-              img.src = sp.specImg;
-              box.appendChild(img);
-              pvGutter.appendChild(box);
-            });
-          }
         });
       }
 
@@ -1483,23 +1462,22 @@ function collectState(){
           `;
           table.appendChild(colg);
 
-          const thead = document.createElement('thead');
-          const trh = document.createElement('tr');
-          const headers = [
-            { cls:'c-item', txt:'Položka' },
-            { cls:'c-spec', txt:'Špecifikácia' },
-            { cls:'c-qty',  txt:'Počet' },
-            { cls:'c-price',txt:'Cena/Ks' },
-            { cls:'c-total',txt:'Cena spolu' }
-          ];
-          headers.forEach(h => {
-            const th = document.createElement('th');
-            th.className = h.cls;
-            th.textContent = h.txt;
-            trh.appendChild(th);
-          });
-          thead.appendChild(trh);
-          table.appendChild(thead);
+          const showHead = hs.some(h => (h.txt || '').trim() !== '');
+
+          if(showHead){
+            const thead = document.createElement('thead');
+            const trh = document.createElement('tr');
+
+            hs.forEach(h => {
+              const th = document.createElement('th');
+              th.className = h.cls;
+              th.textContent = h.txt;
+              trh.appendChild(th);
+            });
+
+            thead.appendChild(trh);
+            table.appendChild(thead);
+          }
 
           const tbody = document.createElement('tbody');
 
@@ -1629,11 +1607,11 @@ if(s.kind === 'custom'){
   const trh = document.createElement('tr');
 
   const hs = [
-    { cls:'c1', txt: headers.h1 || 'Stĺpec 1' },
-    { cls:'c2', txt: headers.h2 || 'Stĺpec 2' },
-    { cls:'c3', txt: headers.h3 || 'Stĺpec 3' },
-    { cls:'c4', txt: headers.h4 || 'Stĺpec 4' },
-    { cls:'c5', txt: headers.h5 || 'Stĺpec 5' }
+    { cls:'c1', txt: headers.h1 || '' },
+    { cls:'c2', txt: headers.h2 || '' },
+    { cls:'c3', txt: headers.h3 || '' },
+    { cls:'c4', txt: headers.h4 || '' },
+    { cls:'c5', txt: headers.h5 || '' }
   ];
 
   hs.forEach(h => {
