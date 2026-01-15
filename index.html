@@ -207,6 +207,28 @@
 
     .pv-or-row td{ padding:10px 0; text-align:center !important; font-weight:900; letter-spacing:.12em; color:#c40000; }
 
+
+/* CUSTOM (manual) SECTION */
+.custom-wrap{ margin-top:10px; }
+.custom-card{ border:1px solid #ddd; border-radius:14px; padding:12px; }
+.custom-head{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+@media (max-width:900px){ .custom-head{ grid-template-columns:1fr; } }
+.custom-headers{ margin-top:12px; display:grid; grid-template-columns:1fr 1fr 1fr 1fr 1fr; gap:10px; }
+@media (max-width:900px){ .custom-headers{ grid-template-columns:1fr; } }
+.custom-rows{ margin-top:12px; display:flex; flex-direction:column; gap:12px; }
+.custom-row{ border:1px solid #ddd; border-radius:14px; padding:12px; }
+.custom-row-grid{ display:grid; grid-template-columns:1fr 1fr 1fr 1fr 1fr 40px; gap:10px; align-items:end; }
+@media (max-width:900px){ .custom-row-grid{ grid-template-columns:1fr; } }
+.custom-row-note{ margin-top:10px; }
+.custom-bottom{ margin-top:12px; display:flex; justify-content:flex-end; gap:10px; flex-wrap:wrap; }
+
+/* PDF: CUSTOM */
+.pv-custom-table .c3, .pv-custom-table .c4, .pv-custom-table .c5{ text-align:right; }
+.pv-custom-total{ margin-top:6mm; display:flex; justify-content:flex-end; }
+.pv-custom-total .box{ width:260px; border-top:1px solid #000; padding-top:4mm; text-align:right; }
+.pv-custom-total .box .lbl{ font-weight:800; font-size:11px; }
+.pv-custom-total .box .val{ font-weight:900; font-size:14px; margin-top:2mm; }
+
     /* PASSWORD OVERLAY */
     .lock{ position:fixed; inset:0; background:#fff; z-index:99999; display:flex; align-items:center; justify-content:center; padding:24px; }
     .lock-card{ width:min(520px, 92vw); border:1px solid #ddd; border-radius:18px; padding:18px; box-shadow:0 10px 30px rgba(0,0,0,.08); }
@@ -391,6 +413,7 @@
             <select data-sec-kind class="select-important">
               <option value="standard" selected>Štandardné plochy</option>
               <option value="dp">Digitálny panel</option>
+              <option value="custom">Ručná sekcia (voľná tabuľka)</option>
             </select>
           </div>
         </div>
@@ -450,6 +473,42 @@
           <button class="btn secondary" type="button" data-dp-add-spec>+ Pridať špecializáciu</button>
         </div>
       </div>
+
+<div data-custom class="custom-wrap" style="display:none;">
+  <div class="custom-card">
+    <div class="custom-head">
+      <div>
+        <label>Podnadpis sekcie (voliteľné)</label>
+        <input class="field-important" data-custom-subtitle placeholder="napr. Špeciálna dohoda / manuálna tabuľka" value="">
+      </div>
+      <div>
+        <label>Spolu za túto sekciu (voliteľné – ručne)</label>
+        <input class="field-important" data-custom-total placeholder="napr. 1 234,00 €" value="">
+      </div>
+    </div>
+
+    <div class="small" style="margin-top:10px; font-weight:800;">Hlavička tabuľky (ručne editovateľná)</div>
+    <div class="custom-headers">
+      <div><label>Stĺpec 1</label><input class="field-important" data-custom-h1 value="Názov položky"></div>
+      <div><label>Stĺpec 2</label><input class="field-important" data-custom-h2 value="Špecifikácia"></div>
+      <div><label>Stĺpec 3</label><input class="field-important" data-custom-h3 value="Počet ks"></div>
+      <div><label>Stĺpec 4</label><input class="field-important" data-custom-h4 value="Cena / ks"></div>
+      <div><label>Stĺpec 5</label><input class="field-important" data-custom-h5 value="Cena spolu"></div>
+    </div>
+
+    <div class="custom-rows" data-custom-rows></div>
+
+    <div class="custom-bottom">
+      <button class="btn secondary" type="button" data-custom-add-row>+ Pridať položku</button>
+    </div>
+
+    <div class="note-box" style="margin-top:12px;">
+      <label>Hlavná poznámka na konci sekcie (voliteľné)</label>
+      <textarea data-custom-note placeholder=""></textarea>
+    </div>
+  </div>
+</div>
+
     </div>
   </template>
 
@@ -552,6 +611,42 @@
         <label>Vlastná poznámka pod položkou (voliteľné)</label>
         <textarea data-extra placeholder=""></textarea>
       </div>
+
+<div data-custom class="custom-wrap" style="display:none;">
+  <div class="custom-card">
+    <div class="custom-head">
+      <div>
+        <label>Podnadpis sekcie (voliteľné)</label>
+        <input class="field-important" data-custom-subtitle placeholder="napr. Špeciálna dohoda / manuálna tabuľka" value="">
+      </div>
+      <div>
+        <label>Spolu za túto sekciu (voliteľné – ručne)</label>
+        <input class="field-important" data-custom-total placeholder="napr. 1 234,00 €" value="">
+      </div>
+    </div>
+
+    <div class="small" style="margin-top:10px; font-weight:800;">Hlavička tabuľky (ručne editovateľná)</div>
+    <div class="custom-headers">
+      <div><label>Stĺpec 1</label><input class="field-important" data-custom-h1 value="Názov položky"></div>
+      <div><label>Stĺpec 2</label><input class="field-important" data-custom-h2 value="Špecifikácia"></div>
+      <div><label>Stĺpec 3</label><input class="field-important" data-custom-h3 value="Počet ks"></div>
+      <div><label>Stĺpec 4</label><input class="field-important" data-custom-h4 value="Cena / ks"></div>
+      <div><label>Stĺpec 5</label><input class="field-important" data-custom-h5 value="Cena spolu"></div>
+    </div>
+
+    <div class="custom-rows" data-custom-rows></div>
+
+    <div class="custom-bottom">
+      <button class="btn secondary" type="button" data-custom-add-row>+ Pridať položku</button>
+    </div>
+
+    <div class="note-box" style="margin-top:12px;">
+      <label>Hlavná poznámka na konci sekcie (voliteľné)</label>
+      <textarea data-custom-note placeholder=""></textarea>
+    </div>
+  </div>
+</div>
+
     </div>
   </template>
 
@@ -572,6 +667,42 @@
       <div class="kill">
         <button class="icon-btn danger" type="button" title="Odstrániť" data-del>🗑️</button>
       </div>
+
+<div data-custom class="custom-wrap" style="display:none;">
+  <div class="custom-card">
+    <div class="custom-head">
+      <div>
+        <label>Podnadpis sekcie (voliteľné)</label>
+        <input class="field-important" data-custom-subtitle placeholder="napr. Špeciálna dohoda / manuálna tabuľka" value="">
+      </div>
+      <div>
+        <label>Spolu za túto sekciu (voliteľné – ručne)</label>
+        <input class="field-important" data-custom-total placeholder="napr. 1 234,00 €" value="">
+      </div>
+    </div>
+
+    <div class="small" style="margin-top:10px; font-weight:800;">Hlavička tabuľky (ručne editovateľná)</div>
+    <div class="custom-headers">
+      <div><label>Stĺpec 1</label><input class="field-important" data-custom-h1 value="Názov položky"></div>
+      <div><label>Stĺpec 2</label><input class="field-important" data-custom-h2 value="Špecifikácia"></div>
+      <div><label>Stĺpec 3</label><input class="field-important" data-custom-h3 value="Počet ks"></div>
+      <div><label>Stĺpec 4</label><input class="field-important" data-custom-h4 value="Cena / ks"></div>
+      <div><label>Stĺpec 5</label><input class="field-important" data-custom-h5 value="Cena spolu"></div>
+    </div>
+
+    <div class="custom-rows" data-custom-rows></div>
+
+    <div class="custom-bottom">
+      <button class="btn secondary" type="button" data-custom-add-row>+ Pridať položku</button>
+    </div>
+
+    <div class="note-box" style="margin-top:12px;">
+      <label>Hlavná poznámka na konci sekcie (voliteľné)</label>
+      <textarea data-custom-note placeholder=""></textarea>
+    </div>
+  </div>
+</div>
+
     </div>
   </template>
 
@@ -604,6 +735,42 @@
         </div>
         <div class="thumb" data-thumb><span class="small">bez obrázka</span></div>
       </div>
+
+<div data-custom class="custom-wrap" style="display:none;">
+  <div class="custom-card">
+    <div class="custom-head">
+      <div>
+        <label>Podnadpis sekcie (voliteľné)</label>
+        <input class="field-important" data-custom-subtitle placeholder="napr. Špeciálna dohoda / manuálna tabuľka" value="">
+      </div>
+      <div>
+        <label>Spolu za túto sekciu (voliteľné – ručne)</label>
+        <input class="field-important" data-custom-total placeholder="napr. 1 234,00 €" value="">
+      </div>
+    </div>
+
+    <div class="small" style="margin-top:10px; font-weight:800;">Hlavička tabuľky (ručne editovateľná)</div>
+    <div class="custom-headers">
+      <div><label>Stĺpec 1</label><input class="field-important" data-custom-h1 value="Názov položky"></div>
+      <div><label>Stĺpec 2</label><input class="field-important" data-custom-h2 value="Špecifikácia"></div>
+      <div><label>Stĺpec 3</label><input class="field-important" data-custom-h3 value="Počet ks"></div>
+      <div><label>Stĺpec 4</label><input class="field-important" data-custom-h4 value="Cena / ks"></div>
+      <div><label>Stĺpec 5</label><input class="field-important" data-custom-h5 value="Cena spolu"></div>
+    </div>
+
+    <div class="custom-rows" data-custom-rows></div>
+
+    <div class="custom-bottom">
+      <button class="btn secondary" type="button" data-custom-add-row>+ Pridať položku</button>
+    </div>
+
+    <div class="note-box" style="margin-top:12px;">
+      <label>Hlavná poznámka na konci sekcie (voliteľné)</label>
+      <textarea data-custom-note placeholder=""></textarea>
+    </div>
+  </div>
+</div>
+
     </div>
   </template>
 
@@ -624,8 +791,65 @@
       <div style="display:flex; justify-content:flex-end;">
         <button class="icon-btn danger" type="button" title="Odstrániť riadok" data-del>🗑️</button>
       </div>
+
+<div data-custom class="custom-wrap" style="display:none;">
+  <div class="custom-card">
+    <div class="custom-head">
+      <div>
+        <label>Podnadpis sekcie (voliteľné)</label>
+        <input class="field-important" data-custom-subtitle placeholder="napr. Špeciálna dohoda / manuálna tabuľka" value="">
+      </div>
+      <div>
+        <label>Spolu za túto sekciu (voliteľné – ručne)</label>
+        <input class="field-important" data-custom-total placeholder="napr. 1 234,00 €" value="">
+      </div>
+    </div>
+
+    <div class="small" style="margin-top:10px; font-weight:800;">Hlavička tabuľky (ručne editovateľná)</div>
+    <div class="custom-headers">
+      <div><label>Stĺpec 1</label><input class="field-important" data-custom-h1 value="Názov položky"></div>
+      <div><label>Stĺpec 2</label><input class="field-important" data-custom-h2 value="Špecifikácia"></div>
+      <div><label>Stĺpec 3</label><input class="field-important" data-custom-h3 value="Počet ks"></div>
+      <div><label>Stĺpec 4</label><input class="field-important" data-custom-h4 value="Cena / ks"></div>
+      <div><label>Stĺpec 5</label><input class="field-important" data-custom-h5 value="Cena spolu"></div>
+    </div>
+
+    <div class="custom-rows" data-custom-rows></div>
+
+    <div class="custom-bottom">
+      <button class="btn secondary" type="button" data-custom-add-row>+ Pridať položku</button>
+    </div>
+
+    <div class="note-box" style="margin-top:12px;">
+      <label>Hlavná poznámka na konci sekcie (voliteľné)</label>
+      <textarea data-custom-note placeholder=""></textarea>
+    </div>
+  </div>
+</div>
+
     </div>
   </template>
+
+
+<template id="tplCustomRow">
+  <div class="custom-row" data-custom-row>
+    <div class="custom-row-grid">
+      <div><label>Stĺpec 1</label><input class="field-important" data-c1 placeholder=""></div>
+      <div><label>Stĺpec 2</label><input class="field-important" data-c2 placeholder=""></div>
+      <div><label>Stĺpec 3</label><input class="field-important" data-c3 placeholder=""></div>
+      <div><label>Stĺpec 4</label><input class="field-important" data-c4 placeholder=""></div>
+      <div><label>Stĺpec 5</label><input class="field-important" data-c5 placeholder=""></div>
+      <div style="display:flex; justify-content:flex-end;">
+        <button class="icon-btn danger" type="button" title="Odstrániť položku" data-del>🗑️</button>
+      </div>
+    </div>
+
+    <div class="custom-row-note">
+      <label>Poznámka pod položkou (voliteľné)</label>
+      <textarea data-row-note placeholder=""></textarea>
+    </div>
+  </div>
+</template>
 
   <script>
     /* ===== PASSWORD ===== */
@@ -1034,11 +1258,35 @@ Počty panelov sú odhadované. Fakturovať budeme len reálny počet panelov v 
       addMonthRow();
     }
 
+
+/* CUSTOM (manual) */
+function customAddRow(secEl){
+  const rowsWrap = secEl.querySelector('[data-custom-rows]');
+  const node = tplCustomRow.content.cloneNode(true);
+  rowsWrap.appendChild(node);
+  const rowEl = rowsWrap.lastElementChild;
+  rowEl.querySelector('[data-del]').addEventListener('click', () => rowEl.remove());
+  return rowEl;
+}
+
+function customInit(secEl){
+  const rowsWrap = secEl.querySelector('[data-custom-rows]');
+  if(!rowsWrap) return;
+  if(rowsWrap.children.length === 0) customAddRow(secEl);
+
+  const btn = secEl.querySelector('[data-custom-add-row]');
+  if(btn && !btn.dataset.wired){
+    btn.dataset.wired = '1';
+    btn.addEventListener('click', () => customAddRow(secEl));
+  }
+}
+
     function wireSection(secEl){
       const kindSel = secEl.querySelector('[data-sec-kind]');
       const stdWrap = secEl.querySelector('[data-standard]');
       const dpWrap = secEl.querySelector('[data-dp]');
       const itemsWrap = secEl.querySelector('[data-items]');
+      const customWrap = secEl.querySelector('[data-custom]');
 
       secEl.querySelector('[data-del-section]').addEventListener('click', () => secEl.remove());
       secEl.querySelector('[data-add-item]').addEventListener('click', () => addItem(itemsWrap));
@@ -1059,8 +1307,10 @@ Počty panelov sú odhadované. Fakturovať budeme len reálny počet panelov v 
       function applyKind(){
         const k = kindSel.value;
         if(k === 'dp'){
+
           stdWrap.style.display = 'none';
           dpWrap.style.display = 'block';
+          if(customWrap) customWrap.style.display = 'none';
 
           const nameEl = secEl.querySelector('[data-sec-name]');
           if(!nameEl.value.trim()) nameEl.value = 'Digitálny panel v čakárni lekára';
@@ -1073,10 +1323,18 @@ Počty panelov sú odhadované. Fakturovať budeme len reálny počet panelov v 
 
           const specsWrap = secEl.querySelector('[data-dp-specs]');
           if(specsWrap.children.length === 0) dpAddSpec(secEl);
+        }else if(k === 'custom'){
+          stdWrap.style.display = 'none';
+          dpWrap.style.display = 'none';
+          if(customWrap) customWrap.style.display = 'block';
+          customInit(secEl);
 
+          const nameEl = secEl.querySelector('[data-sec-name]');
+          if(!nameEl.value.trim()) nameEl.value = 'Ručná sekcia (voľná tabuľka)';
         }else{
           stdWrap.style.display = 'block';
           dpWrap.style.display = 'none';
+          if(customWrap) customWrap.style.display = 'none';
           if(itemsWrap.children.length === 0) addItem(itemsWrap);
         }
       }
@@ -1166,6 +1424,33 @@ Počty panelov sú odhadované. Fakturovať budeme len reálny počet panelov v 
       return { rates, specs, showColSum, noteOn, noteText, dpImgs };
     }
 
+
+function collectCustom(secEl){
+  const subtitle = (secEl.querySelector('[data-custom-subtitle]')?.value || '').trim();
+  const total = (secEl.querySelector('[data-custom-total]')?.value || '').trim();
+  const note = (secEl.querySelector('[data-custom-note]')?.value || '').trim();
+
+  const h1 = (secEl.querySelector('[data-custom-h1]')?.value || '').trim();
+  const h2 = (secEl.querySelector('[data-custom-h2]')?.value || '').trim();
+  const h3 = (secEl.querySelector('[data-custom-h3]')?.value || '').trim();
+  const h4 = (secEl.querySelector('[data-custom-h4]')?.value || '').trim();
+  const h5 = (secEl.querySelector('[data-custom-h5]')?.value || '').trim();
+
+  const rows = [];
+  secEl.querySelectorAll('[data-custom-row]').forEach(r => {
+    const c1 = (r.querySelector('[data-c1]')?.value || '').trim();
+    const c2 = (r.querySelector('[data-c2]')?.value || '').trim();
+    const c3 = (r.querySelector('[data-c3]')?.value || '').trim();
+    const c4 = (r.querySelector('[data-c4]')?.value || '').trim();
+    const c5 = (r.querySelector('[data-c5]')?.value || '').trim();
+    const rnote = (r.querySelector('[data-row-note]')?.value || '').trim();
+    if(!(c1 || c2 || c3 || c4 || c5 || rnote)) return;
+    rows.push({ c1,c2,c3,c4,c5, note:rnote });
+  });
+
+  return { subtitle, total, note, headers:{h1,h2,h3,h4,h5}, rows };
+}
+
     function collectState(){
       const title = document.getElementById('offerTitle').value.trim() || 'Cenová ponuka';
       const subtitle = document.getElementById('offerSubtitle').value.trim();
@@ -1181,6 +1466,8 @@ Počty panelov sú odhadované. Fakturovať budeme len reálny počet panelov v 
 
         if(kind === 'dp'){
           sections.push({ kind:'dp', secName, secPeriod, dp: collectDP(secEl, imagesMode) });
+        }else if(kind === 'custom'){
+          sections.push({ kind:'custom', secName, secPeriod, custom: collectCustom(secEl) });
         }else{
           const items = [];
           const container = secEl.querySelector('[data-items]');
@@ -1423,7 +1710,115 @@ Počty panelov sú odhadované. Fakturovať budeme len reálny počet panelov v 
           return;
         }
 
-        /* DP */
+/* CUSTOM */
+if(s.kind === 'custom'){
+  const c = s.custom || {};
+  const subtitle = c.subtitle || '';
+  const headers = c.headers || {};
+  const rows = c.rows || [];
+
+  if(subtitle){
+    const sub = document.createElement('div');
+    sub.className = 'pv-item-note';
+    sub.style.marginTop = '3mm';
+    sub.textContent = subtitle;
+    secDiv.appendChild(sub);
+  }
+
+  const table = document.createElement('table');
+  table.className = 'pv-table pv-custom-table';
+
+  const colg = document.createElement('colgroup');
+  colg.innerHTML = `
+    <col style="width:28%">
+    <col style="width:22%">
+    <col style="width:10%">
+    <col style="width:20%">
+    <col style="width:20%">
+  `;
+  table.appendChild(colg);
+
+  const thead = document.createElement('thead');
+  const trh = document.createElement('tr');
+
+  const hs = [
+    { cls:'c1', txt: headers.h1 || 'Stĺpec 1' },
+    { cls:'c2', txt: headers.h2 || 'Stĺpec 2' },
+    { cls:'c3', txt: headers.h3 || 'Stĺpec 3' },
+    { cls:'c4', txt: headers.h4 || 'Stĺpec 4' },
+    { cls:'c5', txt: headers.h5 || 'Stĺpec 5' }
+  ];
+
+  hs.forEach(h => {
+    const th = document.createElement('th');
+    th.className = h.cls;
+    th.textContent = h.txt;
+    trh.appendChild(th);
+  });
+
+  thead.appendChild(trh);
+  table.appendChild(thead);
+
+  const tbody = document.createElement('tbody');
+
+  rows.forEach(r => {
+    const tr = document.createElement('tr');
+
+    const td1 = document.createElement('td'); td1.className='c1'; td1.textContent = r.c1 || ''; tr.appendChild(td1);
+    const td2 = document.createElement('td'); td2.className='c2'; td2.textContent = r.c2 || ''; tr.appendChild(td2);
+    const td3 = document.createElement('td'); td3.className='c3'; td3.textContent = r.c3 || ''; tr.appendChild(td3);
+    const td4 = document.createElement('td'); td4.className='c4'; td4.textContent = r.c4 || ''; tr.appendChild(td4);
+    const td5 = document.createElement('td'); td5.className='c5'; td5.textContent = r.c5 || ''; tr.appendChild(td5);
+
+    tbody.appendChild(tr);
+
+    if(r.note){
+      const trn = document.createElement('tr');
+      trn.style.borderBottom = '1px solid #eee';
+
+      const tdn = document.createElement('td');
+      tdn.colSpan = 5;
+      tdn.style.padding = '3px 0 9px 0';
+      tdn.style.fontSize = '10.5px';
+      tdn.style.color = '#111';
+      tdn.textContent = r.note;
+      trn.appendChild(tdn);
+
+      tbody.appendChild(trn);
+    }
+  });
+
+  table.appendChild(tbody);
+  secDiv.appendChild(table);
+
+  if(c.total){
+    const tot = document.createElement('div');
+    tot.className = 'pv-custom-total';
+    tot.innerHTML = `
+      <div class="box">
+        <div class="lbl">Spolu</div>
+        <div class="val">${c.total}</div>
+      </div>
+    `;
+    secDiv.appendChild(tot);
+  }
+
+  if(c.note){
+    const note = document.createElement('div');
+    note.className = 'pv-note-block';
+    note.textContent = c.note;
+    secDiv.appendChild(note);
+  }
+
+  const divLine = document.createElement('div');
+  divLine.className = 'pv-divider';
+  secDiv.appendChild(divLine);
+
+  pvSections.appendChild(secDiv);
+  return;
+}
+
+/* DP */
         const dp = s.dp;
 
         const dpTable = document.createElement('table');
