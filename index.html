@@ -271,10 +271,10 @@
     <div class="toolbar">
       <button class="btn primary" id="btnPrint" type="button">Export do PDF</button>
       <button class="btn secondary" id="btnAddSection" type="button">+ Pridať sekciu</button>
-      <button class="btn ghost" id="btnReset" type="button">Vymazať (demo)</button>
+      <button class="btn ghost" id="btnReset" type="button">Vymazať všetko</button>
     </div>
 
-    <div class="hint">Zvýhodnenie v PDF: pôvodná cena preškrtnutá + pod ňou nová tučná cena (bez samostatného stĺpca).</div>
+    <div class="hint"></div>
 
     <div class="card">
       <h2>Základ ponuky</h2>
@@ -1394,7 +1394,7 @@ function collectState(){
       if(state.imagesMode === 'with'){
         state.sections.forEach(s => {
           if(s.kind === 'standard'){
-            s.items.forEach(it => {
+            (Array.isArray(s.items)?s.items:[]).forEach(it => {
               if(it.__or || !it.img) return;
               const box = document.createElement('div');
               box.className='pv-img';
@@ -1462,26 +1462,28 @@ function collectState(){
           `;
           table.appendChild(colg);
 
-          const showHead = hs.some(h => (h.txt || '').trim() !== '');
+          const thead = document.createElement('thead');
+const trh = document.createElement('tr');
+const headers = [
+  { cls:'c-item', txt:'Položka' },
+  { cls:'c-spec', txt:'Špecifikácia' },
+  { cls:'c-qty',  txt:'Počet' },
+  { cls:'c-price',txt:'Cena/Ks' },
+  { cls:'c-total',txt:'Cena spolu' }
+];
+headers.forEach(h => {
+  const th = document.createElement('th');
+  th.className = h.cls;
+  th.textContent = h.txt;
+  trh.appendChild(th);
+});
+thead.appendChild(trh);
+table.appendChild(thead);
 
-          if(showHead){
-            const thead = document.createElement('thead');
-            const trh = document.createElement('tr');
-
-            hs.forEach(h => {
-              const th = document.createElement('th');
-              th.className = h.cls;
-              th.textContent = h.txt;
-              trh.appendChild(th);
-            });
-
-            thead.appendChild(trh);
-            table.appendChild(thead);
-          }
 
           const tbody = document.createElement('tbody');
 
-          s.items.forEach(it => {
+          (Array.isArray(s.items)?s.items:[]).forEach(it => {
             if(it.__or){
               const trOr = document.createElement('tr');
               trOr.className = 'pv-or-row';
@@ -1541,20 +1543,44 @@ function collectState(){
             tr.appendChild(tdPrice);
 
             const tdTotal = document.createElement('td');
-            tdTotal.className = 'c-total';
-            const strong = document.createElement('strong');
-            strong.textContent = it.qtyMode === 'max' ? ('max. ' + formatMoney(it.total)) : formatMoney(it.total);
-            tdTotal.appendChild(strong);
-            tr.appendChild(tdTotal);
+tdTotal.className = 'c-total';
 
-            grandTotal += it.total;
+const hasDisc = (it.priceMode !== 'fixed') && (it.discount > 0) && (it.price > 0);
+
+if(hasDisc){
+  const baseTotal = (it.qty || 0) * (it.price || 0);
+  const newTotal  = (it.qty || 0) * (it.discount || 0);
+
+  const baseTxt = it.qtyMode === 'max' ? ('max. ' + formatMoney(baseTotal)) : formatMoney(baseTotal);
+  const newTxt  = it.qtyMode === 'max' ? ('max. ' + formatMoney(newTotal))  : formatMoney(newTotal);
+
+  const old = document.createElement('span');
+  old.className = 'pv-money-old';
+  old.textContent = baseTxt;
+
+  const nw = document.createElement('span');
+  nw.className = 'pv-money-new';
+  nw.textContent = newTxt;
+
+  tdTotal.appendChild(old);
+  tdTotal.appendChild(nw);
+} else {
+  const strong = document.createElement('strong');
+  strong.textContent = it.qtyMode === 'max' ? ('max. ' + formatMoney(it.total)) : formatMoney(it.total);
+  tdTotal.appendChild(strong);
+}
+
+tr.appendChild(tdTotal);
+grandTotal += it.total;
             tbody.appendChild(tr);
           });
 
           table.appendChild(tbody);
           secDiv.appendChild(table);
 
-          const extras = s.items
+          const itemsSafe = Array.isArray(s.items)?s.items:[];
+
+          const extras = itemsSafe
             .filter(x => x && !x.__or && x.extra)
             .map(x => x.extra)
             .filter(Boolean);
@@ -1961,6 +1987,7 @@ if(s.kind === 'custom'){
   </script>
 </body>
 </html>
+
 
 
 
