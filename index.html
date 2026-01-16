@@ -248,7 +248,20 @@
       .print-page{ min-height:auto !important; height:auto !important; }
 }
     }
-  </style>
+  
+    /* MULTIPAGE TOGGLE - ARROW IN CIRCLE */
+    .pv-multipage{
+      display:flex; align-items:center; gap:14px;
+      color:#0b2f9e; font-weight:900; font-size:16px;
+    }
+    .pv-multipage .arrow{
+      width:28px; height:28px; border-radius:50%;
+      border:2.5px solid #0b2f9e;
+      display:inline-flex; align-items:center; justify-content:center;
+      font-size:18px; line-height:1; font-weight:900;
+    }
+
+</style>
 </head>
 
 <body>
@@ -317,6 +330,14 @@
           <span>„Ceny sú bez DPH.“ (vždy na konci PDF)</span>
         </div>
       </div>
+
+      <div class="grid-2" style="margin-top:12px;">
+        <div class="chip">
+          <input type="checkbox" id="chkMulti">
+          <span>V PDF zobraziť text „<span class="pv-multipage"><span class="arrow">→</span><span>  Viacstranová cenová ponuka.</span></span>“ v pätičke</span>
+        </div>
+        <div></div>
+      </div>
     </div>
 
     <div class="card">
@@ -359,7 +380,7 @@
   <div class="inner">
     <div class="left">
       <img id="pvFeel" src="feel.png" alt="feel the good network" />
-      <span id="pvMulti" class="pv-multi" style="display:none;">Viacstranová cenová ponuka.</span>
+      <span id="pvMulti" class="pv-multi" style="display:none;"><span class="pv-multipage"><span class="arrow">→</span><span>    Viacstranová cenová ponuka.</span></span></span>
     </div>
   </div>
 </div>
@@ -1388,6 +1409,12 @@ function collectState(){
 
       const pvGen = document.getElementById('pvGen'); if (pvGen) pvGen.textContent = 'Generované: ' + nowStamp();
 
+      // Multi-page footer label (manual toggle)
+      const pvMulti = document.getElementById('pvMulti');
+      const chkMulti = document.getElementById('chkMulti');
+      if(pvMulti) pvMulti.style.display = (chkMulti && chkMulti.checked) ? 'inline' : 'none';
+
+
       const pvGutter = document.getElementById('pvGutter');
       pvGutter.innerHTML = '';
 
@@ -1928,11 +1955,12 @@ if(s.kind === 'custom'){
       }
 
 /* Multi-page indicator */
-(function(){
+function updateMultiPageIndicator(){
   const pvMulti = document.getElementById('pvMulti');
   if(!pvMulti) return;
+  pvMulti.style.display = 'none';
 
-  // Measure 297mm in current CSS pixels
+  // Measure 297mm in current CSS pixels (screen CSS px)
   const meas = document.createElement('div');
   meas.style.position = 'absolute';
   meas.style.visibility = 'hidden';
@@ -1945,10 +1973,11 @@ if(s.kind === 'custom'){
   const pp = document.getElementById('printPage');
   const h = pp ? pp.scrollHeight : 0;
 
-  const isMulti = (pagePx > 0) ? (h > pagePx + 8) : false; // small tolerance
+  // show if content exceeds ~1 page (small tolerance)
+  const isMulti = (pagePx > 0) ? (h > pagePx + 16) : false;
   pvMulti.style.display = isMulti ? 'inline' : 'none';
-})();
-    }
+}
+}
 
     /* BUTTONS */
     document.getElementById('btnAddSection').addEventListener('click', addSection);
@@ -1963,8 +1992,8 @@ if(s.kind === 'custom'){
       document.title = chosen;
 
       renderPDF();
-
       setTimeout(() => {
+        // update multi-page flag as late as possible before print
         window.print();
         setTimeout(() => { document.title = oldTitle; }, 600);
       }, 120);
@@ -1976,6 +2005,7 @@ if(s.kind === 'custom'){
       document.getElementById('pdfImages').value = 'with';
       document.getElementById('pdfShowGrand').value = 'no';
       document.getElementById('chkStdNote').checked = true;
+      document.getElementById('chkMulti').checked = false;
       sectionsWrap.innerHTML = '';
       applyImagesSetting();
       addSection();
