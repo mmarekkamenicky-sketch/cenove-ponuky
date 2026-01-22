@@ -632,7 +632,7 @@
 
             <div class="dp-actions">
               <span class="chip">
-                <input type="checkbox" data-dp-show-colsum checked>
+                <input type="checkbox" data-dp-show-colsum>
                 <span>Zobraziť „Spolu“ v stĺpcoch (15/20/30)</span>
               </span>
               <button class="btn secondary" type="button" data-dp-add-rate><span class="material-symbols-rounded">add</span>Pridať sekundáž</button>
@@ -2104,7 +2104,7 @@ if(s.kind === 'custom'){
                 const baseTotal = (m.panels || 0) * (r.base || 0);
                 td.appendChild(moneyCellWithDiscount(baseTotal, total));
               } else {
-                td.textContent = (total > 0) ? formatMoney(total) : '';
+                if(total > 0){ const b=document.createElement('strong'); b.textContent=formatMoney(total); td.appendChild(b);}
               }
 
               colSums[idx] += total;
@@ -2133,7 +2133,7 @@ if(s.kind === 'custom'){
               const td = document.createElement('td');
               td.className='m-col';
               td.style.fontWeight='900';
-              td.textContent = sum > 0 ? formatMoney(sum) : '';
+              if(sum > 0){ const b=document.createElement('strong'); b.textContent=formatMoney(sum); td.appendChild(b);}
               trSum.appendChild(td);
             });
 
