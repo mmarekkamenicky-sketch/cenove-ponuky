@@ -1582,7 +1582,7 @@ function collectState(){
         if(kind === 'dp'){
           sections.push({ kind:'dp', secMainTitle, secName, secPeriod, dp: collectDP(secEl, imagesMode) });
         }else if(kind === 'custom'){
-          sections.push({ kind:'custom', secName, secPeriod, custom: collectCustom(secEl) });
+          sections.push({ kind:'custom', secMainTitle, secName, secPeriod, custom: collectCustom(secEl) });
         }else{
           const items = [];
           const container = secEl.querySelector('[data-items]');
@@ -1703,6 +1703,13 @@ function collectState(){
         const secDiv = document.createElement('div');
         secDiv.className = 'pv-section';
 
+
+        if(s.secMainTitle){
+          const mt = document.createElement('div');
+          mt.className = 'pv-section-main-title';
+          mt.textContent = s.secMainTitle;
+          secDiv.appendChild(mt);
+        }
         const name = document.createElement('div');
         name.className = 'pv-section-name';
         name.textContent = s.secName || '';
