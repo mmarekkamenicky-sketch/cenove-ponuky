@@ -195,6 +195,11 @@
     .pv-title{ font-size:34px; font-weight:800; }
     .pv-subtitle{ font-size:16px; margin-top:4px; font-weight:500; }
     .pv-section{ margin-top:12mm; break-inside:avoid; page-break-inside:avoid; }
+    .pv-section-main-title{
+      font-size:28px;
+      font-weight:800;
+      margin-bottom:3mm;
+    }
     .pv-section-name{ font-size:13px; font-weight:800; }
     .pv-section-period{ margin-top:2mm; font-size:12px; font-weight:500; color:#111; }
 
@@ -583,6 +588,11 @@
     <div class="section" data-section>
       <div class="section-head">
         <div class="section-title">
+          <div>
+            <label>Hlavný názov sekcie</label>
+            <input data-sec-main-title placeholder="napr. Digitálne panely v čakárni">
+          </div>
+
           <div>
             <label>Názov sekcie</label>
             <input class="field-important" data-sec-name list="dlSectionNames" placeholder="napr. Komunikácia v čakárni pediatra" value="">
@@ -1564,12 +1574,13 @@ function collectState(){
 
       const sections = [];
       sectionsWrap.querySelectorAll('[data-section]').forEach(secEl => {
+        const secMainTitle = (secEl.querySelector('[data-sec-main-title]')?.value || '').trim();
         const secName = secEl.querySelector('[data-sec-name]').value.trim();
         const secPeriod = secEl.querySelector('[data-sec-period]').value.trim();
         const kind = secEl.querySelector('[data-sec-kind]').value;
 
         if(kind === 'dp'){
-          sections.push({ kind:'dp', secName, secPeriod, dp: collectDP(secEl, imagesMode) });
+          sections.push({ kind:'dp', secMainTitle, secName, secPeriod, dp: collectDP(secEl, imagesMode) });
         }else if(kind === 'custom'){
           sections.push({ kind:'custom', secName, secPeriod, custom: collectCustom(secEl) });
         }else{
@@ -1579,7 +1590,7 @@ function collectState(){
             if(child.matches && child.matches('[data-or-sep]')) items.push({ __or:true });
             else if(child.matches && child.matches('[data-item]')) items.push(collectStandardItem(child, imagesMode));
           });
-          sections.push({ kind:'standard', secName, secPeriod, items });
+          sections.push({ kind:'standard', secMainTitle, secName, secPeriod, items });
         }
       });
 
