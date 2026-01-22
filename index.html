@@ -136,6 +136,47 @@
     .dp-img .thumb img{ border-radius:9px; }
 
     /* PRINT / PDF */
+
+    /* EXTRA IMAGES (SECOND PAGE) */
+    .pv-extra-page{
+      width:210mm;
+      min-height:297mm;
+      margin:0 auto;
+      background:#fff;
+      position:relative;
+      page-break-before:always;
+      break-before:page;
+    }
+    .pv-extra-head{
+      padding:12mm 14mm 0 14mm;
+    }
+    .pv-extra-title{
+      font-size:18px;
+      font-weight:900;
+    }
+    .pv-extra-grid{
+      padding:8mm 14mm 18mm 14mm;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:8mm;
+    }
+    .pv-extra-box{
+      border:1px solid #ddd;
+      border-radius:2mm;
+      background:#f6f6f6;
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      height:85mm;
+    }
+    .pv-extra-box img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      display:block;
+    }
+
     .print-view{ display:none; }
     .print-page{ width:210mm; min-height:297mm; margin:0 auto; background:#fff; padding:0; position:relative; }
     .pv-logo{ position:absolute; top:1mm; right:1mm; width:26mm; height:auto; opacity:0.95; }
@@ -149,6 +190,8 @@
 
     .pv-content{ margin-left:48mm; }
     .pv-header{ margin-bottom:12mm; }
+    .pv-doc-title{ font-size:22px; margin-top:4mm; font-weight:800; }
+    .pv-subtitle{ font-size:13.5px; margin-top:2mm; font-weight:400; color:#333; }
     .pv-title{ font-size:34px; font-weight:800; }
     .pv-subtitle{ font-size:16px; margin-top:4px; font-weight:500; }
     .pv-section{ margin-top:12mm; break-inside:avoid; page-break-inside:avoid; }
@@ -388,15 +431,23 @@
       <h2>Základ ponuky</h2>
 
       <div class="grid-2">
-        <div>
-          <label for="offerTitle">Názov ponuky</label>
-          <input id="offerTitle" value="Cenová ponuka">
-        </div>
-        <div>
-          <label for="offerSubtitle">Podnadpis</label>
-          <input id="offerSubtitle" placeholder="napr. Digitálny panel v čakárni pediatra" value="">
-        </div>
+      <div>
+        <label for="offerTitle">Hlavný nadpis dokumentu</label>
+        <input id="offerTitle" value="Cenová ponuka">
       </div>
+      <div>
+        <label for="docTitle">Názov ponuky</label>
+        <input id="docTitle" placeholder="napr. Príprava materiálov" value="">
+      </div>
+    </div>
+
+    <div style="margin-top:12px;">
+      <label for="offerSubtitle">Podnadpis</label>
+      <input id="offerSubtitle" placeholder="napr. Digitálny panel v čakárni pediatra" value="">
+    </div>
+
+    <div class="grid-2" style="margin-top:12px;">
+</div>
 
       <div class="grid-2" style="margin-top:12px;">
         <div>
@@ -450,6 +501,19 @@
         </div>
       </div>
     </div>
+
+    <div class="card">
+      <h2>Druhá strana – doplnkové obrázky (voliteľné)</h2>
+      <div class="small">Tieto obrázky sa v PDF zobrazia na samostatnej ďalšej strane (iba ak sú pridané a PDF je „S obrázkami“).</div>
+
+      <div style="margin-top:12px;">
+        <label for="extraImages2">Pridať obrázky</label>
+        <input id="extraImages2" type="file" accept="image/*" multiple>
+      </div>
+
+      <div class="preview-row" style="margin-top:12px;" id="extraImages2Preview"></div>
+    </div>
+
   </div>
 
   <section class="print-view" id="printView">
@@ -460,6 +524,7 @@
       <div class="pv-content">
         <div class="pv-header">
           <div class="pv-title" id="pvTitle">Cenová ponuka</div>
+          <div class="pv-doc-title" id="pvDocTitle"></div>
           <div class="pv-subtitle" id="pvSubtitle"></div>
         </div>
 
@@ -470,6 +535,8 @@
         <div class="pv-note-block" style="margin-top:8mm; font-weight:900;">Ceny sú bez DPH.</div>
       </div>
     </div>
+
+    <div id="pvExtraPages"></div>
 
     <div class="pv-footer">
   <div class="inner">
@@ -580,6 +647,11 @@
           <div class="note-box" style="margin-top:10px;">
             <label>Text pod digitálne panely (voliteľné)</label>
             <textarea data-dp-note></textarea>
+          </div>
+
+          <div class="note-box" style="margin-top:10px;">
+            <label>Doplnková poznámka (úplne na konci DP sekcie – voliteľné)</label>
+            <textarea data-dp-note2 placeholder="napr. Individuálne podmienky, doplňujúce informácie..."></textarea>
           </div>
         </div>
 
@@ -939,6 +1011,52 @@ Počty panelov sú odhadované. Fakturovať budeme len reálny počet panelov v 
       else appRoot.classList.remove('images-off');
     }
     pdfImagesSel.addEventListener('change', applyImagesSetting);
+
+
+    /* ===== EXTRA IMAGES (2ND PAGE) ===== */
+    const extraImages2Input = document.getElementById('extraImages2');
+    const extraImages2Preview = document.getElementById('extraImages2Preview');
+    let extraImages2Data = []; // dataURL[]
+
+    function renderExtraImages2Preview(){
+      if(!extraImages2Preview) return;
+      extraImages2Preview.innerHTML = '';
+      if(!extraImages2Data.length){
+        extraImages2Preview.innerHTML = '<div class="small">bez obrázkov</div>';
+        return;
+      }
+      extraImages2Data.forEach(url => {
+        const t = document.createElement('div');
+        t.className = 'thumb';
+        const img = document.createElement('img');
+        img.src = url;
+        t.appendChild(img);
+        extraImages2Preview.appendChild(t);
+      });
+    }
+
+    if(extraImages2Input){
+      extraImages2Input.addEventListener('change', () => {
+        const files = Array.from(extraImages2Input.files || []);
+        if(!files.length){
+          extraImages2Data = [];
+          renderExtraImages2Preview();
+          return;
+        }
+        extraImages2Data = [];
+        let left = files.length;
+        files.forEach(f => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            extraImages2Data.push(String(reader.result || ''));
+            left--;
+            if(left<=0) renderExtraImages2Preview();
+          };
+          reader.readAsDataURL(f);
+        });
+      });
+    }
+
 
     /* STANDARD ITEMS */
     function setThumb(itemEl, dataUrl){
@@ -1344,6 +1462,7 @@ Počty panelov sú odhadované. Fakturovať budeme len reálny počet panelov v 
       const noteOn = secEl.querySelector('[data-dp-note-on]').checked;
 
       let noteText = (secEl.querySelector('[data-dp-note]').value || '').trim();
+      const noteText2 = (secEl.querySelector('[data-dp-note2]')?.value || '').trim();
       if(noteOn && !noteText) noteText = DEFAULT_DP_NOTE_TEXT;
 
       const dpImgs = [];
@@ -1371,7 +1490,7 @@ Počty panelov sú odhadované. Fakturovať budeme len reálny počet panelov v 
         specs.push({ spec, specImg, months });
       });
 
-      return { rates, specs, showColSum, noteOn, noteText, dpImgs };
+      return { rates, specs, showColSum, noteOn, noteText, noteText2, dpImgs };
     }
 
 function collectCustom(secEl){
@@ -1435,10 +1554,13 @@ function customEnsureWired(secEl){
 function collectState(){
 
       const title = document.getElementById('offerTitle').value.trim() || 'Cenová ponuka';
+      const docTitle = document.getElementById('docTitle').value.trim();
       const subtitle = document.getElementById('offerSubtitle').value.trim();
       const imagesMode = document.getElementById('pdfImages').value;
       const showGrand = document.getElementById('pdfShowGrand').value === 'yes';
       const stdNoteOn = document.getElementById('chkStdNote').checked;
+
+      const extraImages2 = (imagesMode === 'with') ? (extraImages2Data || []).slice() : [];
 
       const sections = [];
       sectionsWrap.querySelectorAll('[data-section]').forEach(secEl => {
@@ -1461,7 +1583,7 @@ function collectState(){
         }
       });
 
-      return { title, subtitle, imagesMode, showGrand, stdNoteOn, sections };
+      return { title, docTitle, subtitle, imagesMode, showGrand, stdNoteOn, extraImages2, sections };
     }
 
     /* PDF helpers */
@@ -1484,11 +1606,23 @@ function collectState(){
       return wrap;
     }
 
+    function setOrHide(el, value){
+      const v = (value || '').trim();
+      if(v){
+        el.textContent = v;
+        el.style.display = '';
+      }else{
+        el.textContent = '';
+        el.style.display = 'none';
+      }
+    }
+
     function renderPDF(){
       const state = collectState();
 
-      document.getElementById('pvTitle').textContent = state.title;
-      document.getElementById('pvSubtitle').textContent = state.subtitle;
+      setOrHide(document.getElementById('pvTitle'), state.title);
+      setOrHide(document.getElementById('pvDocTitle'), state.docTitle);
+      setOrHide(document.getElementById('pvSubtitle'), state.subtitle);
 
       const printPage = document.getElementById('printPage');
       if(state.imagesMode === 'without') printPage.classList.add('pv-no-images');
@@ -2000,12 +2134,66 @@ if(s.kind === 'custom'){
           secDiv.appendChild(note);
         }
 
+
+        if(dp.noteText2){
+          const note2 = document.createElement('div');
+          note2.className = 'pv-note-block';
+          note2.style.marginTop = '6mm';
+          note2.textContent = dp.noteText2;
+          secDiv.appendChild(note2);
+        }
+
         const divLine = document.createElement('div');
         divLine.className = 'pv-divider';
         secDiv.appendChild(divLine);
 
         pvSections.appendChild(secDiv);
       });
+
+
+      /* Extra images on 2nd page */
+      const pvExtraPages = document.getElementById('pvExtraPages');
+      if(pvExtraPages) pvExtraPages.innerHTML = '';
+
+      if(state.imagesMode === 'with' && (state.extraImages2 || []).length){
+        const page = document.createElement('div');
+        page.className = 'pv-extra-page';
+
+        const logo2 = document.createElement('img');
+        logo2.className = 'pv-logo';
+        logo2.src = 'ids-logo.png';
+        logo2.alt = 'IDS logo';
+        logo2.style.position = 'absolute';
+        logo2.style.top = '1mm';
+        logo2.style.right = '1mm';
+        logo2.style.width = '26mm';
+        logo2.style.opacity = '0.95';
+        logo2.onerror = () => { logo2.style.display = 'none'; };
+        page.appendChild(logo2);
+
+        const head = document.createElement('div');
+        head.className = 'pv-extra-head';
+        const ttl = document.createElement('div');
+        ttl.className = 'pv-extra-title';
+        ttl.textContent = 'Doplnkové obrázky';
+        head.appendChild(ttl);
+        page.appendChild(head);
+
+        const grid = document.createElement('div');
+        grid.className = 'pv-extra-grid';
+
+        state.extraImages2.forEach(url => {
+          const box = document.createElement('div');
+          box.className = 'pv-extra-box';
+          const img = document.createElement('img');
+          img.src = url;
+          box.appendChild(img);
+          grid.appendChild(box);
+        });
+
+        page.appendChild(grid);
+        pvExtraPages.appendChild(page);
+      }
 
       /* Std note */
       const pvStdNote = document.getElementById('pvStdNote');
@@ -2102,6 +2290,9 @@ function updateMultiPageIndicator(){
       document.getElementById('chkStdNote').checked = true;
       document.getElementById('chkMulti').checked = false;
       sectionsWrap.innerHTML = '';
+      extraImages2Data = [];
+      if(extraImages2Input) extraImages2Input.value = '';
+      renderExtraImages2Preview();
       applyImagesSetting();
       addSection();
     });
@@ -2112,6 +2303,7 @@ function updateMultiPageIndicator(){
   </script>
 </body>
 </html>
+
 
 
 
