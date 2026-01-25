@@ -588,9 +588,13 @@
     <div class="section" data-section>
       <div class="section-head">
         <div class="section-title">
-          <div>
-            <label>Hlavný názov sekcie</label>
-            <input data-sec-main-title placeholder="napr. Digitálne panely v čakárni">
+          <div style="grid-column:1 / -1">
+            <label>Typ sekcie</label>
+            <select data-sec-kind class="select-important">
+              <option value="standard" selected>Štandardné plochy</option>
+              <option value="dp">Digitálny panel</option>
+              <option value="custom">Ručná sekcia (voľná tabuľka)</option>
+            </select>
           </div>
 
           <div>
@@ -601,13 +605,16 @@
             <label>Obdobie (Q)</label>
             <input data-sec-period placeholder="napr. Q2 2026" value="">
           </div>
-          <div>
-            <label>Typ sekcie</label>
-            <select data-sec-kind class="select-important">
-              <option value="standard" selected>Štandardné plochy</option>
-              <option value="dp">Digitálny panel</option>
-              <option value="custom">Ručná sekcia (voľná tabuľka)</option>
-            </select>
+
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <span class="chip">
+              <input type="checkbox" data-sec-main-title-on>
+              <span>Zobraziť hlavný názov sekcie</span>
+            </span>
+            <div data-sec-main-title-wrap style="display:none;">
+              <label>Hlavný názov sekcie</label>
+              <input data-sec-main-title placeholder="napr. Digitálne panely v čakárni">
+            </div>
           </div>
         </div>
         <div class="section-actions">
@@ -1365,6 +1372,24 @@ Počty panelov sú odhadované. Fakturovať budeme len reálny počet panelov v 
       const dpWrap = secEl.querySelector('[data-dp]');
       const itemsWrap = secEl.querySelector('[data-items]');
       const customWrap = secEl.querySelector('[data-custom]');
+      /* UI: Hlavný názov sekcie je voliteľný (skrytý za checkbox) */
+      const mainTitleWrap = secEl.querySelector('[data-sec-main-title-wrap]');
+      const mainTitleChk  = secEl.querySelector('[data-sec-main-title-on]');
+      const mainTitleInp  = secEl.querySelector('[data-sec-main-title]');
+
+      if(mainTitleWrap && mainTitleChk && mainTitleInp){
+        const hasVal = (mainTitleInp.value || '').trim().length > 0;
+        mainTitleChk.checked = hasVal;
+        mainTitleWrap.style.display = mainTitleChk.checked ? 'block' : 'none';
+
+        mainTitleChk.addEventListener('change', () => {
+          mainTitleWrap.style.display = mainTitleChk.checked ? 'block' : 'none';
+          if(mainTitleChk.checked){
+            mainTitleInp.focus();
+            mainTitleInp.select?.();
+          }
+        });
+      }
 
       secEl.querySelector('[data-del-section]').addEventListener('click', () => secEl.remove());
       secEl.querySelector('[data-add-item]').addEventListener('click', () => addItem(itemsWrap));
@@ -2321,6 +2346,7 @@ function updateMultiPageIndicator(){
   </script>
 </body>
 </html>
+
 
 
 
