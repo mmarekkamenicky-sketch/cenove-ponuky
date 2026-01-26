@@ -27,6 +27,8 @@
     h1{ margin:0 0 14px 0; font-size:28px; font-weight:800; }
 
     /* BUTTONS */
+
+
     .toolbar{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:12px 0 16px; }
     .btn{ border-radius:999px; padding:10px 16px; border:1px solid #000; background:#fff; font-weight:800; cursor:pointer; }
     .btn.primary{ background:#000; color:#fff; }
@@ -296,6 +298,12 @@
     .lock-err{ margin-top:10px; color:#c40000; font-weight:800; display:none; }
 
     @media print{
+      #modeScreen{ display:none !important; }
+      body.mode-offer #printViewOffer{ display:block !important; }
+      body.mode-offer #printViewOrder{ display:none !important; }
+      body.mode-order #printViewOffer{ display:none !important; }
+      body.mode-order #printViewOrder{ display:block !important; }
+
       .wrap{ display:none !important; }
       .print-view{ display:block !important; }
       body{ margin:0; }
@@ -304,7 +312,7 @@
       .lock{ display:none !important; }
       .print-page{ min-height:auto !important; height:auto !important; }
 }
-    }
+
   
     /* MULTIPAGE TOGGLE - ARROW IN CIRCLE */
     .pv-multipage{
@@ -404,6 +412,10 @@
     }
     .icon-btn .material-symbols-rounded{ font-size:22px; }
 
+  
+  /* ORDER PDF: poznámka pod položkou + pečiatka */
+  .pv-subnote{font-size:11px;color:#777;line-height:1.2;margin-top:1.2mm;}
+  .pv-stamp{display:none;max-width:45mm;max-height:25mm;object-fit:contain;margin-top:2mm;margin-bottom:2mm;}
   </style>
 </head>
 
@@ -421,7 +433,22 @@
     </div>
   </div>
 
-  <div class="wrap" id="appRoot" style="display:none;">
+
+  <!-- MODE SELECTOR (after unlock) -->
+  <div class="wrap" id="modeScreen" style="display:none;">
+    <h1>Vyberte typ dokumentu</h1>
+    <div class="card" style="max-width:720px;">
+      <h2>Čo ideme pripraviť?</h2>
+      <div class="grid-2" style="margin-top:10px;">
+        <button class="btn primary" id="btnModeOffer" type="button">Cenová ponuka</button>
+        <button class="btn secondary" id="btnModeOrder" type="button">Objednávka</button>
+      </div>
+      <div class="hint" style="margin-top:10px;">Tip: výber si pamätáme počas tejto relácie.</div>
+    </div>
+  </div>
+
+
+  <div class="wrap" id="appOffer" style="display:none;">
     <h1>Cenová ponuka – formulár</h1>
 
     <div class="toolbar">
@@ -521,8 +548,246 @@
 
   </div>
 
-  <section class="print-view" id="printView">
-    <div class="print-page" id="printPage">
+  
+  <!-- ORDER FORM -->
+  <div class="wrap" id="appOrder" style="display:none;">
+    <h1>Objednávka – formulár</h1>
+
+    <div class="toolbar">
+      <button class="btn primary" id="btnPrintOrder" type="button">Export do PDF</button>
+      <button class="btn secondary" id="btnUploadStamp" type="button"><span class="material-symbols-rounded">upload</span>Pečiatka</button>
+      <button class="btn ghost" id="btnClearStamp" type="button" style="display:none;">Odstrániť pečiatku</button>
+      <input id="stampFile" type="file" accept="image/*" style="display:none;" />
+      <button class="btn ghost" id="btnResetOrder" type="button">Vymazať (demo)</button>
+      <button class="btn ghost" id="btnBackToMenuFromOrder" type="button">Späť na výber</button>
+    </div>
+
+    <div class="hint">Objednávka je bez DPH. Celková cena sa ráta automaticky (po zľave).</div>
+
+    <div class="card">
+      <h2>Hlavička objednávky</h2>
+
+      <div class="grid-2">
+        <div>
+          <label for="ordNumber">Číslo objednávky</label>
+          <input id="ordNumber" placeholder="napr. 2026-001" />
+        </div>
+        <div>
+          <label for="ordDate">Dátum</label>
+          <input id="ordDate" type="date" />
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-top:14px;">
+        <div class="card" style="margin:0;">
+          <h2 style="margin-bottom:10px;">Objednávateľ</h2>
+          <div class="grid-2">
+            <div style="grid-column:1 / -1">
+              <label>Spoločnosť</label>
+              <input data-buyer-company placeholder="Názov spoločnosti" />
+            </div>
+            <div style="grid-column:1 / -1">
+              <label>Adresa</label>
+              <input data-buyer-address placeholder="Ulica a číslo" />
+            </div>
+            <div>
+              <label>Mesto</label>
+              <input data-buyer-city placeholder="Mesto" />
+            </div>
+            <div>
+              <label>PSČ</label>
+              <input data-buyer-zip placeholder="PSČ" />
+            </div>
+            <div>
+              <label>IČO</label>
+              <input data-buyer-ico placeholder="IČO" />
+            </div>
+            <div></div>
+            <div style="grid-column:1 / -1">
+              <label>Zodpovedná osoba</label>
+              <input data-buyer-person placeholder="Meno a priezvisko" />
+            </div>
+            <div style="grid-column:1 / -1">
+              <label>Kontakt</label>
+              <input data-buyer-contact placeholder="tel. / e-mail" />
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin:0;">
+          <h2 style="margin-bottom:10px;">Dodávateľ</h2>
+          <div class="grid-2">
+            <div style="grid-column:1 / -1">
+              <label>Spoločnosť</label>
+              <input data-supp-company value="IDS Health Media Slovakia spol. s r.o." />
+            </div>
+            <div style="grid-column:1 / -1">
+              <label>Adresa</label>
+              <input data-supp-address value="Mlynské Nivy 5" />
+            </div>
+            <div>
+              <label>Mesto</label>
+              <input data-supp-city value="Bratislava" />
+            </div>
+            <div>
+              <label>PSČ</label>
+              <input data-supp-zip value="821 09" />
+            </div>
+            <div>
+              <label>IČO</label>
+              <input data-supp-ico value="44580266" />
+            </div>
+            <div></div>
+            <div style="grid-column:1 / -1">
+              <label>Kontaktná osoba</label>
+              <input data-supp-person placeholder="Meno a priezvisko" />
+            </div>
+            <div style="grid-column:1 / -1">
+              <label>Kontakt</label>
+              <input data-supp-contact placeholder="tel. / e-mail" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Položky objednávky</h2>
+      <div class="small">Tip: vo výbere „Názov položky“ aj „Umiestnenie“ môžeš písať vlastný text.</div>
+
+      <div style="margin-top:10px; overflow:auto;">
+        <table class="pv-table" style="min-width:1080px;">
+          <thead>
+            <tr>
+              <th style="width:18%;">Názov položky</th>
+              <th style="width:12%;">Termín kampane</th>
+              <th style="width:14%;">Umiestnenie</th>
+              <th style="width:7%; text-align:right;">Množstvo</th>
+              <th style="width:10%; text-align:right;">Jedn. cena</th>
+              <th style="width:9%; text-align:right;">Zľava %</th>
+              <th style="width:18%;">Poznámka</th>
+              <th style="width:12%; text-align:right;">Cena bez DPH</th>
+              <th style="width:6%;"></th>
+            </tr>
+          </thead>
+          <tbody id="orderRows"></tbody>
+        </table>
+      </div>
+
+      <div class="section-bottom" style="justify-content:flex-end; padding-top:10px; margin-top:4px;">
+        <button class="btn secondary" id="btnAddOrderRow" type="button"><span class="material-symbols-rounded">add</span>Pridať položku</button>
+      </div>
+
+
+      <div class="section-bottom" style="justify-content:space-between;">
+        <div class="small">Celková cena bez DPH (súčet položiek):</div>
+        <div style="text-align:right; min-width:260px;">
+          <div style="font-weight:900; font-size:18px;" id="orderGrand">0,00 €</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Doručenie a fakturácia</h2>
+      <div class="grid-2">
+        <div>
+          <label>Termín dodania materiálov</label>
+          <input id="ordDeliveryDate" type="date" />
+        </div>
+        <div>
+          <label>Doba splatnosti faktúry (dni)</label>
+          <input id="ordDueDays" type="number" min="0" step="1" value="14" />
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-top:12px;">
+        <div>
+          <label>Poznámka 1</label>
+          <textarea id="ordNote1"></textarea>
+        </div>
+        <div>
+          <label>Poznámka 2</label>
+          <textarea id="ordNote2"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Podpisy</h2>
+      <div class="grid-2">
+        <div>
+          <label>Za odberateľa</label>
+          <div class="small" id="sigBuyerLine">—</div>
+          <div style="height:38px; border-bottom:1px solid #ddd; margin-top:10px;"></div>
+        </div>
+        <div>
+          <label>Za dodávateľa</label>
+          <div class="small" id="sigSuppLine">—</div>
+          <div style="height:38px; border-bottom:1px solid #ddd; margin-top:10px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <datalist id="dlOrderItems">
+    <option value="B1 plagát"></option>
+    <option value="B1 plagát s umiestnením letáku"></option>
+    <option value="A3 plagát"></option>
+    <option value="A3 plagát s umiestnením letáku"></option>
+    <option value="Distribúcia letákov"></option>
+    <option value="Osobná návšteva lekárov"></option>
+    <option value="Umiestnenie statických plagátov"></option>
+    <option value="15 sekundový spot v digitálnom paneli"></option>
+    <option value="30 sekundový spot v digitálnom paneli"></option>
+  </datalist>
+
+  <datalist id="dlOrderPlace">
+    <option value="Praktický lekár"></option>
+    <option value="Gynekológ"></option>
+    <option value="Pediater"></option>
+    <option value="Lekáreň"></option>
+    <option value="Onkológ"></option>
+    <option value="Gastroenterológ"></option>
+    <option value="Geriater"></option>
+    <option value="Urológ"></option>
+  </datalist>
+
+  <template id="tplOrderRow">
+    <tr data-order-row>
+      <td>
+        <input data-oi list="dlOrderItems" placeholder="napr. B1 plagát">
+      </td>
+      <td>
+        <input data-term placeholder="napr. Q2 2026 / Apríl–Jún">
+      </td>
+      <td>
+        <input data-place list="dlOrderPlace" placeholder="napr. Pediater">
+      </td>
+      <td style="text-align:right;">
+        <input data-qty type="number" min="0" step="1" value="1">
+      </td>
+      <td style="text-align:right;">
+        <input data-unit type="number" min="0" step="0.01" placeholder="0.00">
+      </td>
+      <td style="text-align:right;">
+        <input data-disc type="number" min="0" max="100" step="0.01" value="0">
+      </td>
+      <td>
+        <input data-note placeholder="">
+      </td>
+      <td style="text-align:right; font-weight:900;">
+        <span data-total>0,00 €</span>
+      </td>
+      <td style="text-align:right;">
+        <button class="icon-btn" type="button" title="Skopírovať riadok" data-copy>⧉</button>
+        <button class="icon-btn danger" type="button" title="Odstrániť" data-del>🗑️</button>
+      </td>
+    </tr>
+  </template>
+
+
+  <section class="print-view" id="printViewOffer">
+    <div class="print-page" id="printPageOffer">
       <img class="pv-logo" id="pvLogo" src="ids-logo.png" alt="IDS logo" />
       <div class="pv-gutter" id="pvGutter"></div>
 
@@ -552,6 +817,91 @@
   </div>
 </div>
   </section>
+
+  
+  <section class="print-view" id="printViewOrder" style="display:none;">
+    <div class="print-page" id="printPageOrder">
+      <img class="pv-logo" id="pvLogoOrder" src="ids-logo.png" alt="IDS logo" />
+
+      <div class="pv-content" style="margin-left:0;">
+        <div class="pv-header" style="margin-bottom:10mm;">
+          <div class="pv-title" id="pvOrdTitle">Objednávka</div>
+          <div class="pv-subtitle" id="pvOrdMeta"></div>
+        </div>
+
+        <div class="pv-section" style="margin-top:0;">
+          <div class="pv-section-name">Objednávateľ</div>
+          <div class="pv-note-block" id="pvBuyerBlock" style="margin-top:3mm;"></div>
+        </div>
+
+        <div class="pv-section">
+          <div class="pv-section-name">Dodávateľ</div>
+          <div class="pv-note-block" id="pvSuppBlock" style="margin-top:3mm;"></div>
+        </div>
+
+        <div class="pv-section">
+          <div class="pv-section-name">Položky</div>
+          <table class="pv-table" id="pvOrderTable">
+            <colgroup>
+              <col style="width:22%">
+              <col style="width:12%">
+              <col style="width:14%">
+              <col style="width:8%">
+              <col style="width:10%">
+              <col style="width:8%">
+              <col style="width:10%">
+            </colgroup>
+            <thead>
+              <tr>
+                <th>Názov položky</th>
+                <th>Termín</th>
+                <th>Umiestnenie</th>
+                <th style="text-align:right;">Množ.</th>
+                <th style="text-align:right;">Jedn. cena</th>
+                <th style="text-align:right;">Zľava</th>
+                <th style="text-align:right;">Cena bez DPH</th>
+              </tr>
+            </thead>
+            <tbody id="pvOrderRows"></tbody>
+          </table>
+
+          <div style="margin-top:6mm; display:flex; justify-content:flex-end;">
+            <div style="width:260px; border-top:1px solid #000; padding-top:4mm; text-align:right;">
+              <div style="font-weight:800;">Celková cena bez DPH</div>
+              <div style="font-size:16px; font-weight:900; margin-top:2mm;" id="pvOrderGrand">0,00 €</div>
+            </div>
+          </div>
+
+          <div class="pv-note-block" style="margin-top:5mm; font-weight:900;">Ceny sú bez DPH.</div>
+        </div>
+
+        <div class="pv-section">
+          <div class="pv-section-name">Doručenie a fakturácia</div>
+          <div class="pv-note-block" id="pvDeliveryBlock" style="margin-top:3mm;"></div>
+        </div>
+
+        <div class="pv-section" style="margin-top:10mm;">
+          <div class="pv-divider"></div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:14mm; margin-top:8mm;">
+            <div>
+              <div class="pv-section-name">Za odberateľa</div>
+              <div class="pv-note-block" id="pvSigBuyer" style="margin-top:2mm;"></div>
+              <div style="height:14mm; border-bottom:1px solid #000; margin-top:10mm;"></div>
+            </div>
+            <div>
+              <div class="pv-section-name">Za dodávateľa</div>
+              <div class="pv-note-block" id="pvSigSupp" style="margin-top:2mm;"></div>
+              <div style="height:14mm; border-bottom:1px solid #000; margin-top:10mm;"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+
 
   <datalist id="dlSectionNames">
     <option value="Komunikácia v čakárni pediatra"></option>
@@ -919,15 +1269,309 @@
     const lockInput = document.getElementById('lockInput');
     const lockBtn = document.getElementById('lockBtn');
     const lockErr = document.getElementById('lockErr');
-    const appRoot = document.getElementById('appRoot');
+    const modeScreen = document.getElementById('modeScreen');
+    const appOffer = document.getElementById('appOffer');
+    const appOrder = document.getElementById('appOrder');
 
-    function unlock() {
+    function unlock(){
       lock.style.display = 'none';
-      appRoot.style.display = '';
-      sessionStorage.setItem('idsUnlocked', '1');
+      sessionStorage.setItem('idsUnlocked','1');
+      showModeScreen();
     }
 
-    function tryUnlock() {
+    
+
+    function setMode(mode){
+      sessionStorage.setItem('idsMode', mode);
+      document.body.classList.remove('mode-offer','mode-order');
+      document.body.classList.add(mode === 'order' ? 'mode-order' : 'mode-offer');
+    }
+
+    function showModeScreen(){
+      modeScreen.style.display = '';
+      appOffer.style.display = 'none';
+      appOrder.style.display = 'none';
+      const m = sessionStorage.getItem('idsMode');
+      if(m === 'offer') return showOffer();
+      if(m === 'order') return showOrder();
+    }
+
+    function showOffer(){
+      setMode('offer');
+      modeScreen.style.display = 'none';
+      appOffer.style.display = '';
+      appOrder.style.display = 'none';
+    }
+
+    function showOrder(){
+      setMode('order');
+      modeScreen.style.display = 'none';
+      appOffer.style.display = 'none';
+      appOrder.style.display = '';
+      setTodayIfEmpty();
+      if(orderRows && orderRows.children.length === 0) addOrderRow();
+      recalcOrder();
+    }
+
+
+    /* ===== ORDER APP ===== */
+    const orderRows = document.getElementById('orderRows');
+    const tplOrderRow = document.getElementById('tplOrderRow');
+
+    function setTodayIfEmpty(){
+      const d = new Date();
+      const iso = `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
+      const el = document.getElementById('ordDate');
+      if(el && !el.value) el.value = iso;
+    }
+
+    function recalcOrder(){
+      let grand = 0;
+      orderRows.querySelectorAll('[data-order-row]').forEach(r => {
+        const qty = n(r.querySelector('[data-qty]').value);
+        const unit = n(r.querySelector('[data-unit]').value);
+        const disc = n(r.querySelector('[data-disc]').value);
+        const rate = Math.max(0, Math.min(100, disc));
+        const subtotal = qty * unit;
+        const total = subtotal * (1 - rate/100);
+        r.querySelector('[data-total]').textContent = formatMoney(total);
+        grand += total;
+      });
+      document.getElementById('orderGrand').textContent = formatMoney(grand);
+
+      const bComp = (document.querySelector('[data-buyer-company]')?.value || '').trim();
+      const bPers = (document.querySelector('[data-buyer-person]')?.value || '').trim();
+      const sComp = (document.querySelector('[data-supp-company]')?.value || '').trim();
+      const sPers = (document.querySelector('[data-supp-person]')?.value || '').trim();
+
+      document.getElementById('sigBuyerLine').textContent = [bComp, bPers].filter(Boolean).join(' — ') || '—';
+      document.getElementById('sigSuppLine').textContent = [sComp, sPers].filter(Boolean).join(' — ') || '—';
+    }
+
+    function wireOrderRow(tr){
+      tr.querySelector('[data-del]').addEventListener('click', () => { tr.remove(); recalcOrder(); });
+
+      const btnCopy = tr.querySelector('[data-copy]');
+      if(btnCopy){
+        btnCopy.addEventListener('click', () => {
+          const preset = {
+            oi: tr.querySelector('[data-oi]')?.value || '',
+            term: tr.querySelector('[data-term]')?.value || '',
+            place: tr.querySelector('[data-place]')?.value || '',
+            qty: tr.querySelector('[data-qty]')?.value || '',
+            unit: tr.querySelector('[data-unit]')?.value || '',
+            disc: tr.querySelector('[data-disc]')?.value || '',
+            note: tr.querySelector('[data-note]')?.value || ''
+          };
+
+          const node = tplOrderRow.content.cloneNode(true);
+          tr.after(node);
+          const newTr = tr.nextElementSibling;
+
+          if(preset.oi) newTr.querySelector('[data-oi]').value = preset.oi;
+          if(preset.term) newTr.querySelector('[data-term]').value = preset.term;
+          if(preset.place) newTr.querySelector('[data-place]').value = preset.place;
+          if(preset.qty !== '') newTr.querySelector('[data-qty]').value = preset.qty;
+          if(preset.unit !== '') newTr.querySelector('[data-unit]').value = preset.unit;
+          if(preset.disc !== '') newTr.querySelector('[data-disc]').value = preset.disc;
+          if(preset.note) newTr.querySelector('[data-note]').value = preset.note;
+
+          wireOrderRow(newTr);
+          recalcOrder();
+        });
+      }
+
+      tr.querySelectorAll('input').forEach(inp => {
+        inp.addEventListener('input', recalcOrder);
+        inp.addEventListener('change', recalcOrder);
+      });
+      recalcOrder();
+    }
+
+function addOrderRow(preset={}){
+      const node = tplOrderRow.content.cloneNode(true);
+      orderRows.appendChild(node);
+      const tr = orderRows.lastElementChild;
+
+      if(preset.oi) tr.querySelector('[data-oi]').value = preset.oi;
+      if(preset.term) tr.querySelector('[data-term]').value = preset.term;
+      if(preset.place) tr.querySelector('[data-place]').value = preset.place;
+      if(preset.qty != null) tr.querySelector('[data-qty]').value = String(preset.qty);
+      if(preset.unit != null) tr.querySelector('[data-unit]').value = String(preset.unit);
+      if(preset.disc != null) tr.querySelector('[data-disc]').value = String(preset.disc);
+      if(preset.note) tr.querySelector('[data-note]').value = preset.note;
+
+      wireOrderRow(tr);
+      return tr;
+    }
+
+    function resetOrderDemo(){
+      document.getElementById('ordNumber').value = '';
+      setTodayIfEmpty();
+      document.querySelector('[data-buyer-company]').value = '';
+      document.querySelector('[data-buyer-address]').value = '';
+      document.querySelector('[data-buyer-city]').value = '';
+      document.querySelector('[data-buyer-zip]').value = '';
+      document.querySelector('[data-buyer-ico]').value = '';
+      document.querySelector('[data-buyer-person]').value = '';
+      document.querySelector('[data-buyer-contact]').value = '';
+
+      document.querySelector('[data-supp-person]').value = '';
+      document.querySelector('[data-supp-contact]').value = '';
+
+      orderRows.innerHTML = '';
+      addOrderRow();
+
+      document.getElementById('ordDeliveryDate').value = '';
+      document.getElementById('ordDueDays').value = '14';
+      document.getElementById('ordNote1').value = '';
+      document.getElementById('ordNote2').value = '';
+
+      recalcOrder();
+    }
+
+    function collectOrderState(){
+      const ordNumber = (document.getElementById('ordNumber').value || '').trim();
+      const ordDate = (document.getElementById('ordDate').value || '').trim();
+
+      const buyer = {
+        company: (document.querySelector('[data-buyer-company]').value || '').trim(),
+        address: (document.querySelector('[data-buyer-address]').value || '').trim(),
+        city: (document.querySelector('[data-buyer-city]').value || '').trim(),
+        zip: (document.querySelector('[data-buyer-zip]').value || '').trim(),
+        ico: (document.querySelector('[data-buyer-ico]').value || '').trim(),
+        person: (document.querySelector('[data-buyer-person]').value || '').trim(),
+        contact: (document.querySelector('[data-buyer-contact]').value || '').trim(),
+      };
+
+      const supp = {
+        company: (document.querySelector('[data-supp-company]').value || '').trim(),
+        address: (document.querySelector('[data-supp-address]').value || '').trim(),
+        city: (document.querySelector('[data-supp-city]').value || '').trim(),
+        zip: (document.querySelector('[data-supp-zip]').value || '').trim(),
+        ico: (document.querySelector('[data-supp-ico]').value || '').trim(),
+        person: (document.querySelector('[data-supp-person]').value || '').trim(),
+        contact: (document.querySelector('[data-supp-contact]').value || '').trim(),
+      };
+
+      const rows = [];
+      let grand = 0;
+
+      orderRows.querySelectorAll('[data-order-row]').forEach(r => {
+        const oi = (r.querySelector('[data-oi]').value || '').trim();
+        const term = (r.querySelector('[data-term]').value || '').trim();
+        const place = (r.querySelector('[data-place]').value || '').trim();
+        const qty = n(r.querySelector('[data-qty]').value);
+        const unit = n(r.querySelector('[data-unit]').value);
+        const disc = n(r.querySelector('[data-disc]').value);
+        const note = (r.querySelector('[data-note]').value || '').trim();
+
+        const subtotal = qty * unit;
+        const total = subtotal * (1 - (Math.max(0, Math.min(100, disc))/100));
+
+        rows.push({ oi, term, place, qty, unit, disc, note, total });
+        grand += total;
+      });
+
+      const deliveryDate = (document.getElementById('ordDeliveryDate').value || '').trim();
+      const dueDays = n(document.getElementById('ordDueDays').value);
+      const note1 = (document.getElementById('ordNote1').value || '').trim();
+      const note2 = (document.getElementById('ordNote2').value || '').trim();
+
+      const sigBuyer = [buyer.company, buyer.person].filter(Boolean).join(' — ');
+      const sigSupp  = [supp.company,  supp.person].filter(Boolean).join(' — ');
+
+      return { ordNumber, ordDate, buyer, supp, rows, grand, deliveryDate, dueDays, note1, note2, sigBuyer, sigSupp };
+    }
+
+    function renderOrderPDF(){
+      const st = collectOrderState();
+
+      const pvLogoOrder = document.getElementById('pvLogoOrder');
+      if(pvLogoOrder){
+        pvLogoOrder.onerror = () => { pvLogoOrder.style.display = 'none'; };
+        pvLogoOrder.style.display = 'block';
+      }
+
+const metaParts = [];
+      if(st.ordNumber) metaParts.push('<strong>Číslo objednávky:</strong> ' + st.ordNumber);
+      if(st.ordDate) metaParts.push('Dátum: ' + st.ordDate.split('-').reverse().join('.'));
+      const metaEl = document.getElementById('pvOrdMeta');
+      metaEl.textContent = '';
+      if(st.ordNumber){
+        metaEl.append('Číslo objednávky: ');
+        const n = document.createElement('span');
+        n.style.fontWeight = '800';
+        n.textContent = st.ordNumber;
+        metaEl.append(n);
+      }
+      if(st.ordDate){
+        const d = st.ordDate.split('-').reverse().join('.');
+        if(metaEl.childNodes.length) metaEl.append('  •  ');
+        metaEl.append('Dátum: ' + d);
+      }
+
+      const buyerLines = [];
+      if(st.buyer.company) buyerLines.push(`<div><strong>${st.buyer.company}</strong></div>`);
+      if(st.buyer.address) buyerLines.push(`<div>${st.buyer.address}</div>`);
+      const cityZip = [st.buyer.zip, st.buyer.city].filter(Boolean).join(' ');
+      if(cityZip) buyerLines.push(`<div>${cityZip}</div>`);
+      if(st.buyer.ico) buyerLines.push(`<div>IČO: ${st.buyer.ico}</div>`);
+      if(st.buyer.person) buyerLines.push(`<div>Zodpovedná osoba: ${st.buyer.person}</div>`);
+      if(st.buyer.contact) buyerLines.push(`<div>Kontakt: ${st.buyer.contact}</div>`);
+      document.getElementById('pvBuyerBlock').innerHTML = buyerLines.join('');
+
+      const suppLines = [];
+      if(st.supp.company) suppLines.push(`<div><strong>${st.supp.company}</strong></div>`);
+      if(st.supp.address) suppLines.push(`<div>${st.supp.address}</div>`);
+      const sCityZip = [st.supp.zip, st.supp.city].filter(Boolean).join(' ');
+      if(sCityZip) suppLines.push(`<div>${sCityZip}</div>`);
+      if(st.supp.ico) suppLines.push(`<div>IČO: ${st.supp.ico}</div>`);
+      if(st.supp.person) suppLines.push(`<div>Kontaktná osoba: ${st.supp.person}</div>`);
+      if(st.supp.contact) suppLines.push(`<div>Kontakt: ${st.supp.contact}</div>`);
+      document.getElementById('pvSuppBlock').innerHTML = suppLines.join('');
+
+      const pvRows = document.getElementById('pvOrderRows');
+      pvRows.innerHTML = '';
+
+      st.rows.forEach(r => {
+        const tr = document.createElement('tr');
+
+        const td1 = document.createElement('td');
+        const t = document.createElement('div');
+        t.className = 'pv-item-title';
+        t.textContent = r.oi || '—';
+        td1.appendChild(t);
+        if(r.note){
+          const sub = document.createElement('div');
+          sub.className = 'pv-subnote';
+          sub.textContent = r.note;
+          td1.appendChild(sub);
+        }
+        tr.appendChild(td1);
+        const td2 = document.createElement('td'); td2.textContent = r.term || ''; tr.appendChild(td2);
+        const td3 = document.createElement('td'); td3.textContent = r.place || ''; tr.appendChild(td3);
+const td4 = document.createElement('td'); td4.style.textAlign='right'; td4.innerHTML = `<strong>${r.qty || 0}</strong>`; tr.appendChild(td4);
+        const td5 = document.createElement('td'); td5.style.textAlign='right'; td5.textContent = r.unit > 0 ? formatMoney(r.unit) : ''; tr.appendChild(td5);
+        const td6 = document.createElement('td'); td6.style.textAlign='right'; td6.textContent = (r.disc > 0) ? (String(r.disc).replace('.',',') + ' %') : ''; tr.appendChild(td6);
+        const td8 = document.createElement('td'); td8.style.textAlign='right'; td8.innerHTML = `<strong>${formatMoney(r.total)}</strong>`; tr.appendChild(td8);
+
+        pvRows.appendChild(tr);
+      });
+
+      document.getElementById('pvOrderGrand').textContent = formatMoney(st.grand);
+
+      const delLines = [];
+      if(st.deliveryDate) delLines.push(`<div>Termín dodania materiálov: ${st.deliveryDate.split('-').reverse().join('.')}</div>`);
+      if(st.dueDays) delLines.push(`<div>Doba splatnosti faktúry: ${st.dueDays} dní</div>`);
+      if(st.note1) delLines.push(`<div style="margin-top:2mm;"><strong>Poznámka 1:</strong> ${st.note1}</div>`);
+      if(st.note2) delLines.push(`<div style="margin-top:2mm;"><strong>Poznámka 2:</strong> ${st.note2}</div>`);
+      document.getElementById('pvDeliveryBlock').innerHTML = delLines.join('');
+
+      document.getElementById('pvSigBuyer').textContent = st.sigBuyer || '—';
+      document.getElementById('pvSigSupp').textContent = st.sigSupp || '—';
+    }
+function tryUnlock() {
       if ((lockInput.value || '') === PASS) {
         lockErr.style.display = 'none';
         unlock();
@@ -940,6 +1584,20 @@
 
     lockBtn.addEventListener('click', tryUnlock);
     lockInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') tryUnlock(); });
+
+    /* MODE buttons */
+    const _backOffer = document.getElementById('btnBackToMenuFromOffer');
+    if(_backOffer){ _backOffer.addEventListener('click', () => { sessionStorage.removeItem('idsMode'); showModeScreen(); }); }
+    const _backOrder = document.getElementById('btnBackToMenuFromOrder');
+    if(_backOrder){ _backOrder.addEventListener('click', () => { sessionStorage.removeItem('idsMode'); showModeScreen(); }); }
+
+    /* MODE buttons */
+    const _btnModeOffer = document.getElementById('btnModeOffer');
+    if(_btnModeOffer){ _btnModeOffer.addEventListener('click', () => { sessionStorage.setItem('idsMode','offer'); showOffer(); }); }
+    const _btnModeOrder = document.getElementById('btnModeOrder');
+    if(_btnModeOrder){ _btnModeOrder.addEventListener('click', () => { sessionStorage.setItem('idsMode','order'); showOrder(); }); }
+
+
 
     if (sessionStorage.getItem('idsUnlocked') === '1') {
       unlock();
@@ -1024,8 +1682,8 @@ Počty panelov sú odhadované. Fakturovať budeme len reálny počet panelov v 
 
     function applyImagesSetting(){
       const mode = pdfImagesSel.value;
-      if(mode === 'without') appRoot.classList.add('images-off');
-      else appRoot.classList.remove('images-off');
+      if(mode === 'without') appOffer.classList.add('images-off');
+      else appOffer.classList.remove('images-off');
     }
     pdfImagesSel.addEventListener('change', applyImagesSetting);
 
@@ -1660,7 +2318,7 @@ function collectState(){
       setOrHide(document.getElementById('pvDocTitle'), state.docTitle);
       setOrHide(document.getElementById('pvSubtitle'), state.subtitle);
 
-      const printPage = document.getElementById('printPage');
+      const printPage = document.getElementById('printPageOffer');
       if(state.imagesMode === 'without') printPage.classList.add('pv-no-images');
       else printPage.classList.remove('pv-no-images');
 
@@ -1922,7 +2580,7 @@ if(s.kind === 'custom'){
   colg.innerHTML = `
     <col style="width:28%">
     <col style="width:22%">
-    <col style="width:10%">
+    <col style="width:26%">
     <col style="width:20%">
     <col style="width:20%">
   `;
@@ -2296,7 +2954,7 @@ function updateMultiPageIndicator(){
   const pagePx = meas.getBoundingClientRect().height || 0;
   meas.remove();
 
-  const pp = document.getElementById('printPage');
+  const pp = document.getElementById('printPageOffer');
   const h = pp ? pp.scrollHeight : 0;
 
   // show if content exceeds ~1 page (small tolerance)
@@ -2324,8 +2982,76 @@ function updateMultiPageIndicator(){
         setTimeout(() => { document.title = oldTitle; }, 600);
       }, 120);
     });
+    /* ORDER buttons */
+    document.getElementById('btnAddOrderRow').addEventListener('click', () => addOrderRow());
+    document.getElementById('btnResetOrder').addEventListener('click', resetOrderDemo);
 
-    document.getElementById('btnReset').addEventListener('click', () => {
+    /* ORDER stamp (pečiatka) */
+    let orderStampData = null;
+    try{ orderStampData = localStorage.getItem('ids_order_stamp') || ''; }catch(e){ orderStampData = ''; }
+
+    const btnUploadStamp = document.getElementById('btnUploadStamp');
+    const btnClearStamp  = document.getElementById('btnClearStamp');
+    const stampFile      = document.getElementById('stampFile');
+
+    function updateStampButtons(){
+      if(btnClearStamp) btnClearStamp.style.display = orderStampData ? '' : 'none';
+    }
+    updateStampButtons();
+
+    if(btnUploadStamp && stampFile){
+      btnUploadStamp.addEventListener('click', () => stampFile.click());
+      stampFile.addEventListener('change', () => {
+        const f = stampFile.files && stampFile.files[0];
+        if(!f) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          orderStampData = String(reader.result || '');
+          try{ }catch(e){}
+          updateStampButtons();
+        };
+        reader.readAsDataURL(f);
+        stampFile.value = '';
+      });
+    }
+
+    if(btnClearStamp){
+      btnClearStamp.addEventListener('click', () => {
+        orderStampData = '';
+        try{ localStorage.removeItem('ids_order_stamp'); }catch(e){}
+        updateStampButtons();
+      });
+    }
+
+    [
+      '[data-buyer-company]','[data-buyer-person]','[data-supp-company]','[data-supp-person]',
+      '[data-buyer-address]','[data-buyer-city]','[data-buyer-zip]','[data-buyer-ico]','[data-buyer-contact]',
+      '[data-supp-address]','[data-supp-city]','[data-supp-zip]','[data-supp-ico]','[data-supp-contact]'
+    ].forEach(sel => {
+      const el = document.querySelector(sel);
+      if(el){ el.addEventListener('input', recalcOrder); el.addEventListener('change', recalcOrder); }
+    });
+
+    document.getElementById('btnPrintOrder').addEventListener('click', () => {
+      const suggested = `${fileDatePrefix()}_Objednavka`;
+      const chosen = prompt('Názov súboru (automaticky pridáme dátum na začiatok):', suggested) || suggested;
+
+      const oldTitle = document.title;
+      document.title = chosen;
+
+      document.body.classList.remove('mode-offer','mode-order');
+      document.body.classList.add('mode-order');
+
+      renderOrderPDF();
+
+      setTimeout(() => {
+        window.print();
+        setTimeout(() => { document.title = oldTitle; }, 600);
+      }, 120);
+    });
+
+
+document.getElementById('btnReset').addEventListener('click', () => {
       document.getElementById('offerTitle').value = 'Cenová ponuka';
       document.getElementById('offerSubtitle').value = '';
       document.getElementById('pdfImages').value = 'with';
@@ -2346,7 +3072,6 @@ function updateMultiPageIndicator(){
   </script>
 </body>
 </html>
-
 
 
 
