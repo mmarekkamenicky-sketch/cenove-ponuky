@@ -240,7 +240,18 @@
     .pv-dp-month-table .m-panels{ width:16%; text-align:right; padding-right:10px; }
     .pv-dp-month-table .m-col{ text-align:right; }
 
-    .pv-footer{
+    
+    /* Bottom line (feel + multipage) inside content to avoid blank pages across browsers */
+    .pv-bottomline{
+      margin-top:6mm;
+      display:flex;
+      align-items:flex-end;
+      gap:12mm;
+      break-inside:avoid;
+      page-break-inside:avoid;
+    }
+    .pv-bottomline img{ width:18mm; height:auto; opacity:.95; }
+.pv-footer{
       position:fixed; left:0; right:0; bottom:0; height:18mm;
       display:flex; align-items:flex-end; justify-content:center;
       padding:0 14mm 0mm 1mm;
@@ -803,20 +814,18 @@
         <div id="pvGrandWrap"></div>
 
         <div class="pv-note-block" style="margin-top:8mm; font-weight:900;">Ceny sú bez DPH.</div>
+        <div class="pv-bottomline">
+          <img id="pvFeel" src="feel.png" alt="feel the good network" />
+          <span id="pvMulti" class="pv-multi" style="display:none;">
+            <span class="pv-multipage"><span class="arrow">→</span><span>    Viacstranová cenová ponuka.</span></span>
+          </span>
+        </div>
       </div>
     </div>
 
     <div id="pvExtraPages"></div>
 
-    <div class="pv-footer">
-  <div class="inner">
-    <div class="left">
-      <img id="pvFeel" src="feel.png" alt="feel the good network" />
-      <span id="pvMulti" class="pv-multi" style="display:none;"><span class="pv-multipage"><span class="arrow">→</span><span>    Viacstranová cenová ponuka.</span></span></span>
-    </div>
-  </div>
-</div>
-  </section>
+      </section>
 
   
   <section class="print-view" id="printViewOrder" style="display:none;">
@@ -3072,6 +3081,7 @@ document.getElementById('btnReset').addEventListener('click', () => {
   </script>
 </body>
 </html>
+
 
 
 
