@@ -427,7 +427,9 @@
   /* ORDER PDF: poznámka pod položkou + pečiatka */
   .pv-subnote{font-size:11px;color:#777;line-height:1.2;margin-top:1.2mm;}
   .pv-stamp{display:none;max-width:45mm;max-height:25mm;object-fit:contain;margin-top:2mm;margin-bottom:2mm;}
-  </style>
+  
+    .no-grand-line .pv-grand{ border-top:none !important; padding-top:0 !important; }
+</style>
 </head>
 
 <body>
@@ -506,6 +508,16 @@
             <option value="yes">Áno</option>
             <option value="no" selected>Nie</option>
           </select>
+      <div class="grid-2" style="margin-top:10px;">
+        <div>
+          <label>Zobraziť čiaru nad „Spolu“ v PDF?</label>
+          <select id="pdfGrandLine">
+            <option value="yes" selected>Áno</option>
+            <option value="no">Nie</option>
+          </select>
+        </div>
+      </div>
+
         </div>
       </div>
 
@@ -2987,7 +2999,10 @@ function updateMultiPageIndicator(){
       renderPDF();
       setTimeout(() => {
         // update multi-page flag as late as possible before print
-        window.print();
+        
+        if(pdfGrandLine && pdfGrandLine.value==='no'){ document.body.classList.add('no-grand-line'); }
+        else{ document.body.classList.remove('no-grand-line'); }
+window.print();
         setTimeout(() => { document.title = oldTitle; }, 600);
       }, 120);
     });
@@ -3054,7 +3069,10 @@ function updateMultiPageIndicator(){
       renderOrderPDF();
 
       setTimeout(() => {
-        window.print();
+        
+        if(pdfGrandLine && pdfGrandLine.value==='no'){ document.body.classList.add('no-grand-line'); }
+        else{ document.body.classList.remove('no-grand-line'); }
+window.print();
         setTimeout(() => { document.title = oldTitle; }, 600);
       }, 120);
     });
@@ -3062,6 +3080,7 @@ function updateMultiPageIndicator(){
 
 document.getElementById('btnReset').addEventListener('click', () => {
       document.getElementById('offerTitle').value = 'Cenová ponuka';
+      if(document.getElementById('pdfGrandLine')) document.getElementById('pdfGrandLine').value='yes';
       document.getElementById('offerSubtitle').value = '';
       document.getElementById('pdfImages').value = 'with';
       document.getElementById('pdfShowGrand').value = 'no';
@@ -3075,12 +3094,16 @@ document.getElementById('btnReset').addEventListener('click', () => {
       addSection();
     });
 
+    
+    const pdfGrandLine = document.getElementById('pdfGrandLine');
+
     /* INIT */
     applyImagesSetting();
     addSection();
   </script>
 </body>
 </html>
+
 
 
 
