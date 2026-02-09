@@ -2946,7 +2946,12 @@ if(s.kind === 'custom'){
         const box = document.createElement('div');
         box.style.width = '260px';
         box.style.borderTop = '1px solid #000';
-        box.style.paddingTop = '6mm';
+        
+        if (typeof pdfGrandLine !== 'undefined' && pdfGrandLine && pdfGrandLine.value === 'no') {
+          box.style.borderTop = 'none';
+          box.style.paddingTop = '0';
+        }
+box.style.paddingTop = '6mm';
         box.style.textAlign = 'right';
         box.style.fontSize = '12px';
 
