@@ -221,6 +221,7 @@
 
     /* Standard table col alignments */
     .pv-std-table .c-qty, .pv-std-table .c-price, .pv-std-table .c-total{ text-align:right; }
+    .pv-std-table th:first-child, .pv-std-table td:first-child{ padding-left:0; }
     .pv-qty-max{ display:inline-block; text-align:right; line-height:1.05; }
     .pv-qty-max strong{ font-weight:900; }
 
@@ -549,7 +550,7 @@
       <div class="end-settings">
         <div class="grid-2">
           <div class="small">
-            Súbory: <strong>ids-logo.png</strong> (hore vpravo), <strong>feel.png</strong> (footer).
+            Súbor: <strong>ids-logo.png</strong> (hore vpravo).
           </div>
           <div style="text-align:right;">
             <button class="btn secondary" id="btnAddSectionBottom" type="button"><span class="material-symbols-rounded">add</span>Pridať sekciu</button>
@@ -828,7 +829,6 @@
 
         <div class="pv-note-block" style="margin-top:8mm; font-weight:900;">Ceny sú bez DPH.</div>
         <div class="pv-bottomline">
-          <img id="pvFeel" src="feel.png" alt="feel the good network" />
           <span id="pvMulti" class="pv-multi" style="display:none;">
             <span class="pv-multipage"><span class="arrow">→</span><span>    Viacstranová cenová ponuka.</span></span>
           </span>
@@ -987,6 +987,10 @@
               <label>Hlavný názov sekcie</label>
               <input data-sec-main-title placeholder="napr. Digitálne panely v čakárni">
             </div>
+            <span class="chip" data-sec-show-spec-chip>
+              <input type="checkbox" data-sec-show-spec checked>
+              <span>Zobraziť rozmer / špecifikáciu</span>
+            </span>
           </div>
         </div>
         <div class="section-actions">
@@ -1108,7 +1112,7 @@
           <label>Typ produktu (voľný text)</label>
           <input class="field-important" data-type list="dlTypes" placeholder="napr. B1 plagát">
         </div>
-        <div>
+        <div data-dim-wrap>
           <label>Rozmer</label>
           <input data-dim placeholder="—">
         </div>
@@ -2063,6 +2067,8 @@ Počty panelov sú odhadované. Fakturovať budeme len reálny počet panelov v 
       const mainTitleWrap = secEl.querySelector('[data-sec-main-title-wrap]');
       const mainTitleChk  = secEl.querySelector('[data-sec-main-title-on]');
       const mainTitleInp  = secEl.querySelector('[data-sec-main-title]');
+      const showSpecChk   = secEl.querySelector('[data-sec-show-spec]');
+      const showSpecChip  = secEl.querySelector('[data-sec-show-spec-chip]');
 
       if(mainTitleWrap && mainTitleChk && mainTitleInp){
         const hasVal = (mainTitleInp.value || '').trim().length > 0;
@@ -2094,8 +2100,17 @@ Počty panelov sú odhadované. Fakturovať budeme len reálny počet panelov v 
       if(!dpNoteTa.value.trim()) dpNoteTa.value = DEFAULT_DP_NOTE_TEXT;
       secEl.querySelector('[data-dp-note-on]').checked = false;
 
+      function applyDimVisibility(){
+        const visible = !showSpecChk || showSpecChk.checked;
+        secEl.querySelectorAll('[data-item] [data-dim-wrap]').forEach(el => {
+          el.style.display = visible ? '' : 'none';
+        });
+      }
+
       function applyKind(){
         const k = kindSel.value;
+        if(showSpecChip) showSpecChip.style.display = (k === 'standard') ? '' : 'none';
+        applyDimVisibility();
         if(k === 'dp'){
 
           stdWrap.style.display = 'none';
@@ -2130,6 +2145,7 @@ Počty panelov sú odhadované. Fakturovať budeme len reálny počet panelov v 
       }
 
       kindSel.addEventListener('change', applyKind);
+      if(showSpecChk) showSpecChk.addEventListener('change', applyDimVisibility);
       applyKind();
     }
 
@@ -2290,6 +2306,7 @@ function collectState(){
         const secName = secEl.querySelector('[data-sec-name]').value.trim();
         const secPeriod = secEl.querySelector('[data-sec-period]').value.trim();
         const kind = secEl.querySelector('[data-sec-kind]').value;
+        const showSpec = !!secEl.querySelector('[data-sec-show-spec]')?.checked;
 
         if(kind === 'dp'){
           sections.push({ kind:'dp', secMainTitle, secName, secPeriod, dp: collectDP(secEl, imagesMode) });
@@ -2302,7 +2319,7 @@ function collectState(){
             if(child.matches && child.matches('[data-or-sep]')) items.push({ __or:true });
             else if(child.matches && child.matches('[data-item]')) items.push(collectStandardItem(child, imagesMode));
           });
-          sections.push({ kind:'standard', secMainTitle, secName, secPeriod, items });
+          sections.push({ kind:'standard', secMainTitle, secName, secPeriod, showSpec, items });
         }
       });
 
@@ -2354,10 +2371,6 @@ function collectState(){
       const pvLogo = document.getElementById('pvLogo');
       pvLogo.onerror = () => { pvLogo.style.display = 'none'; };
       pvLogo.style.display = 'block';
-
-      const pvFeel = document.getElementById('pvFeel');
-      pvFeel.onerror = () => { pvFeel.style.display = 'none'; };
-      pvFeel.style.display = 'block';
 
       const pvGen = document.getElementById('pvGen'); if (pvGen) pvGen.textContent = 'Generované: ' + nowStamp();
 
@@ -2438,10 +2451,19 @@ function collectState(){
           const table = document.createElement('table');
           table.className = 'pv-table pv-std-table';
 
+          const showSpec = s.showSpec !== false;
+
           const colg = document.createElement('colgroup');
-          colg.innerHTML = `
+          colg.innerHTML = showSpec
+            ? `
             <col style="width:44%">
             <col style="width:20%">
+            <col style="width:10%">
+            <col style="width:13%">
+            <col style="width:13%">
+          `
+            : `
+            <col style="width:64%">
             <col style="width:10%">
             <col style="width:13%">
             <col style="width:13%">
@@ -2450,13 +2472,20 @@ function collectState(){
 
           const thead = document.createElement('thead');
 const trh = document.createElement('tr');
-const headers = [
-  { cls:'c-item', txt:'Položka' },
-  { cls:'c-spec', txt:'Špecifikácia' },
-  { cls:'c-qty',  txt:'Počet' },
-  { cls:'c-price',txt:'Cena/Ks' },
-  { cls:'c-total',txt:'Cena spolu' }
-];
+const headers = showSpec
+  ? [
+      { cls:'c-item', txt:'Položka' },
+      { cls:'c-spec', txt:'Špecifikácia' },
+      { cls:'c-qty',  txt:'Počet' },
+      { cls:'c-price',txt:'Cena/Ks' },
+      { cls:'c-total',txt:'Cena spolu' }
+    ]
+  : [
+      { cls:'c-item', txt:'Položka' },
+      { cls:'c-qty',  txt:'Počet' },
+      { cls:'c-price',txt:'Cena/Ks' },
+      { cls:'c-total',txt:'Cena spolu' }
+    ];
 headers.forEach(h => {
   const th = document.createElement('th');
   th.className = h.cls;
@@ -2474,7 +2503,7 @@ table.appendChild(thead);
               const trOr = document.createElement('tr');
               trOr.className = 'pv-or-row';
               const td = document.createElement('td');
-              td.colSpan = 5;
+              td.colSpan = showSpec ? 5 : 4;
               td.textContent = 'ALEBO';
               trOr.appendChild(td);
               tbody.appendChild(trOr);
@@ -2504,10 +2533,12 @@ table.appendChild(thead);
             }
             tr.appendChild(tdItem);
 
-            const tdSpec = document.createElement('td');
-            tdSpec.className = 'c-spec';
-            tdSpec.textContent = it.dim || '';
-            tr.appendChild(tdSpec);
+            if(showSpec){
+              const tdSpec = document.createElement('td');
+              tdSpec.className = 'c-spec';
+              tdSpec.textContent = it.dim || '';
+              tr.appendChild(tdSpec);
+            }
 
             const tdQty = document.createElement('td');
             tdQty.className = 'c-qty';
@@ -3116,7 +3147,6 @@ document.getElementById('btnReset').addEventListener('click', () => {
   </script>
 </body>
 </html>
-
 
 
 
