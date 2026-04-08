@@ -108,6 +108,21 @@
     .note-box{ margin-top:10px; }
     .images-off .img-controls{ display:none !important; }
 
+    .qty-presets{ margin-top:8px; display:flex; flex-wrap:wrap; gap:6px; }
+    .qty-preset-btn{
+      border:1px solid rgba(10,20,40,.14);
+      background:#f7f9fc;
+      border-radius:999px;
+      padding:6px 10px;
+      font-family:inherit;
+      font-size:12px;
+      font-weight:800;
+      color:#0b2f9e;
+      cursor:pointer;
+      line-height:1;
+    }
+    .qty-preset-btn:hover{ background:#eef4ff; border-color:#2563eb; }
+
     /* DP EDIT */
     .dp-wrap{ margin-top:10px; }
     .dp-card{ border:1px solid #ddd; border-radius:14px; padding:12px; }
@@ -1146,6 +1161,16 @@
             </select>
             <input class="field-important" data-qty type="number" min="0" step="1" value="1">
           </div>
+          <div class="qty-presets">
+            <button class="qty-preset-btn" type="button" data-qty-preset="90">90</button>
+            <button class="qty-preset-btn" type="button" data-qty-preset="100">100</button>
+            <button class="qty-preset-btn" type="button" data-qty-preset="130">130</button>
+            <button class="qty-preset-btn" type="button" data-qty-preset="150">150</button>
+            <button class="qty-preset-btn" type="button" data-qty-preset="200">200</button>
+            <button class="qty-preset-btn" type="button" data-qty-preset="250">250</button>
+            <button class="qty-preset-btn" type="button" data-qty-preset="350">350</button>
+            <button class="qty-preset-btn" type="button" data-qty-preset="500">500</button>
+          </div>
         </div>
       </div>
 
@@ -1871,6 +1896,14 @@ Počty panelov sú odhadované. Fakturovať budeme len reálny počet panelov v 
       typeInput.addEventListener('blur', () => { applyPreset(itemEl); recalcItem(itemEl); });
 
       itemEl.querySelector('[data-price-mode]').addEventListener('change', () => togglePriceMode(itemEl));
+
+      itemEl.querySelectorAll('[data-qty-preset]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const qtyInput = itemEl.querySelector('[data-qty]');
+          qtyInput.value = btn.dataset.qtyPreset || '0';
+          recalcItem(itemEl);
+        });
+      });
 
       itemEl.querySelectorAll('input, select, textarea').forEach(el => {
         if(el.matches('[data-img]')) return;
